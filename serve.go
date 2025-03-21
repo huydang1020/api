@@ -7,6 +7,7 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	permpb "github.com/huyshop/header/permission"
+	userpb "github.com/huyshop/header/user"
 	"go.elastic.co/apm/module/apmgin"
 	"google.golang.org/grpc"
 )
@@ -14,6 +15,7 @@ import (
 type Router struct {
 	route   *gin.Engine
 	permSer permpb.PermissionServiceClient
+	userSer userpb.UserServiceClient
 }
 
 func init() {
@@ -29,9 +31,21 @@ func (r *Router) dialPerm(target string) error {
 	return nil
 }
 
+func (r *Router) dialUser(target string) error {
+	client, err := grpc.Dial(target, grpc.WithInsecure(), grpc.WithDefaultServiceConfig(`{"loadBalancingPolicy":"round_robin"}`))
+	if err != nil {
+		return err
+	}
+	r.userSer = userpb.NewUserServiceClient(client)
+	return nil
+}
+
 func NewRouter(cf *Configs) error {
 	r := &Router{}
 	if err := r.dialPerm(cf.PermGrpcServer); err != nil {
+		log.Print(err)
+	}
+	if err := r.dialUser(cf.UserGrpcServer); err != nil {
 		log.Print(err)
 	}
 	r.route = gin.New()

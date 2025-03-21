@@ -16,18 +16,21 @@ import (
 type Configs struct {
 	Port           string
 	PermGrpcServer string
+	UserGrpcServer string
 }
 
-var config = LoadConfig()
+var config *Configs
 
-func LoadConfig() *Configs {
+func init() {
+	log.SetFlags(log.LstdFlags | log.Lshortfile)
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatal("Error loading env:", err)
 	}
-	return &Configs{
+	config = &Configs{
 		Port:           os.Getenv("PORT"),
 		PermGrpcServer: os.Getenv("PERM_GRPC_SERVER"),
+		UserGrpcServer: os.Getenv("USER_GRPC_SERVER"),
 	}
 }
 
