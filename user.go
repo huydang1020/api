@@ -36,7 +36,7 @@ func (r *Router) handleSignInAdmin(ctx *gin.Context) {
 		return
 	}
 	// Tạo map để tra cứu nhanh
-	mapMenu := make(map[int32]*permpb.Page)
+	mapMenu := make(map[string]*permpb.Page)
 	for _, p := range pages.Pages {
 		mapMenu[p.Id] = p
 	}
@@ -44,7 +44,7 @@ func (r *Router) handleSignInAdmin(ctx *gin.Context) {
 	// Xây dựng cây menu
 	var menu []*permpb.Page
 	for _, p := range pages.Pages {
-		if p.ParentId == 0 {
+		if p.ParentId == "" {
 			menu = append(menu, p) // Trang chính
 		} else if parent, ok := mapMenu[p.ParentId]; ok {
 			parent.Children = append(parent.Children, p) // Thêm vào trang cha
