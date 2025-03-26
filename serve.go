@@ -1,11 +1,15 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
+	"strconv"
+	"time"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"github.com/go-redis/redis/v8"
 	permpb "github.com/huyshop/header/permission"
 	userpb "github.com/huyshop/header/user"
 	"go.elastic.co/apm/module/apmgin"
@@ -14,6 +18,7 @@ import (
 
 type Router struct {
 	route   *gin.Engine
+	cache   *redis.Client
 	permSer permpb.PermissionServiceClient
 	userSer userpb.UserServiceClient
 }
@@ -38,6 +43,27 @@ func (r *Router) dialUser(target string) error {
 	}
 	r.userSer = userpb.NewUserServiceClient(client)
 	return nil
+}
+
+func NewRedisCache(addr, pw string, db int) *redis.Client {
+	client := redis.NewClient(&redis.Options{
+		Addr:     addr,
+		Password: pw,
+		DB:       db,
+	})
+	tick := time.NewTicker(10 * time.Minute)
+	ctx := context.Background()
+	go func(client *redis.Client) {
+		for {
+			select {
+			case <-tick.C:
+				if err := client.Ping(ctx).Err(); err != nil {
+					panic(err)
+				}
+			}
+		}
+	}(client)
+	return client
 }
 
 func NewRouter(cf *Configs) error {
@@ -87,6 +113,9 @@ func NewRouter(cf *Configs) error {
 		}
 	})
 	r.route.Use(apmgin.Middleware(r.route))
+	redisDb, _ := strconv.Atoi(config.RedisDb)
+	rd := NewRedisCache(config.RedisAddr, config.RedisPassword, redisDb)
+	r.cache = rd
 	r.router()
 	r.route.Run(fmt.Sprintf(":%v", cf.Port))
 	return nil

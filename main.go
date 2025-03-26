@@ -17,6 +17,10 @@ type Configs struct {
 	Port           string
 	PermGrpcServer string
 	UserGrpcServer string
+	JwtSecretKey   string
+	RedisAddr      string
+	RedisPassword  string
+	RedisDb        string
 }
 
 var config *Configs
@@ -31,6 +35,10 @@ func init() {
 		Port:           os.Getenv("PORT"),
 		PermGrpcServer: os.Getenv("PERM_GRPC_SERVER"),
 		UserGrpcServer: os.Getenv("USER_GRPC_SERVER"),
+		JwtSecretKey:   os.Getenv("JWT_SECRET_KEY"),
+		RedisAddr:      os.Getenv("REDIS_ADDR"),
+		RedisPassword:  os.Getenv("REDIS_PASSWORD"),
+		RedisDb:        os.Getenv("REDIS_DB"),
 	}
 }
 

@@ -1,9 +1,9 @@
 package main
 
 func (r *Router) mappingRouterAdmin() {
-	r1 := r.route.Group("/api/admin")
 
-	r1.POST("/sign-in", r.handleSignInAdmin)
+	r.route.POST("/api/admin/sign-in", r.handleSignInAdmin)
+	r1 := r.route.Group("/api/admin", authMiddleware(r))
 
 	// user
 	r1.GET("/user", r.handleGetListUser)
