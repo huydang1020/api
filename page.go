@@ -36,7 +36,7 @@ func (r *Router) handleListPage(ctx *gin.Context) {
 	}
 	// log.Println("pages", pages)
 	menu := SortPage(pages)
-	ctx.JSON(200, &Response{Code: 0, Message: "success", Data: menu})
+	ctx.JSON(200, &Response{Code: 0, Message: "success", Data: &ppb.Pages{Pages: menu, Total: pages.Total}})
 }
 
 func SortPage(pages *ppb.Pages) []*ppb.Page {

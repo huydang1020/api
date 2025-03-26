@@ -20,7 +20,7 @@ func (r *Router) mappingRouterAdmin() {
 	r1.DELETE("/role/:id", r.handleDeleteRole)
 
 	// page
-	r1.GET("/page", r.handleListPage)
+	r1.GET("/get-pages", r.handleListPage)
 	r1.POST("/page", r.handleCreatePage)
 	r1.GET("/page/:id", r.handleGetPage)
 	r1.PUT("/page/:id", r.handleUpdatePage)
