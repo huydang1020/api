@@ -1,8 +1,6 @@
 package main
 
 import (
-	"sort"
-
 	"github.com/gin-gonic/gin"
 	"github.com/huyshop/api/utils"
 	permpb "github.com/huyshop/header/permission"
@@ -35,40 +33,13 @@ func (r *Router) handleSignInAdmin(ctx *gin.Context) {
 		ctx.JSON(500, &Response{Code: -1, Message: err.Error()})
 		return
 	}
-	// Tạo map để tra cứu nhanh
-	mapMenu := make(map[string]*permpb.Page)
-	for _, p := range pages.Pages {
-		mapMenu[p.Id] = p
-	}
-
-	// Xây dựng cây menu
-	var menu []*permpb.Page
-	for _, p := range pages.Pages {
-		if p.ParentId == "" {
-			menu = append(menu, p) // Trang chính
-		} else if parent, ok := mapMenu[p.ParentId]; ok {
-			parent.Children = append(parent.Children, p) // Thêm vào trang cha
-		}
-	}
-	// Sắp xếp menu chính và menu con
-	sortPages(menu)
+	menu := SortPage(pages)
 
 	// Gán lại quyền cho user
 	role.Permission = menu
 	resp.User.Role = role
 	resp.User.Permissions = menu
 	ctx.JSON(200, &Response{Code: 0, Message: "success", Data: resp})
-}
-
-func sortPages(pages []*permpb.Page) {
-	sort.Slice(pages, func(i, j int) bool {
-		return pages[i].Id < pages[j].Id // Sắp xếp theo ID tăng dần (hoặc theo Name, Order, ...)
-	})
-	for _, p := range pages {
-		if len(p.Children) > 0 {
-			sortPages(p.Children) // Đệ quy để sắp xếp các menu con
-		}
-	}
 }
 
 func (r *Router) handleGetListUser(ctx *gin.Context) {
