@@ -25,6 +25,7 @@ func (r *Router) handleListPageByPermission(ctx *gin.Context) {
 		user, err := r.userSer.GetUser(c, &upb.UserRequest{Id: uidStr})
 		if err != nil {
 			ctx.JSON(400, &Response{Code: -1, Message: utils.E_access_denied})
+			return
 		}
 		req.RoleId = user.GetRoleId()
 	}
@@ -54,6 +55,7 @@ func (r *Router) handleListPage(ctx *gin.Context) {
 		user, err := r.userSer.GetUser(c, &upb.UserRequest{Id: uidStr})
 		if err != nil {
 			ctx.JSON(400, &Response{Code: -1, Message: utils.E_access_denied})
+			return
 		}
 		req.RoleId = user.GetRoleId()
 	}
@@ -62,6 +64,9 @@ func (r *Router) handleListPage(ctx *gin.Context) {
 	if err != nil {
 		ctx.JSON(500, &Response{Code: -1, Message: err.Error()})
 		return
+	}
+	for _, p := range pages.Pages {
+		p.Actions = nil
 	}
 	ctx.JSON(200, &Response{Code: 0, Message: "success", Data: pages})
 }
