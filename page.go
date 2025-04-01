@@ -10,7 +10,7 @@ import (
 	upb "github.com/huyshop/header/user"
 )
 
-func (r *Router) handleListPage(ctx *gin.Context) {
+func (r *Router) handleListPageByPermission(ctx *gin.Context) {
 	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
 	defer cancel()
 	req := &ppb.PageRequest{}
@@ -37,6 +37,33 @@ func (r *Router) handleListPage(ctx *gin.Context) {
 	// log.Println("pages", pages)
 	menu := SortPage(pages)
 	ctx.JSON(200, &Response{Code: 0, Message: "success", Data: &ppb.Pages{Pages: menu, Total: pages.Total}})
+}
+
+func (r *Router) handleListPage(ctx *gin.Context) {
+	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
+	defer cancel()
+	req := &ppb.PageRequest{}
+	utils.BindQuery(req, ctx)
+	uid, exist := ctx.Get("user_id")
+	if exist {
+		uidStr, ok := uid.(string)
+		if !ok {
+			ctx.JSON(400, &Response{Code: -1, Message: "invalid user_id"})
+			return
+		}
+		user, err := r.userSer.GetUser(c, &upb.UserRequest{Id: uidStr})
+		if err != nil {
+			ctx.JSON(400, &Response{Code: -1, Message: utils.E_access_denied})
+		}
+		req.RoleId = user.GetRoleId()
+	}
+	log.Println("req", req)
+	pages, err := r.permSer.ListPages(c, req)
+	if err != nil {
+		ctx.JSON(500, &Response{Code: -1, Message: err.Error()})
+		return
+	}
+	ctx.JSON(200, &Response{Code: 0, Message: "success", Data: pages})
 }
 
 func SortPage(pages *ppb.Pages) []*ppb.Page {
