@@ -1,251 +1,167 @@
 {
-  "error_not_found_id": {
-    "en": "Error not found id",
-    "vi": "Lỗi không tìm thấy id"
+  "not_found_id": {
+    "en": "Not found id",
+    "vi": "Không tìm thấy id"
   },
-  "error_not_found_token": {
-    "en": "Error not found token",
-    "vi": "Lỗi không tìm thấy mã thông báo"
+  "invalid_token": {
+    "en": "Invalid token",
+    "vi": "Không tìm thấy mã thông báo"
   },
   "error_not_found_otp": {
-    "en": "Error not found otp",
-    "vi": "Lỗi không tìm thấy otp"
-  },
-  "error_hash_not_match": {
-    "en": "Error hash not match",
-    "vi": "Lỗi không khớp"
+    "en": "Not found OTP",
+    "vi": "Không tìm thấy OTP"
   },
   "error_not_found_otp_code": {
-    "en": "Error not found otp code",
-    "vi": "Lỗi không tìm thấy mã otp"
+    "en": "Not found OTP code",
+    "vi": "Không tìm thấy mã OTP"
   },
   "error_otp_state_invalid": {
-    "en": "Error otp state invalid",
-    "vi": "Lỗi otp trạng thái không hợp lệ"
+    "en": "OTP state invalid",
+    "vi": "OTP trạng thái không hợp lệ"
   },
   "error_otp_outdate_time": {
-    "en": "Error otp outdate time",
-    "vi": "Lỗi otp vượt thời gian"
+    "en": "OTP outdate time",
+    "vi": "OTP vượt thời gian"
   },
   "error_token_not_valid": {
-    "en": "Error token not valid",
-    "vi": "Mã thông báo lỗi không hợp lệ"
-  },
-  "error_not_found_context": {
-    "en": "Error not found context",
-    "vi": "Lỗi không tìm thấy ngữ cảnh"
-  },
-  "error_missing_username_password": {
-    "en": "Error missing username password",
-    "vi": "Lỗi thiếu mật khẩu tên người dùng"
-  },
-  "error_missing_phone_password": {
-    "en": "Error missing phone password",
-    "vi": "Lỗi thiếu mật khẩu điện thoại"
-  },
-  "error_missing_email_password": {
-    "en": "Error missing email password",
-    "vi": "Lỗi thiếu mật khẩu email"
-  },
-  "error_trouble_to_read_data": {
-    "en": "Error trouble to read data",
-    "vi": "Lỗi khó đọc dữ liệu"
-  },
-  "error_not_found_scope": {
-    "en": "Error not found scope",
-    "vi": "Lỗi không tìm thấy phạm vi"
+    "en": "Token not valid",
+    "vi": "Mã thông báo không hợp lệ"
   },
   "error_not_found_phone": {
-    "en": "Error not found phone",
-    "vi": "Lỗi không tìm thấy điện thoại"
+    "en": "Not found phone",
+    "vi": "Không tìm thấy số điện thoại"
   },
-  "E_not_found_new_password": {
-    "en": "E not found new password",
-    "vi": "E không tìm thấy mật khẩu mới"
+  "not_found_phone_number_or_email": {
+    "en": "Not found username",
+    "vi": "Tài khoản không tồn tại"
   },
-  "error_not_found_app": {
-    "en": "Error not found app",
-    "vi": "Lỗi không tìm thấy ứng dụng"
+  "not_found_new_password": {
+    "en": "Not found new password",
+    "vi": "Không tìm thấy mật khẩu mới"
   },
   "error_not_found_user": {
-    "en": "Error not found user",
-    "vi": "Lỗi không tìm thấy người dùng"
-  },
-  "error_not_found_user_id": {
-    "en": "Error not found user id",
-    "vi": "user_id không được để trống"
+    "en": "Not found user",
+    "vi": "Không tìm thấy người dùng"
   },
   "error_not_found_username": {
-    "en": "Error not found username",
-    "vi": "Lỗi không tìm thấy tên người dùng"
+    "en": "Not found username",
+    "vi": "Không tìm thấy tên người dùng"
   },
   "error_not_found_email": {
-    "en": "Error not found email",
-    "vi": "Lỗi không tìm thấy email"
+    "en": "Not found email",
+    "vi": "Không tìm thấy email"
   },
   "error_username_existed": {
-    "en": "Error username existed",
-    "vi": "tên người dùng lỗi tồn tại"
+    "en": "username existed",
+    "vi": "Tên người dùng tồn tại"
   },
-  "error_user_existed": {
-    "en": "Error user existed",
-    "vi": "Lỗi người dùng tồn tại"
+  "user_existed": {
+    "en": "user existed",
+    "vi": "Người dùng tồn tại"
   },
   "error_user_not_found": {
-    "en": "Error user not found",
-    "vi": "Lỗi người dùng không tìm thấy"
+    "en": "user not found",
+    "vi": "Không tìm thấy người dùng"
   },
   "error_user_password_invalid": {
-    "en": "Error user password invalid",
-    "vi": "Lỗi người dùng mật khẩu không hợp lệ"
-  },
-  "error_user_password_not_match": {
-    "en": "Error user password not match",
-    "vi": "Lỗi người dùng mật khẩu không khớp"
-  },
-  "error_user_disable_state_invalid": {
-    "en": "Error user disable state invalid",
-    "vi": "Lỗi người dùng vô hiệu trạng thái không hợp lệ"
-  },
-  "error_user_ids_length_so_larger": {
-    "en": "Error user ids length so larger",
-    "vi": "Lỗi id người dùng chiều dài quá lớn"
+    "en": "user password invalid",
+    "vi": "Mật khẩu không hợp lệ"
   },
   "error_have_no_enough_permissions": {
-    "en": "Error have no enough permissions",
-    "vi": "Lỗi không có đủ quyền"
+    "en": "have no enough permissions",
+    "vi": "Không có quyền"
   },
   "error_have_no_id_token": {
-    "en": "Error have no id token",
-    "vi": "Lỗi không có mã thông báo id"
-  },
-  "error_invalid_permissions_score": {
-    "en": "Error invalid permissions score",
-    "vi": "Lỗi điểm quyền không hợp lệ"
+    "en": "have no id token",
+    "vi": "Không có mã thông báo id"
   },
   "error_invalid_permissions_role_not_found": {
-    "en": "Error invalid permissions role not found",
-    "vi": "Lỗi không tìm thấy vai trò quyền không hợp lệ"
+    "en": "invalid permissions role not found",
+    "vi": "Không tìm thấy vai trò quyền không hợp lệ"
   },
-  "error_invalid_permissions_existed": {
-    "en": "Error invalid permissions existed",
-    "vi": "Lỗi quyền không hợp lệ tồn tại"
+  "error_invalid_permissions": {
+    "en": "invalid permissions existed",
+    "vi": "Quyền không hợp lệ"
   },
   "error_not_found_role": {
-    "en": "Error not found role",
-    "vi": "Lỗi không tìm thấy vai trò"
-  },
-  "error_not_found_permission": {
-    "en": "Error not found permission",
-    "vi": "Lỗi không tìm thấy quyền"
-  },
-  "error_state_not_actived": {
-    "en": "Error state not actived",
-    "vi": "trạng thái lỗi không được kích hoạt"
-  },
-  "error_not_enough_points": {
-    "en": "Error not enough points",
-    "vi": "Lỗi không đủ điểm"
-  },
-  "error_not_found_point_transfer": {
-    "en": "Error not found point transfer",
-    "vi": "Lỗi không tìm thấy chuyển điểm"
-  },
-  "error_not_found_to": {
-    "en": "Error not found to",
-    "vi": "Lỗi không tìm thấy"
-  },
-  "error_phone_number_invalid": {
-    "en": "Error phone number invalid",
-    "vi": "Lỗi số điện thoại không hợp lệ"
-  },
-  "error_not_found_point_type": {
-    "en": "Error not found point type",
-    "vi": "Lỗi không tìm thấy loại điểm"
-  },
-  "error_not_found_name": {
-    "en": "Error not found name",
-    "vi": "Lỗi không tìm thấy tên"
+    "en": "Not found role",
+    "vi": "Không tìm thấy vai trò"
   },
   "error_not_found_role_id": {
-    "en": "Error not found role id",
-    "vi": "Lỗi không tìm thấy id vai trò"
+    "en": "Not found role id",
+    "vi": "Không tìm thấy mã vai trò"
+  },
+  "error_not_found_permission": {
+    "en": "Not found permission",
+    "vi": "Không tìm thấy quyền"
+  },
+  "error_state_not_actived": {
+    "en": "state not actived",
+    "vi": "Trạng thái không được kích hoạt"
+  },
+  "error_not_enough_points": {
+    "en": "Not enough points",
+    "vi": "Không đủ điểm"
+  },
+  "error_not_found_point_transfer": {
+    "en": "Not found point transfer",
+    "vi": "Không tìm thấy chuyển điểm"
+  },
+  "error_not_found_to": {
+    "en": "Not found to",
+    "vi": "Không tìm thấy"
+  },
+  "error_phone_number_invalid": {
+    "en": "phone number invalid",
+    "vi": "Số điện thoại không hợp lệ"
   },
   "error_not_found_receiver_id": {
-    "en": "Error not found receiver id",
-    "vi": "Lỗi không tìm thấy id người nhận"
+    "en": "Not found receiver id",
+    "vi": "Không tìm thấy mã người nhận"
   },
   "error_unknown": {
-    "en": "Error unknown",
-    "vi": "Lỗi không xác định"
-  },
-  "error_not_found_partner": {
-    "en": "Error not found partner",
-    "vi": "Lỗi không tìm thấy đối tác"
-  },
-  "error_not_found_exchange_id": {
-    "en": "Error not found exchange id",
-    "vi": "Lỗi không tìm thấy id trao đổi"
+    "en": "unknown",
+    "vi": "Không xác định"
   },
   "error_not_found_buyer": {
-    "en": "Error not found buyer",
-    "vi": "Lỗi không tìm thấy người mua"
+    "en": "Not found buyer",
+    "vi": "Không tìm thấy người mua"
   },
   "error_not_found_seller": {
-    "en": "Error not found seller",
-    "vi": "Lỗi không tìm thấy người bán"
+    "en": "Not found seller",
+    "vi": "Không tìm thấy người bán"
   },
   "error_not_found_rate": {
-    "en": "Error not found rate",
-    "vi": "tỷ lệ lỗi không tìm thấy"
+    "en": "Not found rate",
+    "vi": "tỷ lệ không tìm thấy"
   },
   "error_not_found_state": {
-    "en": "Error not found state",
-    "vi": "Lỗi không tìm thấy trạng thái"
+    "en": "Not found state",
+    "vi": "Không tìm thấy trạng thái"
   },
   "error_not_found_sender_id": {
-    "en": "Error not found sender id",
-    "vi": "Lỗi không tìm thấy id người gửi"
-  },
-  "error_not_found_point_type_seller_id": {
-    "en": "Error not found point type seller id",
-    "vi": "Lỗi không tìm thấy loại điểm id người bán"
-  },
-  "error_not_found_point_type_buyer_id": {
-    "en": "Error not found point type buyer id",
-    "vi": "Lỗi không tìm thấy loại điểm id người mua"
-  },
-  "error_not_found_config_rate_seller_mpoint": {
-    "en": "Error not found config rate seller mpoint",
-    "vi": "Lỗi không tìm thấy tỷ lệ cấu hình người bán mpoint"
-  },
-  "error_not_found_config_rate_mpoint_buyer": {
-    "en": "Error not found config rate mpoint buyer",
-    "vi": "Lỗi không tìm thấy tỷ lệ cấu hình người mua mpoint"
-  },
-  "error_fee_max_1": {
-    "en": "Error fee max 1",
-    "vi": "phí lỗi tối đa 1"
+    "en": "Not found sender id",
+    "vi": "Không tìm thấy id người gửi"
   },
   "error_points_too_low": {
-    "en": "Error points too low",
-    "vi": "Điểm lỗi quá thấp"
+    "en": "points too low",
+    "vi": "Điểm quá thấp"
   },
   "error_points_too_high": {
-    "en": "Error points too high",
-    "vi": "Điểm lỗi quá cao"
+    "en": "points too high",
+    "vi": "Điểm quá cao"
   },
   "error_points_zero": {
-    "en": "Error points zero",
-    "vi": "Điểm lỗi bằng không"
+    "en": "points zero",
+    "vi": "Điểm bằng không"
   },
   "error_not_found_alias_id": {
-    "en": "Error not found alias id",
-    "vi": "Lỗi không tìm thấy id bí danh"
+    "en": "Not found alias id",
+    "vi": "Không tìm thấy id bí danh"
   },
   "error_trans_alias_id_existed": {
-    "en": "Error trans alias id existed",
-    "vi": "Lỗi id bí danh chuyển đổi tồn tại"
+    "en": "trans alias id existed",
+    "vi": "Mã bí danh chuyển đổi tồn tại"
   },
   "can_not_update": {
     "en": "Can not update",
@@ -253,18 +169,14 @@
   },
   "internal_error": {
     "en": "Internal Error",
-    "vi": "Lỗi bên trong"
-  },
-  "not_found_any_id_username_email_phone": {
-    "en": "Not found any id username email phone",
-    "vi": "Không tìm thấy bất kỳ tên người dùng id điện thoại email"
+    "vi": "bên trong"
   },
   "error_not_found_partner_id": {
-    "en": "Error not found partner id",
+    "en": "Not found partner id",
     "vi": "Không tìm thấy id đối tác"
   },
   "error_not_found_page": {
-    "en": "Error not found page",
+    "en": "Not found page",
     "vi": "Không tìm thấy trang"
   },
   "not_found_code": {
@@ -273,14 +185,14 @@
   },
   "transaction_id_cannot_empty": {
     "en": "transaction_id cannot empty",
-    "vi": "transaction_id không được để trống"
+    "vi": "Mã giao dịch không được để trống"
   },
   "not_found_total_bill": {
     "en": "Not found total bill",
     "vi": "Không tìm thấy tổng hóa đơn"
   },
-  "code_used": {
-    "en": "code used",
+  "Code_used": {
+    "en": "Code used",
     "vi": "Mã đã được sử dụng"
   },
   "with_trans_code_points_only_lower_than_0": {
@@ -304,24 +216,16 @@
     "vi": "Không tìm thấy mã biling"
   },
   "timestamp_invalid": {
-    "en": "timestamp invalid",
-    "vi": "timestamp không hợp lệ"
+    "en": "Timestamp invalid",
+    "vi": "Thời gian không hợp lệ"
   },
   "not_match_signature": {
     "en": "Not match signature",
-    "vi": "chữ ký không khớp"
+    "vi": "Chữ ký không khớp"
   },
   "amount_cannot_empty": {
-    "en": "amount cannot empty",
-    "vi": "amount không được để trống"
-  },
-  "timestamp_cannot_empty": {
-    "en": "timestamp cannot empty",
-    "vi": "timestamp không được để trống"
-  },
-  "data_cannot_empty": {
-    "en": "data cannot empty",
-    "vi": "data không được để trống"
+    "en": "Amount cannot empty",
+    "vi": "Số lượng không được để trống"
   },
   "state invalid": {
     "en": "State invalid",
@@ -330,14 +234,6 @@
   "internal_errors": {
     "en": "Internal errors",
     "vi": "Đã có lỗi xảy ra"
-  },
-  "Invalid": {
-    "en": "Invalid",
-    "vi": "Không hợp lệ"
-  },
-  "invalid_partner_slogan": {
-    "en": "Invalid partner slogan",
-    "vi": "khẩu hiệu đối tác không hợp lệ"
   },
   "invalid_partner_website": {
     "en": "Invalid partner website",
@@ -351,33 +247,29 @@
     "en": "Invalid partner email",
     "vi": "Email đối tác không hợp lệ"
   },
-  "invalid_contract_category_id": {
-    "en": "Invalid contract category id",
-    "vi": "id danh mục hợp đồng không hợp lệ"
+  "invalid_category": {
+    "en": "Invalid category",
+    "vi": "Danh mục không hợp lệ"
   },
   "index_can_not_zero": {
-    "en": "index can not zero",
-    "vi": "chỉ số không thể bằng không"
-  },
-  "not_found_cards": {
-    "en": "Not found cards",
-    "vi": "Không tìm thấy thẻ"
+    "en": "Index can not zero",
+    "vi": "Chỉ số không thể bằng không"
   },
   "error_can_not_update": {
-    "en": "Error can not update",
-    "vi": "Lỗi không thể cập nhật"
+    "en": "can not update",
+    "vi": "Không thể cập nhật"
   },
   "not_found_api_key": {
     "en": "Not found api key",
     "vi": "Không tìm thấy khóa api"
   },
   "alias_partner_exists": {
-    "en": "alias partner exists",
-    "vi": "đối tác bí danh tồn tại"
+    "en": "Alias partner exists",
+    "vi": "Đối tác bí danh tồn tại"
   },
   "alias_store_exists": {
-    "en": "alias store exists",
-    "vi": "cửa hàng bí danh tồn tại"
+    "en": "Alias store exists",
+    "vi": "Cửa hàng bí danh tồn tại"
   },
   "not_found": {
     "en": "Not found",
@@ -389,7 +281,7 @@
   },
   "user_id_cannot_empty": {
     "en": "user_id cannot empty",
-    "vi": "user_id không được để trống"
+    "vi": "Mã khách hàng không được để trống"
   },
   "not_found_partner_id": {
     "en": "Not found partner id",
@@ -400,7 +292,7 @@
     "vi": "Không tìm thấy đối tác"
   },
   "partner_not_active": {
-    "en": "partner not active",
+    "en": "Partner not active",
     "vi": "trạng thái đối tác không hoạt động"
   },
   "not_found_partner_get_code_id": {
@@ -439,29 +331,17 @@
     "en": "Not found voucher id",
     "vi": "Không tìm thấy mã ưu đãi"
   },
-  "voucher_id_cannot_empty": {
-    "en": "voucher_id cannot empty",
-    "vi": "voucher_id không được để trống"
-  },
-  "code_cannot_empty": {
-    "en": "code cannot empty",
-    "vi": "code không được để trống"
+  "Code_cannot_empty": {
+    "en": "Code cannot empty",
+    "vi": "Code không được để trống"
   },
   "total_bill_cannot_empty_or_must_be_greater_than_0": {
-    "en": "total bill cannot empty or must be greater than 0",
-    "vi": "tổng tiền hóa đơn không được để trống hoặc phải lớn hơn 0"
-  },
-  "cancel_reason_cannot_empty": {
-    "en": "cancel_reason cannot empty",
-    "vi": "lí do hủy mã không được để trống"
+    "en": "Total bill cannot empty or must be greater than 0",
+    "vi": "Tổng tiền hóa đơn phải lớn hơn 0"
   },
   "state_cannot_empty": {
-    "en": "state cannot empty",
-    "vi": "state không được để trống"
-  },
-  "status_changed_at_cannot_empty": {
-    "en": "status_changed_at cannot empty",
-    "vi": "status_changed_at không được để trống"
+    "en": "State cannot empty",
+    "vi": "Trạng thái không được để trống"
   },
   "not_found_condition_id": {
     "en": "Not found condition id",
@@ -497,31 +377,11 @@
   },
   "invalid_code_state": {
     "en": "Invalid code state",
-    "vi": "trạng thái mã không hợp lệ"
+    "vi": "Trạng thái mã không hợp lệ"
   },
   "invalid_voucher_state": {
     "en": "Invalid voucher state",
-    "vi": "trạng thái ưu đãi không hợp lệ"
-  },
-  "app_id_cannot_empty": {
-    "en": "app_id cannot empty",
-    "vi": "app_id không được để trống"
-  },
-  "empty_condition_ids": {
-    "en": "empty condition ids",
-    "vi": "id điều kiện trống"
-  },
-  "Internal": {
-    "en": "Internal",
-    "vi": "nội bộ"
-  },
-  "not_found_id": {
-    "en": "Not found id",
-    "vi": "Không tìm thấy id"
-  },
-  "not_found_contract_id": {
-    "en": "Not found contract id",
-    "vi": "Không tìm thấy id hợp đồng"
+    "vi": "Trạng thái ưu đãi không hợp lệ"
   },
   "not_found_price": {
     "en": "Not found price",
@@ -568,92 +428,72 @@
     "vi": "Không tìm thấy số lượng tem"
   },
   "time_not_valid": {
-    "en": "time not valid",
-    "vi": "thời gian không hợp lệ"
+    "en": "Time not valid",
+    "vi": "Thời gian không hợp lệ"
   },
   "exchange_point_fail": {
     "en": "exchange point fail",
     "vi": "Điểm đổi không thành công"
   },
-  "get_code_error": {
-    "en": "get code Error",
-    "vi": "gặp lỗi mã"
+  "Code_expired": {
+    "en": "Code expired",
+    "vi": "Mã hết hạn"
   },
-  "code_expired": {
-    "en": "code expired",
-    "vi": "mã hết hạn"
-  },
-  "code_state_invalid": {
-    "en": "code state invalid",
+  "Code_state_invalid": {
+    "en": "Code state invalid",
     "vi": "trạng thái mã không hợp lệ"
   },
-  "code_does_not_belong_to_the_partner": {
-    "en": "code does not belong to the partner",
-    "vi": "mã không thuộc đối tác"
+  "Code_does_not_belong_to_the_partner": {
+    "en": "Code does not belong to the partner",
+    "vi": "Mã không thuộc đối tác"
   },
   "store_does_not_belong_to_the_partner": {
-    "en": "store does not belong to the partner",
-    "vi": "cửa hàng không thuộc đối tác"
+    "en": "Store does not belong to the partner",
+    "vi": "Cửa hàng không thuộc đối tác"
   },
-  "value_lt_min_value": {
-    "en": "value lt min value",
-    "vi": "giá trị lt giá trị tối thiểu"
+  "Value_lt_min_value": {
+    "en": "Value lt min value",
+    "vi": "Giá trị lt giá trị tối thiểu"
   },
-  "value_gt_max_value": {
-    "en": "value gt max value",
-    "vi": "giá trị gt giá trị tối đa"
+  "Value_gt_max_value": {
+    "en": "Value gt max value",
+    "vi": "Giá trị gt giá trị tối đa"
   },
-  "code_not_exists": {
-    "en": "code not exists",
-    "vi": "mã không tồn tại"
+  "Code_not_exists": {
+    "en": "Code not exists",
+    "vi": "Mã không tồn tại"
   },
   "not_found_sync_code_url": {
     "en": "Not found sync code url",
     "vi": "Không tìm thấy url mã đồng bộ"
   },
-  "brand_id_or_ids_cannot_empty": {
-    "en": "brand_id or ids cannot empty",
-    "vi": "brand_id hoặc ids không được để trống"
-  },
-  "order_id_cannot_empty": {
-    "en": "order_id cannot empty",
-    "vi": "order_id không được để trống"
-  },
-  "order_status_cannot_empty": {
-    "en": "order_status cannot empty",
-    "vi": "order_status không được để trống"
-  },
-  "ship_status_cannot_empty": {
-    "en": "ship_status cannot empty",
-    "vi": "ship_status không được để trống"
-  },
-  "description_cannot_empty": {
-    "en": "description cannot empty",
-    "vi": "description không được để trống"
-  },
   "invalid_order_status": {
     "en": "Invalid order status",
-    "vi": "trạng thái đơn hàng không hợp lệ"
+    "vi": "Trạng thái đơn hàng không hợp lệ"
+  },
+  "invalid_shipping_status": {
+    "en": "Invalid shipping status",
+    "vi": "Trạng thái giao hàng không hợp lệ"
   },
   "invalid_ship_status": {
     "en": "Invalid ship status",
-    "vi": "trạng thái giao hàng không hợp lệ"
+    "vi": "Trạng thái giao hàng không hợp lệ"
   },
   "out_of_code": {
-    "en": "out of code",
-    "vi": "hết mã"
+    "en": "Out of code",
+    "vi": "Hết mã"
   },
   "maximum_amount_is_20": {
-    "en": "maximum amount is 20",
+    "en": "Maximum amount is 20",
     "vi": "Số lượng tối đa là 20"
   },
   "exist_transaction_id": {
-    "en": "exist transaction id",
-    "vi": "id giao dịch đã tồn tại"
+    "en": "Exist transaction id",
+    "vi": "Mã giao dịch đã tồn tại"
   },
   "not_found_transaction_id": {
     "en": "Not found transaction id",
-    "vi": "id giao dịch không tồn tại"
+    "vi": "Mã giao dịch không tồn tại"
   },
   "the_amount_of_code_is_not_enough": {
     "en": "the amount of code is not enough",
@@ -661,7 +501,7 @@
   },
   "invalid_get_code_method": {
     "en": "Invalid get code method",
-    "vi": "phương thức lấy mã không hợp lệ"
+    "vi": "Phương thức lấy mã không hợp lệ"
   },
   "not_found_code_id": {
     "en": "Not found code id",
@@ -669,7 +509,7 @@
   },
   "voucher_id_code_not_equal_my_voucher": {
     "en": "voucher id code not equal my voucher",
-    "vi": "mã id voucher không bằng voucher của tôi"
+    "vi": "Mã id voucher không bằng voucher của tôi"
   },
   "not_found_alt_voucher_id": {
     "en": "Not found alt voucher id",
@@ -704,12 +544,12 @@
     "vi": "điều kiện hết hạn ngạch đổi mã mỗi giờ"
   },
   "time_not_in_weekday": {
-    "en": "time not in weekday",
-    "vi": "thời gian không phải trong ngày trong tuần"
+    "en": "Time not in weekday",
+    "vi": "Thời gian không phải trong ngày trong tuần"
   },
   "time_not_in_day_of_month": {
-    "en": "time not in day of month",
-    "vi": "thời gian không phải ngày trong tháng"
+    "en": "Time not in day of month",
+    "vi": "Thời gian không phải ngày trong tháng"
   },
   "voucher_not_exists": {
     "en": "voucher not exists",
@@ -725,7 +565,7 @@
   },
   "partner_id_invalid": {
     "en": "partner id invalid",
-    "vi": "id đối tác không hợp lệ"
+    "vi": "Mã đối tác không hợp lệ"
   },
   "not_found_score": {
     "en": "Not found score",
@@ -735,33 +575,21 @@
     "en": "Not found voucher",
     "vi": "Không tìm thấy ưu đãi"
   },
-  "partner_type_invalid": {
-    "en": "partner type invalid",
-    "vi": "loại đối tác không hợp lệ"
-  },
-  "secret_not_match": {
-    "en": "secret not match",
-    "vi": "bí mật không khớp"
-  },
   "redeem_type_invalid": {
-    "en": "redeem type invalid",
-    "vi": "đổi loại không hợp lệ"
+    "en": "Redeem type invalid",
+    "vi": "Đổi loại không hợp lệ"
   },
   "voucher_code_error": {
     "en": "voucher code Error",
-    "vi": "Lỗi mã chứng từ"
+    "vi": "Mã chứng từ"
   },
   "invalid_voucher_duration": {
     "en": "Invalid voucher duration",
-    "vi": "thời hạn phiếu thưởng không hợp lệ"
+    "vi": "Thời hạn phiếu thưởng không hợp lệ"
   },
   "not_found_code_info": {
     "en": "Not found code info",
     "vi": "Không tìm thấy thông tin mã"
-  },
-  "persence_value_lower_than_100": {
-    "en": "persence value lower than 100",
-    "vi": "giá trị kiên trì thấp hơn 100"
   },
   "not_found_url": {
     "en": "Not found url",
@@ -771,13 +599,9 @@
     "en": "Not found action",
     "vi": "Không tìm thấy hành động"
   },
-  "partner_type_not_valid": {
-    "en": "partner type not valid",
-    "vi": "loại đối tác không hợp lệ"
-  },
   "total_bill_not_enough_for_apply_voucher": {
-    "en": "total bill not enough for apply voucher",
-    "vi": "tổng hóa đơn không đủ để áp dụng ưu đãi"
+    "en": "Total bill not enough for apply voucher",
+    "vi": "Tổng hóa đơn không đủ để áp dụng ưu đãi"
   },
   "not_found_from_day": {
     "en": "Not found from day",
@@ -791,26 +615,6 @@
     "en": "Not found to day",
     "vi": "Không tìm thấy cho đến ngày"
   },
-  "not_found_creator": {
-    "en": "Not found creator",
-    "vi": "Không tìm thấy người sáng tạo"
-  },
-  "invalid_start_mins_to_mins": {
-    "en": "Invalid start mins to mins",
-    "vi": "phút bắt đầu không hợp lệ đến phút"
-  },
-  "state_not_active": {
-    "en": "state not active",
-    "vi": "trạng thái không hoạt động"
-  },
-  "campaign_start_minutes_not_time_yet": {
-    "en": "campaign start minutes not time yet",
-    "vi": "phút bắt đầu chiến dịch chưa đến giờ"
-  },
-  "campaign_end_minutes_over": {
-    "en": "campaign end minutes over",
-    "vi": "phút kết thúc chiến dịch đã qua"
-  },
   "campaign_from_day_not_time_yet": {
     "en": "campaign from day not time yet",
     "vi": "chiến dịch từ ngày chưa đến giờ"
@@ -823,13 +627,9 @@
     "en": "Not found user",
     "vi": "Không tìm thấy người dùng"
   },
-  "your_request_very_fast": {
-    "en": "your request very fast",
-    "vi": "yêu cầu của bạn quá nhanh"
-  },
   "update_nothing_affects": {
-    "en": "update nothing affects",
-    "vi": "cập nhật không có gì ảnh hưởng"
+    "en": "Update nothing affects",
+    "vi": "Cập nhật không có gì ảnh hưởng"
   },
   "can_not_insert": {
     "en": "Can not insert",
@@ -839,25 +639,33 @@
     "en": "Can not delete",
     "vi": "Không thể xóa"
   },
+  "invalid_state": {
+    "en": "Invalid state",
+    "vi": "Trạng thái không hợp lệ"
+  },
+  "invalid_event": {
+    "en": "Invalid event",
+    "vi": "Sự kiện không hợp lệ"
+  },
   "time_invalid_start_at": {
-    "en": "time invalid start at",
-    "vi": "thời gian bắt đầu của ưu đãi không hợp lệ"
+    "en": "Time invalid start at",
+    "vi": "Thời gian bắt đầu của ưu đãi không hợp lệ"
   },
   "time_invalid_end_at": {
-    "en": "time invalid end at",
+    "en": "Time invalid end at",
     "vi": "ưu đãi đã hết hạn"
   },
   "time_invalid_during_start": {
-    "en": "time invalid during start",
-    "vi": "thời gian không hợp lệ khi bắt đầu"
+    "en": "Time invalid during start",
+    "vi": "Thời gian không hợp lệ khi bắt đầu"
   },
   "time_invalid_during_end": {
-    "en": "time invalid during end",
-    "vi": "thời gian không hợp lệ trong thời gian kết thúc"
+    "en": "Time invalid during end",
+    "vi": "Thời gian không hợp lệ trong thời gian kết thúc"
   },
   "invalid_applicable_store": {
     "en": "Invalid applicable store",
-    "vi": "cửa hàng áp dụng không hợp lệ"
+    "vi": "Cửa hàng áp dụng không hợp lệ"
   },
   "not_found_redeem_by": {
     "en": "Not found redeem by",
@@ -868,8 +676,8 @@
     "vi": "Không tìm thấy phiếu thưởng người dùng"
   },
   "voucher_invalid": {
-    "en": "voucher_invalid",
-    "vi": "ưu đãi không hợp lệ"
+    "en": "Voucher_invalid",
+    "vi": "Ưu đãi không hợp lệ"
   },
   "invalid_voucher_type": {
     "en": "Invalid voucher type",
@@ -880,7 +688,7 @@
     "vi": "Tài khoản đối soát không thuộc Đối tác cung cấp voucher này!"
   },
   "not_found_store": {
-    "en": "cannot find the store",
+    "en": "Cannot find the store",
     "vi": "Không tìm thấy cửa hàng"
   },
   "not_found_raw_voucher": {
@@ -888,8 +696,8 @@
     "vi": "Không tìm thấy chứng từ thô"
   },
   "partner_is_not_pusher": {
-    "en": "partner is not pusher",
-    "vi": "đối tác không phải là người thúc đẩy"
+    "en": "Partner is not pusher",
+    "vi": "Đối tác không phải là người thúc đẩy"
   },
   "app_id_is_incorrect": {
     "en": "app_id is incorrect",
@@ -905,15 +713,15 @@
   },
   "access_is_denied": {
     "en": "access is denied",
-    "vi": "truy cập bị từ chối"
+    "vi": "Truy cập bị từ chối"
   },
   "can_not_pay_voucher": {
     "en": "Can not pay voucher",
-    "vi": " lỗi đổi ưu đãi"
+    "vi": "Không thể đổi ưu đãi"
   },
   "your_budget_is_not_enough": {
-    "en": "your budget is not enough",
-    "vi": "hạn mức của bạn không đủ"
+    "en": "Your budget is not enough",
+    "vi": "Hạn mức của bạn không đủ"
   },
   "brand_alt_id_cannot_empty": {
     "en": "brand_alt_id cannot empty",
@@ -1014,5 +822,53 @@
   "bad_request": {
     "en": "Bad request",
     "vi": "Yêu cầu không hợp lệ"
-  }
+  },
+  "invalid_signature": {
+    "en": "Invalid signature",
+    "vi": "Chữ ký không hợp lệ"
+  },
+  "phone_number_or_email_is_incorrect": {
+    "en": "Phone number or email is incorrect",
+    "vi": "Số điện thoại hoặc email không đúng"
+  },
+  "password_is_incorrect": {
+    "en": "Password is incorrect",
+    "vi": "Mật khẩu không đúng"
+  },
+  "not_found_password": {
+    "en": "Not found password",
+    "vi": "Không tìm thấy mật khẩu"
+  },
+  "invalid_order_detail": {
+    "en": "Invalid order detail",
+    "vi": "Chi tiết đơn hàng không hợp lệ"
+  },
+  "invalid_amount": {
+    "en": "Invalid amount",
+    "vi": "Số lượng không hợp lệ"
+  },
+  "negative_amount": {
+    "en": "Negative amount",
+    "vi": "Số lượng âm"
+  },
+  "positive_amount": {
+    "en": "Positive amount",
+    "vi": "Số lượng dương"
+  },
+  "invalid_price": {
+    "en": "Invalid price",
+    "vi": "Giá không hợp lệ"
+  },
+  "invalid_weight": {
+    "en": "Invalid weight",
+    "vi": "Trọng lượng không hợp lệ"
+  },
+  "invalid_name": {
+    "en": "Invalid name",
+    "vi": "Tên không hợp lệ"
+  },
+  "invalid_product_type_id": {
+    "en": "Invalid product type id",
+    "vi": "Mã loại sản phẩm không hợp lệ"
+  },
 }
