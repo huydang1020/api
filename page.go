@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"log"
 	"sort"
 
@@ -19,7 +20,7 @@ func (r *Router) handleListPageByPermission(ctx *gin.Context) {
 	if exist {
 		uidStr, ok := uid.(string)
 		if !ok {
-			ctx.JSON(400, &Response{Code: -1, Message: "invalid user_id"})
+			utils.HandleError(LangMapping, ctx, errors.New(utils.E_invalid_user))
 			return
 		}
 		user, err := r.userSer.GetUser(c, &upb.UserRequest{Id: uidStr})
@@ -32,7 +33,7 @@ func (r *Router) handleListPageByPermission(ctx *gin.Context) {
 	log.Println("req", req)
 	pages, err := r.permSer.ListPages(c, req)
 	if err != nil {
-		ctx.JSON(500, &Response{Code: -1, Message: err.Error()})
+		utils.HandleError(LangMapping, ctx, err)
 		return
 	}
 	// log.Println("pages", pages)
@@ -49,12 +50,12 @@ func (r *Router) handleListPage(ctx *gin.Context) {
 	if exist {
 		uidStr, ok := uid.(string)
 		if !ok {
-			ctx.JSON(400, &Response{Code: -1, Message: "invalid user_id"})
+			utils.HandleError(LangMapping, ctx, errors.New(utils.E_invalid_user))
 			return
 		}
 		user, err := r.userSer.GetUser(c, &upb.UserRequest{Id: uidStr})
 		if err != nil {
-			ctx.JSON(400, &Response{Code: -1, Message: utils.E_access_denied})
+			utils.HandleError(LangMapping, ctx, errors.New(utils.E_access_denied))
 			return
 		}
 		req.RoleId = user.GetRoleId()
@@ -62,7 +63,7 @@ func (r *Router) handleListPage(ctx *gin.Context) {
 	log.Println("req", req)
 	pages, err := r.permSer.ListPages(c, req)
 	if err != nil {
-		ctx.JSON(500, &Response{Code: -1, Message: err.Error()})
+		utils.HandleError(LangMapping, ctx, err)
 		return
 	}
 	for _, p := range pages.Pages {
@@ -112,7 +113,7 @@ func (r *Router) handleGetPage(ctx *gin.Context) {
 	id := ctx.Param("id")
 	page, err := r.permSer.GetPage(c, &ppb.PageRequest{Id: id})
 	if err != nil {
-		ctx.JSON(500, &Response{Code: -1, Message: err.Error()})
+		utils.HandleError(LangMapping, ctx, err)
 		return
 	}
 	ctx.JSON(200, &Response{Code: 0, Message: "success", Data: page})
@@ -125,7 +126,7 @@ func (r *Router) handleCreatePage(ctx *gin.Context) {
 	ctx.ShouldBindJSON(req)
 	_, err := r.permSer.CreatePage(c, req)
 	if err != nil {
-		ctx.JSON(500, &Response{Code: -1, Message: err.Error()})
+		utils.HandleError(LangMapping, ctx, err)
 		return
 	}
 	ctx.JSON(200, &Response{Code: 0, Message: "success"})
@@ -140,7 +141,7 @@ func (r *Router) handleUpdatePage(ctx *gin.Context) {
 	req.Id = id
 	_, err := r.permSer.UpdatePage(c, req)
 	if err != nil {
-		ctx.JSON(500, &Response{Code: -1, Message: err.Error()})
+		utils.HandleError(LangMapping, ctx, err)
 		return
 	}
 	ctx.JSON(200, &Response{Code: 0, Message: "success"})
@@ -152,7 +153,7 @@ func (r *Router) handleDeletePage(ctx *gin.Context) {
 	id := ctx.Param("id")
 	_, err := r.permSer.DeletePage(c, &ppb.Page{Id: id})
 	if err != nil {
-		ctx.JSON(500, &Response{Code: -1, Message: err.Error()})
+		utils.HandleError(LangMapping, ctx, err)
 		return
 	}
 	ctx.JSON(200, &Response{Code: 0, Message: "success"})

@@ -20,17 +20,17 @@ func (r *Router) handleSignInAdmin(ctx *gin.Context) {
 	ctx.ShouldBindJSON(req)
 	resp, err := r.userSer.SignIn(c, req)
 	if err != nil {
-		ctx.JSON(500, &Response{Code: -1, Message: err.Error()})
+		utils.HandleError(LangMapping, ctx, err)
 		return
 	}
 	role, err := r.permSer.GetRole(c, &permpb.RoleRequest{Id: resp.GetUser().GetRoleId()})
 	if err != nil {
-		ctx.JSON(500, &Response{Code: -1, Message: err.Error()})
+		utils.HandleError(LangMapping, ctx, err)
 		return
 	}
 	pages, err := r.permSer.ListPages(c, &permpb.PageRequest{RoleId: role.GetId()})
 	if err != nil {
-		ctx.JSON(500, &Response{Code: -1, Message: err.Error()})
+		utils.HandleError(LangMapping, ctx, err)
 		return
 	}
 	menu := SortPage(pages)
@@ -49,7 +49,7 @@ func (r *Router) handleGetListUser(ctx *gin.Context) {
 	utils.BindQuery(req, ctx)
 	users, err := r.userSer.ListUsers(c, req)
 	if err != nil {
-		ctx.JSON(500, &Response{Code: -1, Message: err.Error()})
+		utils.HandleError(LangMapping, ctx, err)
 		return
 	}
 	ctx.JSON(200, &Response{Code: 0, Message: "success", Data: users})
@@ -61,7 +61,7 @@ func (r *Router) handleGetUser(ctx *gin.Context) {
 	id := ctx.Param("id")
 	user, err := r.userSer.GetUser(c, &userpb.UserRequest{Id: id})
 	if err != nil {
-		ctx.JSON(500, &Response{Code: -1, Message: err.Error()})
+		utils.HandleError(LangMapping, ctx, err)
 		return
 	}
 	ctx.JSON(200, &Response{Code: 0, Message: "success", Data: user})
@@ -74,7 +74,7 @@ func (r *Router) handleCreateUser(ctx *gin.Context) {
 	ctx.ShouldBindJSON(req)
 	_, err := r.userSer.CreateUser(c, req)
 	if err != nil {
-		ctx.JSON(500, &Response{Code: -1, Message: err.Error()})
+		utils.HandleError(LangMapping, ctx, err)
 		return
 	}
 	ctx.JSON(200, &Response{Code: 0, Message: "success"})
@@ -89,7 +89,7 @@ func (r *Router) handleUpdateUser(ctx *gin.Context) {
 	req.Id = id
 	_, err := r.userSer.UpdateUser(c, req)
 	if err != nil {
-		ctx.JSON(500, &Response{Code: -1, Message: err.Error()})
+		utils.HandleError(LangMapping, ctx, err)
 		return
 	}
 	ctx.JSON(200, &Response{Code: 0, Message: "success"})
@@ -101,7 +101,7 @@ func (r *Router) handleDeleteUser(ctx *gin.Context) {
 	id := ctx.Param("id")
 	_, err := r.userSer.DeleteUser(c, &userpb.User{Id: id})
 	if err != nil {
-		ctx.JSON(500, &Response{Code: -1, Message: err.Error()})
+		utils.HandleError(LangMapping, ctx, err)
 		return
 	}
 	ctx.JSON(200, &Response{Code: 0, Message: "success"})

@@ -4,11 +4,15 @@ import (
 	"context"
 	"encoding/json"
 	"log"
+	"net/http"
+	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/schema"
+	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
+	"google.golang.org/grpc/status"
 )
 
 var decoder = schema.NewDecoder()
@@ -20,6 +24,25 @@ func init() {
 type Map = map[string]interface{}
 
 type MapString = map[string]string
+
+type LangCode struct {
+	Vi string `json:"vi"`
+	En string `json:"en"`
+}
+
+type ErrMsg struct {
+	Code    int    `json:"code"`
+	Message string `json:"message"`
+}
+
+var mErrs = map[codes.Code]int{
+	codes.OK:               http.StatusOK,
+	codes.InvalidArgument:  http.StatusBadRequest,
+	codes.NotFound:         http.StatusNotFound,
+	codes.Internal:         http.StatusInternalServerError,
+	codes.Unauthenticated:  http.StatusUnauthorized,
+	codes.PermissionDenied: http.StatusUnauthorized,
+}
 
 func MakeContext(sec int, claims interface{}) (context.Context, context.CancelFunc) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(sec)*time.Second)
@@ -56,4 +79,27 @@ func ConvertUnixToDateTime(format string, t int64) (string, error) {
 	}
 	formattedDate := time.Unix(t, 0).In(location).Format(format)
 	return formattedDate, nil
+}
+
+func HandleError(mLangs map[string]LangCode, ctx *gin.Context, err error) {
+	s := status.Convert(err)
+	statusCode := 200
+	lang := ctx.GetHeader("Accept-Language")
+	if strings.Contains(lang, "en-US") {
+		if data, ok := mLangs[s.Message()]; ok {
+			ctx.JSON(statusCode, ErrMsg{Code: -1, Message: data.En})
+			return
+		} else {
+			ctx.JSON(statusCode, ErrMsg{Code: -1, Message: "An error occurred"})
+			return
+		}
+	} else {
+		if data, ok := mLangs[s.Message()]; ok {
+			ctx.JSON(statusCode, ErrMsg{Code: -1, Message: data.Vi})
+			return
+		} else {
+			ctx.JSON(statusCode, ErrMsg{Code: -1, Message: "Có lỗi xảy ra"})
+			return
+		}
+	}
 }

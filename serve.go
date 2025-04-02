@@ -2,18 +2,22 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"log"
+	"os"
 	"strconv"
 	"time"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/go-redis/redis/v8"
+	"github.com/huyshop/api/utils"
 	permpb "github.com/huyshop/header/permission"
 	userpb "github.com/huyshop/header/user"
 	"go.elastic.co/apm/module/apmgin"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 )
 
 type Router struct {
@@ -25,10 +29,28 @@ type Router struct {
 
 func init() {
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
+	loadErrorCodes()
+}
+
+var LangMapping map[string]utils.LangCode
+
+func loadErrorCodes() {
+	bin, err := os.ReadFile("assets/errors.json")
+	if err != nil {
+		panic(err)
+	}
+	errorCodes := make(map[string]utils.LangCode)
+	if err := json.Unmarshal(bin, &errorCodes); err != nil {
+		panic(err)
+	}
+	LangMapping = errorCodes
 }
 
 func (r *Router) dialPerm(target string) error {
-	client, err := grpc.Dial(target, grpc.WithInsecure(), grpc.WithDefaultServiceConfig(`{"loadBalancingPolicy":"round_robin"}`))
+	client, err := grpc.Dial(target,
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
+		grpc.WithDefaultServiceConfig(`{"loadBalancingPolicy":"round_robin"}`),
+	)
 	if err != nil {
 		return err
 	}
@@ -37,7 +59,10 @@ func (r *Router) dialPerm(target string) error {
 }
 
 func (r *Router) dialUser(target string) error {
-	client, err := grpc.Dial(target, grpc.WithInsecure(), grpc.WithDefaultServiceConfig(`{"loadBalancingPolicy":"round_robin"}`))
+	client, err := grpc.Dial(target,
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
+		grpc.WithDefaultServiceConfig(`{"loadBalancingPolicy":"round_robin"}`),
+	)
 	if err != nil {
 		return err
 	}
