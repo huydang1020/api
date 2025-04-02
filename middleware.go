@@ -19,7 +19,7 @@ func authMiddleware(r *Router) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		tokenString := c.GetHeader("access-token")
 		if tokenString == "" {
-			utils.HandleError(LangMapping, c, fmt.Errorf(utils.E_unauthorized))
+			utils.HandleError(LangMappingErr, c, fmt.Errorf(utils.E_unauthorized))
 			c.Abort()
 			return
 		}
@@ -28,7 +28,7 @@ func authMiddleware(r *Router) gin.HandlerFunc {
 		})
 		claims, ok := token.Claims.(*jt.JWTClaim)
 		if !ok {
-			utils.HandleError(LangMapping, c, fmt.Errorf(utils.E_invalid_token))
+			utils.HandleError(LangMappingErr, c, fmt.Errorf(utils.E_invalid_token))
 			c.Abort()
 			return
 		}
@@ -40,25 +40,25 @@ func authMiddleware(r *Router) gin.HandlerFunc {
 					defer cancel()
 					refreshToken, err := r.cache.Get(ctx, keyRedis).Result()
 					if err == redis.Nil || err != nil {
-						utils.HandleError(LangMapping, c, fmt.Errorf(utils.E_invalid_token))
+						utils.HandleError(LangMappingErr, c, fmt.Errorf(utils.E_invalid_token))
 						c.Abort()
 						return
 					}
 					if refreshToken == "" {
-						utils.HandleError(LangMapping, c, fmt.Errorf(utils.E_invalid_token))
+						utils.HandleError(LangMappingErr, c, fmt.Errorf(utils.E_invalid_token))
 						c.Abort()
 						return
 					}
 					validRefreshToken, err := jt.ValidateRefreshToken(refreshToken, config.JwtSecretKey)
 					if err != nil {
-						utils.HandleError(LangMapping, c, fmt.Errorf(utils.E_invalid_token))
+						utils.HandleError(LangMappingErr, c, fmt.Errorf(utils.E_invalid_token))
 						c.Abort()
 						return
 					}
 					exprAct, _ := strconv.Atoi(os.Getenv("JWT_EXPIRE_ACCESS_TOKEN"))
 					newToken, err := jt.GenerateAccessToken(validRefreshToken.UserId, validRefreshToken.RoleId, time.Duration(exprAct), config.JwtSecretKey)
 					if err != nil {
-						utils.HandleError(LangMapping, c, fmt.Errorf(utils.E_invalid_token))
+						utils.HandleError(LangMappingErr, c, fmt.Errorf(utils.E_invalid_token))
 						c.Abort()
 						return
 					}
@@ -69,11 +69,11 @@ func authMiddleware(r *Router) gin.HandlerFunc {
 				}
 			}
 			if err == jwt.ErrSignatureInvalid {
-				utils.HandleError(LangMapping, c, fmt.Errorf(utils.E_unauthorized))
+				utils.HandleError(LangMappingErr, c, fmt.Errorf(utils.E_unauthorized))
 				c.Abort()
 				return
 			}
-			utils.HandleError(LangMapping, c, fmt.Errorf(utils.E_bad_request))
+			utils.HandleError(LangMappingErr, c, fmt.Errorf(utils.E_bad_request))
 			c.Abort()
 			return
 		}
@@ -82,7 +82,7 @@ func authMiddleware(r *Router) gin.HandlerFunc {
 			c.Set("user_id", claims.UserId)
 			c.Next()
 		} else {
-			utils.HandleError(LangMapping, c, fmt.Errorf(utils.E_unauthorized))
+			utils.HandleError(LangMappingErr, c, fmt.Errorf(utils.E_unauthorized))
 			c.Abort()
 			return
 		}

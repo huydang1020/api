@@ -30,9 +30,11 @@ type Router struct {
 func init() {
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
 	loadErrorCodes()
+	loadSuccessCodes()
 }
 
-var LangMapping map[string]utils.LangCode
+var LangMappingErr map[string]utils.LangCode
+var LangMappingSuccess map[string]utils.LangCode
 
 func loadErrorCodes() {
 	bin, err := os.ReadFile("assets/errors.json")
@@ -43,7 +45,19 @@ func loadErrorCodes() {
 	if err := json.Unmarshal(bin, &errorCodes); err != nil {
 		panic(err)
 	}
-	LangMapping = errorCodes
+	LangMappingErr = errorCodes
+}
+
+func loadSuccessCodes() {
+	bin, err := os.ReadFile("assets/success.json")
+	if err != nil {
+		panic(err)
+	}
+	successCodes := make(map[string]utils.LangCode)
+	if err := json.Unmarshal(bin, &successCodes); err != nil {
+		panic(err)
+	}
+	LangMappingSuccess = successCodes
 }
 
 func (r *Router) dialPerm(target string) error {

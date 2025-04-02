@@ -77,7 +77,7 @@
   },
   "error_invalid_permissions_role_not_found": {
     "en": "invalid permissions role not found",
-    "vi": "Không tìm thấy vai trò quyền không hợp lệ"
+    "vi": "Không tìm thấy quyền không hợp lệ"
   },
   "error_invalid_permissions": {
     "en": "invalid permissions existed",
@@ -85,11 +85,11 @@
   },
   "error_not_found_role": {
     "en": "Not found role",
-    "vi": "Không tìm thấy vai trò"
+    "vi": "Không tìm thấy quyền"
   },
-  "error_not_found_role_id": {
+  "not_found_role_id": {
     "en": "Not found role id",
-    "vi": "Không tìm thấy mã vai trò"
+    "vi": "Không tìm thấy mã quyền"
   },
   "error_not_found_permission": {
     "en": "Not found permission",

@@ -35,6 +35,12 @@ type ErrMsg struct {
 	Message string `json:"message"`
 }
 
+type Response struct {
+	Code    int         `json:"code"` // 0: success, -1: error
+	Message string      `json:"message"`
+	Data    interface{} `json:"data,omitempty"`
+}
+
 var mErrs = map[codes.Code]int{
 	codes.OK:               http.StatusOK,
 	codes.InvalidArgument:  http.StatusBadRequest,
@@ -99,6 +105,24 @@ func HandleError(mLangs map[string]LangCode, ctx *gin.Context, err error) {
 			return
 		} else {
 			ctx.JSON(statusCode, ErrMsg{Code: -1, Message: "Có lỗi xảy ra"})
+			return
+		}
+	}
+}
+
+func HandleSuccess(mLangs map[string]LangCode, ctx *gin.Context, resp *Response) {
+	statusCode := 200
+	lang := ctx.GetHeader("Accept-Language")
+	if strings.Contains(lang, "en-US") {
+		if data, ok := mLangs[resp.Message]; ok {
+			resp.Message = data.En
+			ctx.JSON(statusCode, resp)
+			return
+		}
+	} else {
+		if data, ok := mLangs[resp.Message]; ok {
+			resp.Message = data.Vi
+			ctx.JSON(statusCode, resp)
 			return
 		}
 	}

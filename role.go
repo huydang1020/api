@@ -13,10 +13,10 @@ func (r *Router) handleListRole(ctx *gin.Context) {
 	utils.BindQuery(req, ctx)
 	roles, err := r.permSer.ListRoles(c, req)
 	if err != nil {
-		utils.HandleError(LangMapping, ctx, err)
+		utils.HandleError(LangMappingErr, ctx, err)
 		return
 	}
-	ctx.JSON(200, &Response{Code: 0, Message: "success", Data: roles})
+	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: roles})
 }
 
 func (r *Router) handleGetRole(ctx *gin.Context) {
@@ -25,10 +25,10 @@ func (r *Router) handleGetRole(ctx *gin.Context) {
 	id := ctx.Param("id")
 	role, err := r.permSer.GetRole(c, &ppb.RoleRequest{Id: id})
 	if err != nil {
-		utils.HandleError(LangMapping, ctx, err)
+		utils.HandleError(LangMappingErr, ctx, err)
 		return
 	}
-	ctx.JSON(200, &Response{Code: 0, Message: "success", Data: role})
+	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: role})
 }
 
 func (r *Router) handleCreateRole(ctx *gin.Context) {
@@ -38,10 +38,10 @@ func (r *Router) handleCreateRole(ctx *gin.Context) {
 	ctx.ShouldBindJSON(req)
 	_, err := r.permSer.CreateRole(c, req)
 	if err != nil {
-		utils.HandleError(LangMapping, ctx, err)
+		utils.HandleError(LangMappingErr, ctx, err)
 		return
 	}
-	ctx.JSON(200, &Response{Code: 0, Message: "success"})
+	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success"})
 }
 
 func (r *Router) handleUpdateRole(ctx *gin.Context) {
@@ -53,10 +53,10 @@ func (r *Router) handleUpdateRole(ctx *gin.Context) {
 	req.Id = id
 	_, err := r.permSer.UpdateRole(c, req)
 	if err != nil {
-		utils.HandleError(LangMapping, ctx, err)
+		utils.HandleError(LangMappingErr, ctx, err)
 		return
 	}
-	ctx.JSON(200, &Response{Code: 0, Message: "success"})
+	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success"})
 }
 
 func (r *Router) handleDeleteRole(ctx *gin.Context) {
@@ -65,8 +65,8 @@ func (r *Router) handleDeleteRole(ctx *gin.Context) {
 	id := ctx.Param("id")
 	_, err := r.permSer.DeleteRole(c, &ppb.Role{Id: id})
 	if err != nil {
-		utils.HandleError(LangMapping, ctx, err)
+		utils.HandleError(LangMappingErr, ctx, err)
 		return
 	}
-	ctx.JSON(200, &Response{Code: 0, Message: "success"})
+	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success"})
 }
