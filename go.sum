@@ -86,6 +86,8 @@ github.com/huyshop/header v0.0.16 h1:blWXbPrtZudKvWMEQdsLl/vf2/bNEtfoNjaO+C9jGxw
 github.com/huyshop/header v0.0.16/go.mod h1:nvdjSbW7OGaqge6xfn/HPHbEJbtmCTcnzBqShjNJHTE=
 github.com/huyshop/header v0.0.18 h1:eJGikbrKRG8FL4cCRG9gWuqGx1KeDXJLQpOEbk9q9+A=
 github.com/huyshop/header v0.0.18/go.mod h1:nvdjSbW7OGaqge6xfn/HPHbEJbtmCTcnzBqShjNJHTE=
+github.com/huyshop/header v0.0.20 h1:64p5OIoOelzu5AY0jaa/PHlJ3ejAK2Df7tbZIbQQ8bM=
+github.com/huyshop/header v0.0.20/go.mod h1:nvdjSbW7OGaqge6xfn/HPHbEJbtmCTcnzBqShjNJHTE=
 github.com/jcchavezs/porto v0.1.0 h1:Xmxxn25zQMmgE7/yHYmh19KcItG81hIwfbEEFnd6w/Q=
 github.com/jcchavezs/porto v0.1.0/go.mod h1:fESH0gzDHiutHRdX2hv27ojnOVFco37hg1W6E9EZF4A=
 github.com/jessevdk/go-flags v1.4.0/go.mod h1:4FA24M0QyGHXBuZZK/XkWh8h0e1EYbRYJSGM75WSRxI=
