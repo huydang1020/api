@@ -127,10 +127,6 @@
     "en": "Invalid signature",
     "vi": "Chữ ký không hợp lệ"
   },
-  "phone_number_or_email_is_incorrect": {
-    "en": "Phone number or email is incorrect",
-    "vi": "Số điện thoại hoặc email không đúng"
-  },
   "password_is_incorrect": {
     "en": "Password is incorrect",
     "vi": "Mật khẩu không đúng"
@@ -142,5 +138,13 @@
   "invalid_name": {
     "en": "Invalid name",
     "vi": "Tên không hợp lệ"
+  },
+  "not_found_username": {
+    "en": "Not found username",
+    "vi": "Không tìm thấy tên người dùng"
+  },
+  "E_username_is_incorrect": {
+    "en": "Username is incorrect",
+    "vi": "Tên người dùng không đúng"
   }
 }

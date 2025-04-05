@@ -27,7 +27,7 @@ require (
 	github.com/cloudwego/base64x v0.1.4 // indirect
 	github.com/cloudwego/iasm v0.2.0 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.5 // indirect
-	github.com/dgrijalva/jwt-go v3.2.0+incompatible // indirect
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/elastic/go-licenser v0.3.1 // indirect
 	github.com/elastic/go-sysinfo v1.1.1 // indirect
 	github.com/elastic/go-windows v1.0.0 // indirect
