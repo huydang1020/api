@@ -46,20 +46,20 @@ func (r *Router) handleListPage(ctx *gin.Context) {
 	defer cancel()
 	req := &ppb.PageRequest{}
 	utils.BindQuery(req, ctx)
-	uid, exist := ctx.Get("user_id")
-	if exist {
-		uidStr, ok := uid.(string)
-		if !ok {
-			utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_invalid_user))
-			return
-		}
-		user, err := r.userSer.GetUser(c, &upb.UserRequest{Id: uidStr})
-		if err != nil {
-			utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_access_denied))
-			return
-		}
-		req.RoleId = user.GetRoleId()
-	}
+	// uid, exist := ctx.Get("user_id")
+	// if exist {
+	// 	uidStr, ok := uid.(string)
+	// 	if !ok {
+	// 		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_invalid_user))
+	// 		return
+	// 	}
+	// 	user, err := r.userSer.GetUser(c, &upb.UserRequest{Id: uidStr})
+	// 	if err != nil {
+	// 		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_access_denied))
+	// 		return
+	// 	}
+	// 	req.RoleId = user.GetRoleId()
+	// }
 	pages, err := r.permSer.ListPages(c, req)
 	if err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
