@@ -2,8 +2,11 @@ package main
 
 func (r *Router) mappingRouterAdmin() {
 
-	r.route.POST("/api/admin/sign-in", r.handleSignInAdmin)
+	r.route.POST("/api/admin/user/sign-in", r.handleSignInAdmin)
 	r1 := r.route.Group("/api/admin", authMiddleware(r))
+
+
+	r1.GET("/user/page", r.handleListUserPage)
 
 	// user
 	r1.GET("/user", r.handleGetListUser)
@@ -19,9 +22,10 @@ func (r *Router) mappingRouterAdmin() {
 	r1.PUT("/role/:id", r.handleUpdateRole)
 	r1.DELETE("/role/:id", r.handleDeleteRole)
 
+
+
 	// page
-	r1.GET("/get-pages", r.handleListPageByPermission)
-	r1.GET("/list-pages", r.handleListPage)
+	r1.GET("/page", r.handleListPage)
 	r1.POST("/page", r.handleCreatePage)
 	r1.GET("/page/:id", r.handleGetPage)
 	r1.PUT("/page/:id", r.handleUpdatePage)

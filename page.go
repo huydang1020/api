@@ -11,7 +11,7 @@ import (
 	upb "github.com/huyshop/header/user"
 )
 
-func (r *Router) handleListPageByPermission(ctx *gin.Context) {
+func (r *Router) handleListUserPage(ctx *gin.Context) {
 	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
 	defer cancel()
 	req := &ppb.PageRequest{}

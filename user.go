@@ -30,9 +30,9 @@ func (r *Router) handleSignInAdmin(ctx *gin.Context) {
 	menu := SortPage(pages)
 
 	// Gán lại quyền cho user
-	role.Permission = menu
+	role.Page = menu
 	resp.User.Role = role
-	resp.User.Permissions = menu
+	resp.User.Pages = menu
 	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: resp})
 }
 
