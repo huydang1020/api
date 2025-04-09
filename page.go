@@ -60,6 +60,10 @@ func (r *Router) handleListPage(ctx *gin.Context) {
 	// 	}
 	// 	req.RoleId = user.GetRoleId()
 	// }
+	if err := r.isCanBeAccess(c, ctx, "page", "r"); err != nil {
+		utils.HandleError(LangMappingErr, ctx, err)
+		return
+	}
 	pages, err := r.permSer.ListPages(c, req)
 	if err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
@@ -107,8 +111,14 @@ func (r *Router) handleGetPage(ctx *gin.Context) {
 	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
 	defer cancel()
 	id := ctx.Param("id")
+	if err := r.isCanBeAccess(c, ctx, "page", "r"); err != nil {
+		log.Println("err", err)
+		utils.HandleError(LangMappingErr, ctx, err)
+		return
+	}
 	page, err := r.permSer.GetPage(c, &ppb.PageRequest{Id: id})
 	if err != nil {
+		log.Println("err", err)
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
 	}
@@ -120,6 +130,11 @@ func (r *Router) handleCreatePage(ctx *gin.Context) {
 	defer cancel()
 	req := &ppb.Page{}
 	ctx.ShouldBindJSON(req)
+	if err := r.isCanBeAccess(c, ctx, "page", "c"); err != nil {
+		log.Println("err", err)
+		utils.HandleError(LangMappingErr, ctx, err)
+		return
+	}
 	_, err := r.permSer.CreatePage(c, req)
 	if err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
@@ -134,6 +149,10 @@ func (r *Router) handleUpdatePage(ctx *gin.Context) {
 	id := ctx.Param("id")
 	req := &ppb.Page{}
 	ctx.ShouldBindJSON(req)
+	if err := r.isCanBeAccess(c, ctx, "page", "u"); err != nil {
+		utils.HandleError(LangMappingErr, ctx, err)
+		return
+	}
 	req.Id = id
 	_, err := r.permSer.UpdatePage(c, req)
 	if err != nil {
@@ -147,6 +166,10 @@ func (r *Router) handleDeletePage(ctx *gin.Context) {
 	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
 	defer cancel()
 	id := ctx.Param("id")
+	if err := r.isCanBeAccess(c, ctx, "page", "d"); err != nil {
+		utils.HandleError(LangMappingErr, ctx, err)
+		return
+	}
 	_, err := r.permSer.DeletePage(c, &ppb.Page{Id: id})
 	if err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)

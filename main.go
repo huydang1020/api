@@ -21,6 +21,9 @@ type Configs struct {
 	RedisAddr      string
 	RedisPassword  string
 	RedisDb        string
+	CloundName     string
+	CloundApiKey   string
+	CloundSecret   string
 }
 
 var config *Configs
@@ -39,6 +42,9 @@ func init() {
 		RedisAddr:      os.Getenv("REDIS_ADDR"),
 		RedisPassword:  os.Getenv("REDIS_PASSWORD"),
 		RedisDb:        os.Getenv("REDIS_DB"),
+		CloundName:     os.Getenv("CLOUD_NAME"),
+		CloundApiKey:   os.Getenv("CLOUD_API_KEY"),
+		CloundSecret:   os.Getenv("CLOUD_SECRET"),
 	}
 }
 

@@ -64,6 +64,7 @@ func authMiddleware(r *Router) gin.HandlerFunc {
 					}
 					c.Header("access-token", newToken)
 					c.Set("user_id", claims.UserId)
+					c.Set("role_id", claims.RoleId)
 					c.Next()
 					return
 				}
@@ -80,6 +81,7 @@ func authMiddleware(r *Router) gin.HandlerFunc {
 
 		if claims, ok := token.Claims.(*jt.JWTClaim); ok && token.Valid {
 			c.Set("user_id", claims.UserId)
+			c.Set("role_id", claims.RoleId)
 			c.Next()
 		} else {
 			utils.HandleError(LangMappingErr, c, fmt.Errorf(utils.E_unauthorized))

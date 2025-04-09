@@ -46,6 +46,24 @@ func (r *Router) handleGetListUser(ctx *gin.Context) {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
 	}
+	rids := make([]string, 0)
+	for _, user := range users.Users {
+		rids = append(rids, user.RoleId)
+	}
+	roles, err := r.permSer.ListRoles(c, &permpb.RoleRequest{RoleIds: rids})
+	if err != nil {
+		utils.HandleError(LangMappingErr, ctx, err)
+		return
+	}
+	// Gán lại quyền cho user
+	for _, user := range users.Users {
+		for _, role := range roles.Roles {
+			if user.RoleId == role.Id {
+				user.Role = role
+				break
+			}
+		}
+	}
 	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: users})
 }
 
