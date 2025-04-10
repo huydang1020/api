@@ -4,10 +4,13 @@ import (
 	"context"
 	"encoding/json"
 	"log"
+	"mime/multipart"
 	"net/http"
 	"strings"
 	"time"
 
+	"github.com/cloudinary/cloudinary-go"
+	"github.com/cloudinary/cloudinary-go/api/uploader"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/schema"
 	"google.golang.org/grpc/codes"
@@ -126,4 +129,22 @@ func HandleSuccess(mLangs map[string]LangCode, ctx *gin.Context, resp *Response)
 			return
 		}
 	}
+}
+
+func UploadImageToCloudinary(file multipart.File, filePath, cldName, cldKey, cldSecret string) (string, error) {
+	cld, err := cloudinary.NewFromParams(cldName, cldKey, cldSecret)
+	if err != nil {
+		return "", err
+	}
+	uploadParams := uploader.UploadParams{
+		PublicID: filePath,
+	}
+	ctx := context.Background()
+	result, err := cld.Upload.Upload(ctx, file, uploadParams)
+	if err != nil {
+		return "", err
+	}
+	imageUrl := result.SecureURL
+	log.Println("imageUrl", imageUrl)
+	return imageUrl, nil
 }

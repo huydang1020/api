@@ -1,6 +1,9 @@
 package main
 
 import (
+	"log"
+	"strconv"
+
 	"github.com/gin-gonic/gin"
 	"github.com/huyshop/api/utils"
 	permpb "github.com/huyshop/header/permission"
@@ -83,8 +86,51 @@ func (r *Router) handleCreateUser(ctx *gin.Context) {
 	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
 	defer cancel()
 	req := &userpb.User{}
-	ctx.ShouldBindJSON(req)
-	_, err := r.userSer.CreateUser(c, req)
+	req.FullName = ctx.PostForm("full_name")
+	req.Email = ctx.PostForm("email")
+	req.PhoneNumber = ctx.PostForm("phone_number")
+	req.Username = ctx.PostForm("username")
+	req.Password = ctx.PostForm("password")
+	req.RoleId = ctx.PostForm("role_id")
+	req.State = ctx.PostForm("status")
+	req.Address = ctx.PostForm("address")
+	if birthday := ctx.PostForm("birthday"); birthday != "" {
+		birth, err := strconv.Atoi(birthday)
+		if err != nil {
+			log.Println("birthday err:", err)
+			utils.HandleError(LangMappingErr, ctx, err)
+			return
+		}
+		req.Birthday = int64(birth)
+	}
+
+	// Xử lý file avatar (nếu có)
+	form, err := ctx.MultipartForm()
+	if err == nil && form.File["avatar"] != nil {
+		avatar := []string{}
+		files := form.File["avatar"]
+		for _, file := range files {
+			imageName := file.Filename
+			image, err := file.Open()
+			if err != nil {
+				log.Println("file open err:", err)
+				continue
+			}
+			defer image.Close()
+
+			imageUrl, err := utils.UploadImageToCloudinary(image, imageName, config.CloundName, config.CloundApiKey, config.CloundSecret)
+			if err != nil {
+				log.Println("upload img err:", err)
+				continue
+			}
+			avatar = append(avatar, imageUrl)
+		}
+		if len(avatar) > 0 {
+			req.Avatar = avatar[0]
+		}
+	}
+	log.Println("req:", req)
+	_, err = r.userSer.CreateUser(c, req)
 	if err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
