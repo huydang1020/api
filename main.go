@@ -14,16 +14,16 @@ import (
 )
 
 type Configs struct {
-	Port           string
-	PermGrpcServer string
-	UserGrpcServer string
-	JwtSecretKey   string
-	RedisAddr      string
-	RedisPassword  string
-	RedisDb        string
-	CloundName     string
-	CloundApiKey   string
-	CloundSecret   string
+	Port             string
+	PermGrpcServer   string
+	UserGrpcServer   string
+	JwtSecretKey     string
+	RedisAddr        string
+	RedisPassword    string
+	RedisDb          string
+	CloudinaryName   string
+	CloudinaryApiKey string
+	CloudinarySecret string
 }
 
 var config *Configs
@@ -35,16 +35,16 @@ func init() {
 		log.Fatal("Error loading env:", err)
 	}
 	config = &Configs{
-		Port:           os.Getenv("PORT"),
-		PermGrpcServer: os.Getenv("PERM_GRPC_SERVER"),
-		UserGrpcServer: os.Getenv("USER_GRPC_SERVER"),
-		JwtSecretKey:   os.Getenv("JWT_SECRET_KEY"),
-		RedisAddr:      os.Getenv("REDIS_ADDR"),
-		RedisPassword:  os.Getenv("REDIS_PASSWORD"),
-		RedisDb:        os.Getenv("REDIS_DB"),
-		CloundName:     os.Getenv("CLOUD_NAME"),
-		CloundApiKey:   os.Getenv("CLOUD_API_KEY"),
-		CloundSecret:   os.Getenv("CLOUD_SECRET"),
+		Port:             os.Getenv("PORT"),
+		PermGrpcServer:   os.Getenv("PERM_GRPC_SERVER"),
+		UserGrpcServer:   os.Getenv("USER_GRPC_SERVER"),
+		JwtSecretKey:     os.Getenv("JWT_SECRET_KEY"),
+		RedisAddr:        os.Getenv("REDIS_ADDR"),
+		RedisPassword:    os.Getenv("REDIS_PASSWORD"),
+		RedisDb:          os.Getenv("REDIS_DB"),
+		CloudinaryName:   os.Getenv("CLOUDINARY_NAME"),
+		CloudinaryApiKey: os.Getenv("CLOUDINARY_API_KEY"),
+		CloudinarySecret: os.Getenv("CLOUDINARY_SECRET"),
 	}
 }
 

@@ -92,7 +92,9 @@ func (r *Router) handleCreateUser(ctx *gin.Context) {
 	req.Username = ctx.PostForm("username")
 	req.Password = ctx.PostForm("password")
 	req.RoleId = ctx.PostForm("role_id")
-	req.State = ctx.PostForm("status")
+	req.Province = ctx.PostForm("province")
+	req.District = ctx.PostForm("district")
+	req.Ward = ctx.PostForm("ward")
 	req.Address = ctx.PostForm("address")
 	if birthday := ctx.PostForm("birthday"); birthday != "" {
 		birth, err := strconv.Atoi(birthday)
@@ -118,7 +120,7 @@ func (r *Router) handleCreateUser(ctx *gin.Context) {
 			}
 			defer image.Close()
 
-			imageUrl, err := utils.UploadImageToCloudinary(image, imageName, config.CloundName, config.CloundApiKey, config.CloundSecret)
+			imageUrl, err := UploadImageToCloudinary(c, image, imageName)
 			if err != nil {
 				log.Println("upload img err:", err)
 				continue

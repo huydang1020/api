@@ -5,8 +5,8 @@ func (r *Router) mappingRouterAdmin() {
 	r.route.POST("/api/admin/user/sign-in", r.handleSignInAdmin)
 	r1 := r.route.Group("/api/admin", authMiddleware(r))
 
-
 	r1.GET("/user/page", r.handleListUserPage)
+	r1.POST("/upload-image", r.handleUploadImage)
 
 	// user
 	r1.GET("/user", r.handleGetListUser)
@@ -21,8 +21,6 @@ func (r *Router) mappingRouterAdmin() {
 	r1.GET("/role/:id", r.handleGetRole)
 	r1.PUT("/role/:id", r.handleUpdateRole)
 	r1.DELETE("/role/:id", r.handleDeleteRole)
-
-
 
 	// page
 	r1.GET("/page", r.handleListPage)
