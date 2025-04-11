@@ -15,6 +15,7 @@ import (
 	"github.com/huyshop/api/utils"
 	partpb "github.com/huyshop/header/partner"
 	permpb "github.com/huyshop/header/permission"
+	propb "github.com/huyshop/header/product"
 	userpb "github.com/huyshop/header/user"
 	voupb "github.com/huyshop/header/voucher"
 	"go.elastic.co/apm/module/apmgin"
@@ -29,6 +30,7 @@ type Router struct {
 	userSer    userpb.UserServiceClient
 	partnerSer partpb.PartnerServiceClient
 	voucherSer voupb.VoucherServiceClient
+	productSer propb.ProductServiceClient
 }
 
 func init() {
@@ -112,6 +114,18 @@ func (r *Router) dialVoucher(target string) error {
 	return nil
 }
 
+func (r *Router) dialProduct(target string) error {
+	client, err := grpc.Dial(target,
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
+		grpc.WithDefaultServiceConfig(`{"loadBalancingPolicy":"round_robin"}`),
+	)
+	if err != nil {
+		return err
+	}
+	r.productSer = propb.NewProductServiceClient(client)
+	return nil
+}
+
 func NewRedisCache(addr, pw string, db int) *redis.Client {
 	client := redis.NewClient(&redis.Options{
 		Addr:     addr,
@@ -145,6 +159,9 @@ func NewRouter(cf *Configs) error {
 		log.Print(err)
 	}
 	if err := r.dialVoucher(cf.VoucherGrpcServer); err != nil {
+		log.Print(err)
+	}
+	if err := r.dialProduct(cf.ProductGrpcServer); err != nil {
 		log.Print(err)
 	}
 	r.route = gin.New()

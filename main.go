@@ -19,6 +19,7 @@ type Configs struct {
 	UserGrpcServer    string
 	PartnerGrpcServer string
 	VoucherGrpcServer string
+	ProductGrpcServer string
 	JwtSecretKey      string
 	RedisAddr         string
 	RedisPassword     string
@@ -42,6 +43,7 @@ func init() {
 		UserGrpcServer:    os.Getenv("USER_GRPC_SERVER"),
 		PartnerGrpcServer: os.Getenv("PARTNER_GRPC_SERVER"),
 		VoucherGrpcServer: os.Getenv("VOUCHER_GRPC_SERVER"),
+		ProductGrpcServer: os.Getenv("PRODUCT_GRPC_SERVER"),
 		JwtSecretKey:      os.Getenv("JWT_SECRET_KEY"),
 		RedisAddr:         os.Getenv("REDIS_ADDR"),
 		RedisPassword:     os.Getenv("REDIS_PASSWORD"),
