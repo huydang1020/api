@@ -13,6 +13,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-redis/redis/v8"
 	"github.com/huyshop/api/utils"
+	partpb "github.com/huyshop/header/partner"
 	permpb "github.com/huyshop/header/permission"
 	userpb "github.com/huyshop/header/user"
 	"go.elastic.co/apm/module/apmgin"
@@ -21,10 +22,11 @@ import (
 )
 
 type Router struct {
-	route   *gin.Engine
-	cache   *redis.Client
-	permSer permpb.PermissionServiceClient
-	userSer userpb.UserServiceClient
+	route      *gin.Engine
+	cache      *redis.Client
+	permSer    permpb.PermissionServiceClient
+	userSer    userpb.UserServiceClient
+	partnerSer partpb.PartnerServiceClient
 }
 
 func init() {
@@ -84,6 +86,18 @@ func (r *Router) dialUser(target string) error {
 	return nil
 }
 
+func (r *Router) dialPartner(target string) error {
+	client, err := grpc.Dial(target,
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
+		grpc.WithDefaultServiceConfig(`{"loadBalancingPolicy":"round_robin"}`),
+	)
+	if err != nil {
+		return err
+	}
+	r.partnerSer = partpb.NewPartnerServiceClient(client)
+	return nil
+}
+
 func NewRedisCache(addr, pw string, db int) *redis.Client {
 	client := redis.NewClient(&redis.Options{
 		Addr:     addr,
@@ -111,6 +125,9 @@ func NewRouter(cf *Configs) error {
 		log.Print(err)
 	}
 	if err := r.dialUser(cf.UserGrpcServer); err != nil {
+		log.Print(err)
+	}
+	if err := r.dialPartner(cf.PartnerGrpcServer); err != nil {
 		log.Print(err)
 	}
 	r.route = gin.New()
