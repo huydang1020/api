@@ -16,6 +16,7 @@ import (
 	partpb "github.com/huyshop/header/partner"
 	permpb "github.com/huyshop/header/permission"
 	userpb "github.com/huyshop/header/user"
+	voupb "github.com/huyshop/header/voucher"
 	"go.elastic.co/apm/module/apmgin"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -27,6 +28,7 @@ type Router struct {
 	permSer    permpb.PermissionServiceClient
 	userSer    userpb.UserServiceClient
 	partnerSer partpb.PartnerServiceClient
+	voucherSer voupb.VoucherServiceClient
 }
 
 func init() {
@@ -98,6 +100,18 @@ func (r *Router) dialPartner(target string) error {
 	return nil
 }
 
+func (r *Router) dialVoucher(target string) error {
+	client, err := grpc.Dial(target,
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
+		grpc.WithDefaultServiceConfig(`{"loadBalancingPolicy":"round_robin"}`),
+	)
+	if err != nil {
+		return err
+	}
+	r.voucherSer = voupb.NewVoucherServiceClient(client)
+	return nil
+}
+
 func NewRedisCache(addr, pw string, db int) *redis.Client {
 	client := redis.NewClient(&redis.Options{
 		Addr:     addr,
@@ -128,6 +142,9 @@ func NewRouter(cf *Configs) error {
 		log.Print(err)
 	}
 	if err := r.dialPartner(cf.PartnerGrpcServer); err != nil {
+		log.Print(err)
+	}
+	if err := r.dialVoucher(cf.VoucherGrpcServer); err != nil {
 		log.Print(err)
 	}
 	r.route = gin.New()
