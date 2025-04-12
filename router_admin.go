@@ -28,4 +28,18 @@ func (r *Router) mappingRouterAdmin() {
 	r1.GET("/page/:id", r.handleGetPage)
 	r1.PUT("/page/:id", r.handleUpdatePage)
 	r1.DELETE("/page/:id", r.handleDeletePage)
+
+	// store
+	r1.GET("/store", r.handleListStore)
+	r1.POST("/store", r.handleCreateStore)
+	r1.GET("/store/:id", r.handleGetStore)
+	r1.PUT("/store/:id", r.handleUpdateStore)
+	r1.DELETE("/store/:id", r.handleDeleteStore)
+
+	// partner
+	r1.GET("/partner", r.handleListPartner)
+	r1.POST("/partner", r.handleCreatePartner)
+	r1.GET("/partner/:id", r.handleGetPartner)
+	r1.PUT("/partner/:id", r.handleUpdatePartner)
+	r1.DELETE("/partner/:id", r.handleDeletePartner)
 }

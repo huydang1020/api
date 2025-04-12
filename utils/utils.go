@@ -3,6 +3,7 @@ package utils
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"log"
 	"net/http"
 	"strings"
@@ -126,4 +127,30 @@ func HandleSuccess(mLangs map[string]LangCode, ctx *gin.Context, resp *Response)
 			return
 		}
 	}
+}
+
+func GetUserIdByToken(ctx *gin.Context) (string, error) {
+	uid, exist := ctx.Get("user_id")
+	if !exist {
+		return "", errors.New(E_invalid_user_id)
+	}
+	userid, ok := uid.(string)
+	if !ok {
+		return "", errors.New(E_internal_errors)
+	}
+
+	return userid, nil
+}
+
+func GetRoleByToken(ctx *gin.Context) (string, error) {
+	rid, exist := ctx.Get("user_id")
+	if !exist {
+		return "", errors.New(E_invalid_user_id)
+	}
+	userid, ok := rid.(string)
+	if !ok {
+		return "", errors.New(E_internal_errors)
+	}
+
+	return userid, nil
 }

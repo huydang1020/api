@@ -19,13 +19,13 @@
     "en": "Not found user id",
     "vi": "Không tìm thấy mã người dùng"
   },
-  "not_found_name": {
-    "en": "Not found name",
-    "vi": "Không tìm thấy tên người dùng"
+  "name_cannot_empty": {
+    "en": "Name cannot empty",
+    "vi": "Tên không được để trống"
   },
-  "not_found_email": {
-    "en": "Not found email",
-    "vi": "Không tìm thấy email"
+  "email_cannot_empty": {
+    "en": "Email cannot empty",
+    "vi": "Email không được để trống"
   },
   "username_existed": {
     "en": "username existed",
@@ -62,10 +62,6 @@
   "not_found_page": {
     "en": "Not found page",
     "vi": "Không tìm thấy trang"
-  },
-  "not_found_code": {
-    "en": "Not found code",
-    "vi": "Không tìm thấy mã"
   },
   "internal_errors": {
     "en": "Internal errors",
@@ -117,7 +113,7 @@
   },
   "unauthorized": {
     "en": "Unauthorized",
-    "vi": "Không được phép truy cập"
+    "vi": "Lỗi xác thực"
   },
   "bad_request": {
     "en": "Bad request",
@@ -129,7 +125,7 @@
   },
   "password_is_incorrect": {
     "en": "Password is incorrect",
-    "vi": "Mật khẩu không đúng"
+    "vi": "Mật khẩu không chính xác"
   },
   "not_found_password": {
     "en": "Not found password",
@@ -145,6 +141,38 @@
   },
   "E_username_is_incorrect": {
     "en": "Username is incorrect",
-    "vi": "Tên người dùng không đúng"
+    "vi": "Tên người dùng không chính xác"
+  },
+  "address_cannot_empty": {
+    "en": "Address cannot empty",
+    "vi": "Địa chỉ không được để trống"
+  },
+  "provice_cannot_empty": {
+    "en": "Provice cannot empty",
+    "vi": "Tỉnh không được để trống"
+  },
+  "district_cannot_empty": {
+    "en": "District cannot empty",
+    "vi": "Quận không được để trống"
+  },
+  "ward_cannot_empty": {
+    "en": "Ward cannot_empty",
+    "vi": "Phường cửa hàng không hợp lệ"
+  },
+  "role_cannot_empty": {
+    "en": "Role cannot empty",
+    "vi": "Quyền không được để trống"
+  },
+  "username_cannot_empty": {
+    "en": "Username cannot empty",
+    "vi": "Tên người dùng không được để trống"
+  },
+  "password_cannot_empty": {
+    "en": "Password cannot empty",
+    "vi": "Mật khẩu không được để trống"
+  },
+  "phone_number_cannot_empty": {
+    "en": "Phone cannot empty",
+    "vi": "Số điện thoại không được để trống"
   }
 }
