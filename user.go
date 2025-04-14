@@ -392,11 +392,46 @@ func (r *Router) handleCreatePartner(ctx *gin.Context) {
 	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
 	defer cancel()
 	req := &userpb.Partner{}
-	ctx.ShouldBindJSON(req)
 	if err := r.isCanBeAccess(c, ctx, "partner", "c"); err != nil {
 		log.Println("err", err)
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
+	}
+	req.State = ctx.PostForm("state")
+	if req.State == "" {
+		req.State = userpb.Partner_active.String()
+	}
+	req.Name = ctx.PostForm("name")
+	if req.Name == "" {
+		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_name_cannot_empty))
+		return
+	}
+	req.Description = ctx.PostForm("description")
+	req.Address = ctx.PostForm("address")
+	req.UserId = ctx.PostForm("user_id")
+	form, err := ctx.MultipartForm()
+	if err == nil && form.File["logo"] != nil {
+		logo := []string{}
+		files := form.File["logo"]
+		for _, file := range files {
+			imageName := file.Filename
+			image, err := file.Open()
+			if err != nil {
+				log.Println("file open err:", err)
+				continue
+			}
+			defer image.Close()
+
+			imageUrl, err := UploadImageToCloudinary(c, image, imageName)
+			if err != nil {
+				log.Println("upload img err:", err)
+				continue
+			}
+			logo = append(logo, imageUrl)
+		}
+		if len(logo) > 0 {
+			req.Logo = logo[0]
+		}
 	}
 	uid, err := utils.GetUserIdByToken(ctx)
 	if err != nil {
@@ -418,13 +453,42 @@ func (r *Router) handleUpdatePartner(ctx *gin.Context) {
 	defer cancel()
 	id := ctx.Param("id")
 	req := &userpb.Partner{}
-	ctx.ShouldBindJSON(req)
 	if err := r.isCanBeAccess(c, ctx, "partner", "u"); err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
 	}
+	req.State = ctx.PostForm("state")
+	req.Name = ctx.PostForm("name")
+	req.Description = ctx.PostForm("description")
+	req.Address = ctx.PostForm("address")
+	req.UserId = ctx.PostForm("user_id")
+	form, err := ctx.MultipartForm()
+	if err == nil && form.File["logo"] != nil {
+		logo := []string{}
+		files := form.File["logo"]
+		for _, file := range files {
+			imageName := file.Filename
+			image, err := file.Open()
+			if err != nil {
+				log.Println("file open err:", err)
+				continue
+			}
+			defer image.Close()
+
+			imageUrl, err := UploadImageToCloudinary(c, image, imageName)
+			if err != nil {
+				log.Println("upload img err:", err)
+				continue
+			}
+			logo = append(logo, imageUrl)
+		}
+		if len(logo) > 0 {
+			req.Logo = logo[0]
+		}
+	}
 	req.Id = id
-	_, err := r.userSer.UpdatePartner(c, req)
+	log.Println("partner", req)
+	_, err = r.userSer.UpdatePartner(c, req)
 	if err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
