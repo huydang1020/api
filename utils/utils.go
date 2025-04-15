@@ -81,7 +81,7 @@ func HandleError(mLangs map[string]LangCode, ctx *gin.Context, err error) {
 	s := status.Convert(err)
 	statusCode := 200
 	lang := ctx.GetHeader("Accept-Language")
-	if strings.Contains(lang, "en_US") {
+	if strings.Contains(lang, "vi_VN") {
 		if data, ok := mLangs[s.Message()]; ok {
 			ctx.JSON(statusCode, ErrMsg{Code: -1, Message: data.En})
 			return
