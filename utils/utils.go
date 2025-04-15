@@ -5,13 +5,11 @@ import (
 	"encoding/json"
 	"errors"
 	"log"
-	"net/http"
 	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/schema"
-	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 )
@@ -40,15 +38,6 @@ type Response struct {
 	Code    int         `json:"code"` // 0: success, -1: error
 	Message string      `json:"message"`
 	Data    interface{} `json:"data,omitempty"`
-}
-
-var mErrs = map[codes.Code]int{
-	codes.OK:               http.StatusOK,
-	codes.InvalidArgument:  http.StatusBadRequest,
-	codes.NotFound:         http.StatusNotFound,
-	codes.Internal:         http.StatusInternalServerError,
-	codes.Unauthenticated:  http.StatusUnauthorized,
-	codes.PermissionDenied: http.StatusUnauthorized,
 }
 
 func MakeContext(sec int, claims interface{}) (context.Context, context.CancelFunc) {
@@ -114,7 +103,7 @@ func HandleError(mLangs map[string]LangCode, ctx *gin.Context, err error) {
 func HandleSuccess(mLangs map[string]LangCode, ctx *gin.Context, resp *Response) {
 	statusCode := 200
 	lang := ctx.GetHeader("Accept-Language")
-	if strings.Contains(lang, "en_US") {
+	if strings.Contains(lang, "vi_VN") {
 		if data, ok := mLangs[resp.Message]; ok {
 			resp.Message = data.En
 			ctx.JSON(statusCode, resp)
