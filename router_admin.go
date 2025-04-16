@@ -4,7 +4,7 @@ func (r *Router) mappingRouterAdmin() {
 
 	r.route.POST("/api/admin/user/sign-in", r.handleSignInAdmin)
 	r1 := r.route.Group("/api/admin", authMiddleware(r))
-
+	r1.POST("/menu", r.ListMenu)
 	r1.GET("/user/page", r.handleListUserPage)
 	r1.POST("/upload-image", r.handleUploadImage)
 
