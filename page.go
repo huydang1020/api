@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"fmt"
 	"log"
 	"sort"
 
@@ -17,28 +18,24 @@ func (r *Router) handleListUserPage(ctx *gin.Context) {
 	req := &ppb.PageRequest{}
 	utils.BindQuery(req, ctx)
 	uid, exist := ctx.Get("user_id")
-	if exist {
-		uidStr, ok := uid.(string)
-		if !ok {
-			utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_invalid_user))
-			return
-		}
-		user, err := r.userSer.GetUser(c, &upb.UserRequest{Id: uidStr})
-		if err != nil {
-			utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_access_denied))
-			return
-		}
-		req.RoleId = user.GetRoleId()
+	if !exist {
+		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_invalid_user))
+		return
 	}
-	log.Println("req", req)
+	user, err := r.userSer.GetUser(c, &upb.UserRequest{Id: fmt.Sprint(uid)})
+	if err != nil {
+		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_access_denied))
+		return
+	}
+	req.RoleId = user.GetRoleId()
 	pages, err := r.permSer.ListPages(c, req)
+	log.Println("pages:", pages)
 	if err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
 	}
-	// log.Println("pages", pages)
-	menu := SortPage(pages)
-	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: &ppb.Pages{Pages: menu, Total: pages.Total}})
+	menu := BuildMenuTree(pages.Pages)
+	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: gin.H{"pages": menu, "total": pages.Total}})
 }
 
 func (r *Router) handleListPage(ctx *gin.Context) {
@@ -46,6 +43,7 @@ func (r *Router) handleListPage(ctx *gin.Context) {
 	defer cancel()
 	req := &ppb.PageRequest{}
 	utils.BindQuery(req, ctx)
+	log.Println("req:", req)
 	// uid, exist := ctx.Get("user_id")
 	// if exist {
 	// 	uidStr, ok := uid.(string)

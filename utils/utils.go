@@ -3,7 +3,6 @@ package utils
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"log"
 	"strings"
 	"time"
@@ -81,20 +80,20 @@ func HandleError(mLangs map[string]LangCode, ctx *gin.Context, err error) {
 	s := status.Convert(err)
 	statusCode := 200
 	lang := ctx.GetHeader("Accept-Language")
-	if strings.Contains(lang, "vi_VN") {
-		if data, ok := mLangs[s.Message()]; ok {
-			ctx.JSON(statusCode, ErrMsg{Code: -1, Message: data.En})
-			return
-		} else {
-			ctx.JSON(statusCode, ErrMsg{Code: -1, Message: "An error occurred"})
-			return
-		}
-	} else {
+	if strings.Contains(lang, "vi-VN") {
 		if data, ok := mLangs[s.Message()]; ok {
 			ctx.JSON(statusCode, ErrMsg{Code: -1, Message: data.Vi})
 			return
 		} else {
 			ctx.JSON(statusCode, ErrMsg{Code: -1, Message: "Có lỗi xảy ra"})
+			return
+		}
+	} else {
+		if data, ok := mLangs[s.Message()]; ok {
+			ctx.JSON(statusCode, ErrMsg{Code: -1, Message: data.En})
+			return
+		} else {
+			ctx.JSON(statusCode, ErrMsg{Code: -1, Message: "An error occurred"})
 			return
 		}
 	}
@@ -103,43 +102,17 @@ func HandleError(mLangs map[string]LangCode, ctx *gin.Context, err error) {
 func HandleSuccess(mLangs map[string]LangCode, ctx *gin.Context, resp *Response) {
 	statusCode := 200
 	lang := ctx.GetHeader("Accept-Language")
-	if strings.Contains(lang, "vi_VN") {
-		if data, ok := mLangs[resp.Message]; ok {
-			resp.Message = data.En
-			ctx.JSON(statusCode, resp)
-			return
-		}
-	} else {
+	if strings.Contains(lang, "vi-VN") {
 		if data, ok := mLangs[resp.Message]; ok {
 			resp.Message = data.Vi
 			ctx.JSON(statusCode, resp)
 			return
 		}
+	} else {
+		if data, ok := mLangs[resp.Message]; ok {
+			resp.Message = data.En
+			ctx.JSON(statusCode, resp)
+			return
+		}
 	}
-}
-
-func GetUserIdByToken(ctx *gin.Context) (string, error) {
-	uid, exist := ctx.Get("user_id")
-	if !exist {
-		return "", errors.New(E_invalid_user_id)
-	}
-	userid, ok := uid.(string)
-	if !ok {
-		return "", errors.New(E_internal_errors)
-	}
-
-	return userid, nil
-}
-
-func GetRoleByToken(ctx *gin.Context) (string, error) {
-	rid, exist := ctx.Get("user_id")
-	if !exist {
-		return "", errors.New(E_invalid_user_id)
-	}
-	userid, ok := rid.(string)
-	if !ok {
-		return "", errors.New(E_internal_errors)
-	}
-
-	return userid, nil
 }

@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"sort"
 
-	"github.com/gin-gonic/gin"
-	"github.com/huyshop/api/utils"
 	ppb "github.com/huyshop/header/permission"
 )
 
@@ -16,8 +14,8 @@ type MenuData struct {
 }
 
 type Handle struct {
-	Icon         string   `json:"icon"`
-	IconType     string   `json:"iconType"`
+	Icon         string   `json:"icon,omitempty"`
+	IconType     string   `json:"iconType,omitempty"`
 	Title        string   `json:"title"`
 	Order        int      `json:"order"`
 	IframeLink   string   `json:"iframeLink,omitempty"`
@@ -38,7 +36,7 @@ func BuildMenuTree(pages []*ppb.Page) []*MenuData {
 		var roles []string
 		var perms []string
 		for _, ra := range page.RoleActions {
-			roles = AppendIfMissing(roles, ra.Role.Name)
+			roles = AppendIfMissing(roles, ra.Role.Id)
 			for _, act := range ra.Actions {
 				perm := fmt.Sprintf("permission:%s", ConvertAction(act))
 				perms = AppendIfMissing(perms, perm)
@@ -46,16 +44,16 @@ func BuildMenuTree(pages []*ppb.Page) []*MenuData {
 		}
 
 		menu := &MenuData{
-			Path: "/" + page.Route,
+			Path: page.Path,
 			Handle: &Handle{
-				Title:       page.Name,
-				Icon:        page.Icon.IconName,
-				IconType:    page.Icon.IconType,
-				Order:       int(page.Order),
+				Icon:        page.Handle.Icon,
+				IconType:    page.Handle.IconType,
+				Title:       page.Handle.Title,
+				Order:       int(page.Handle.Order),
 				Roles:       roles,
 				Permissions: perms,
-				// KeepAlive:   page.KeepAlive,
-				// HideInMenu:  page.HideMenu,
+				KeepAlive:   page.Handle.KeepAlive,
+				HideInMenu:  page.Handle.HideInMenu,
 			},
 			Children: []*MenuData{},
 		}
@@ -114,18 +112,4 @@ func sortMenuDataByOrder(menu []*MenuData) {
 			sortMenuDataByOrder(m.Children)
 		}
 	}
-}
-
-func (r *Router) ListMenu(ctx *gin.Context) {
-	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
-	defer cancel()
-	req := &ppb.PageRole{}
-	utils.BindQuery(req, ctx)
-	pages, err := r.permSer.ListPages(c, &ppb.PageRequest{})
-	if err != nil {
-		utils.HandleError(LangMappingErr, ctx, err)
-		return
-	}
-	menuTree := BuildMenuTree(pages.Pages)
-	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: menuTree})
 }

@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"fmt"
 	"log"
 	"strconv"
 
@@ -21,23 +22,40 @@ func (r *Router) handleSignInAdmin(ctx *gin.Context) {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
 	}
-	role, err := r.permSer.GetRole(c, &permpb.RoleRequest{Id: resp.GetUser().GetRoleId()})
-	if err != nil {
-		utils.HandleError(LangMappingErr, ctx, err)
-		return
-	}
-	pages, err := r.permSer.ListPages(c, &permpb.PageRequest{RoleId: role.GetId()})
-	if err != nil {
-		utils.HandleError(LangMappingErr, ctx, err)
-		return
-	}
-	menu := SortPage(pages)
+	// role, err := r.permSer.GetRole(c, &permpb.RoleRequest{Id: resp.GetUser().GetRoleId()})
+	// if err != nil {
+	// 	utils.HandleError(LangMappingErr, ctx, err)
+	// 	return
+	// }
+	// pages, err := r.permSer.ListPages(c, &permpb.PageRequest{RoleId: role.GetId()})
+	// if err != nil {
+	// 	utils.HandleError(LangMappingErr, ctx, err)
+	// 	return
+	// }
+	// menu := SortPage(pages)
 
-	// Gán lại quyền cho user
-	role.Page = menu
-	resp.User.Role = role
-	resp.User.Pages = menu
+	// // Gán lại quyền cho user
+	// role.Page = menu
+	// resp.User.Role = role
+	// resp.User.Pages = menu
 	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: resp})
+}
+
+func (r *Router) handleGetMe(ctx *gin.Context) {
+	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
+	defer cancel()
+	uid, exist := ctx.Get("user_id")
+	if !exist {
+		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_invalid_user_id))
+		return
+	}
+	user, err := r.userSer.GetUser(c, &userpb.UserRequest{Id: fmt.Sprint(uid)})
+	if err != nil {
+		utils.HandleError(LangMappingErr, ctx, err)
+		return
+	}
+	user.Password = ""
+	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: user})
 }
 
 func (r *Router) handleGetListUser(ctx *gin.Context) {
@@ -294,13 +312,12 @@ func (r *Router) handleCreateStore(ctx *gin.Context) {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
 	}
-	uid, err := utils.GetUserIdByToken(ctx)
-	if err != nil {
-		log.Println("err", err)
-		utils.HandleError(LangMappingErr, ctx, err)
+	uid, exist := ctx.Get("user_id")
+	if !exist {
+		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_invalid_user_id))
 		return
 	}
-	user, err := r.userSer.GetUser(c, &userpb.UserRequest{Id: uid})
+	user, err := r.userSer.GetUser(c, &userpb.UserRequest{Id: fmt.Sprint(uid)})
 	if err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
@@ -433,13 +450,12 @@ func (r *Router) handleCreatePartner(ctx *gin.Context) {
 			req.Logo = logo[0]
 		}
 	}
-	uid, err := utils.GetUserIdByToken(ctx)
-	if err != nil {
-		log.Println("err", err)
-		utils.HandleError(LangMappingErr, ctx, err)
+	uid, exist := ctx.Get("user_id")
+	if !exist {
+		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_invalid_user_id))
 		return
 	}
-	req.UserId = uid
+	req.UserId = fmt.Sprint(uid)
 	_, err = r.userSer.CreatePartner(c, req)
 	if err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
