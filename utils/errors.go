@@ -21,4 +21,5 @@ const (
 	E_not_found_role_id         = "invalid_role_id"
 	E_internal_errors           = "internal_errors"
 	E_name_cannot_empty         = "name_cannot_empty"
+	E_full_name_cannot_empty    = "full_name_cannot_empty"
 )

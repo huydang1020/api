@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"log"
-	"sort"
 
 	"github.com/gin-gonic/gin"
 	"github.com/huyshop/api/utils"
@@ -34,7 +33,7 @@ func (r *Router) handleListUserPage(ctx *gin.Context) {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
 	}
-	menu := BuildMenuTree(pages.Pages)
+	menu := utils.BuildMenuTree(pages.Pages)
 	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: gin.H{"pages": menu, "total": pages.Total}})
 }
 
@@ -44,20 +43,6 @@ func (r *Router) handleListPage(ctx *gin.Context) {
 	req := &ppb.PageRequest{}
 	utils.BindQuery(req, ctx)
 	log.Println("req:", req)
-	// uid, exist := ctx.Get("user_id")
-	// if exist {
-	// 	uidStr, ok := uid.(string)
-	// 	if !ok {
-	// 		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_invalid_user))
-	// 		return
-	// 	}
-	// 	user, err := r.userSer.GetUser(c, &upb.UserRequest{Id: uidStr})
-	// 	if err != nil {
-	// 		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_access_denied))
-	// 		return
-	// 	}
-	// 	req.RoleId = user.GetRoleId()
-	// }
 	if err := r.isCanBeAccess(c, ctx, "page", "r"); err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
@@ -68,41 +53,6 @@ func (r *Router) handleListPage(ctx *gin.Context) {
 		return
 	}
 	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: pages})
-}
-
-func SortPage(pages *ppb.Pages) []*ppb.Page {
-	// Tạo map để tra cứu nhanh
-	mapMenu := make(map[string]*ppb.Page)
-	for _, p := range pages.Pages {
-		mapMenu[p.Id] = p
-	}
-
-	// Xây dựng cây menu
-	var menu []*ppb.Page
-	for _, p := range pages.Pages {
-		if p.ParentId == "" {
-			menu = append(menu, p) // Trang chính
-		} else if parent, ok := mapMenu[p.ParentId]; ok {
-			parent.Children = append(parent.Children, p) // Thêm vào trang cha
-		} else {
-			// Trường hợp không tìm thấy cha, vẫn thêm vào menu để không mất dữ liệu
-			menu = append(menu, p)
-		}
-	}
-	// Sắp xếp menu chính và menu con
-	sortPagesByOrder(menu)
-	return menu
-}
-
-func sortPagesByOrder(pages []*ppb.Page) {
-	sort.Slice(pages, func(i, j int) bool {
-		return pages[i].Id < pages[j].Id // Sắp xếp theo ID tăng dần (hoặc theo Name, Order, ...)
-	})
-	for _, p := range pages {
-		if len(p.Children) > 0 {
-			sortPagesByOrder(p.Children) // Đệ quy để sắp xếp các menu con
-		}
-	}
 }
 
 func (r *Router) handleGetPage(ctx *gin.Context) {

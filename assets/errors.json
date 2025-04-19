@@ -174,5 +174,13 @@
   "phone_number_cannot_empty": {
     "en": "Phone cannot empty",
     "vi": "Số điện thoại không được để trống"
+  },
+  "group_exist": {
+    "en": "Group exist",
+    "vi": "Danh mục đã tồn tại"
+  },
+  "full_name_cannot_empty": {
+    "en": "Full name cannot empty",
+    "vi": "Họ tên không được để trống"
   }
 }

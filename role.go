@@ -95,7 +95,7 @@ func (r *Router) handleDeleteRole(ctx *gin.Context) {
 	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success"})
 }
 
-func (r Router) isCanBeAccess(c context.Context, ctx *gin.Context, objId, action string) error {
+func (r Router) isCanBeAccess(c context.Context, ctx *gin.Context, group, action string) error {
 	rid, exist := ctx.Get("role_id")
 	if !exist {
 		return errors.New(utils.E_invalid_role)
@@ -105,7 +105,7 @@ func (r Router) isCanBeAccess(c context.Context, ctx *gin.Context, objId, action
 		return errors.New(utils.E_invalid_role)
 	}
 	enforcer := &ppb.PolicyRequest{
-		RoleId: roleid, ObjectId: objId, Action: action,
+		RoleId: roleid, Group: group, Action: action,
 	}
 	log.Println("enforcer", enforcer)
 	_, err := r.permSer.CheckAccess(c, enforcer)

@@ -22,22 +22,6 @@ func (r *Router) handleSignInAdmin(ctx *gin.Context) {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
 	}
-	// role, err := r.permSer.GetRole(c, &permpb.RoleRequest{Id: resp.GetUser().GetRoleId()})
-	// if err != nil {
-	// 	utils.HandleError(LangMappingErr, ctx, err)
-	// 	return
-	// }
-	// pages, err := r.permSer.ListPages(c, &permpb.PageRequest{RoleId: role.GetId()})
-	// if err != nil {
-	// 	utils.HandleError(LangMappingErr, ctx, err)
-	// 	return
-	// }
-	// menu := SortPage(pages)
-
-	// // Gán lại quyền cho user
-	// role.Page = menu
-	// resp.User.Role = role
-	// resp.User.Pages = menu
 	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: resp})
 }
 
@@ -107,7 +91,7 @@ func (r *Router) handleCreateUser(ctx *gin.Context) {
 	req := &userpb.User{}
 	fullName := ctx.PostForm("full_name")
 	if fullName == "" {
-		utils.HandleError(LangMappingErr, ctx, errors.New("full_name is required"))
+		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_full_name_cannot_empty))
 		return
 	}
 	req.FullName = fullName

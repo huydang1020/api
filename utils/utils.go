@@ -3,12 +3,14 @@ package utils
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"log"
 	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/schema"
+	ppb "github.com/huyshop/header/permission"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 )
@@ -80,11 +82,12 @@ func HandleError(mLangs map[string]LangCode, ctx *gin.Context, err error) {
 	s := status.Convert(err)
 	statusCode := 200
 	lang := ctx.GetHeader("Accept-Language")
-	if strings.Contains(lang, "vi-VN") {
+	if strings.Contains(lang, "vi_VN") {
 		if data, ok := mLangs[s.Message()]; ok {
 			ctx.JSON(statusCode, ErrMsg{Code: -1, Message: data.Vi})
 			return
 		} else {
+			log.Println("error:", err)
 			ctx.JSON(statusCode, ErrMsg{Code: -1, Message: "Có lỗi xảy ra"})
 			return
 		}
@@ -93,6 +96,7 @@ func HandleError(mLangs map[string]LangCode, ctx *gin.Context, err error) {
 			ctx.JSON(statusCode, ErrMsg{Code: -1, Message: data.En})
 			return
 		} else {
+			log.Println("error:", err)
 			ctx.JSON(statusCode, ErrMsg{Code: -1, Message: "An error occurred"})
 			return
 		}
@@ -102,7 +106,7 @@ func HandleError(mLangs map[string]LangCode, ctx *gin.Context, err error) {
 func HandleSuccess(mLangs map[string]LangCode, ctx *gin.Context, resp *Response) {
 	statusCode := 200
 	lang := ctx.GetHeader("Accept-Language")
-	if strings.Contains(lang, "vi-VN") {
+	if strings.Contains(lang, "vi_VN") {
 		if data, ok := mLangs[resp.Message]; ok {
 			resp.Message = data.Vi
 			ctx.JSON(statusCode, resp)
@@ -114,5 +118,79 @@ func HandleSuccess(mLangs map[string]LangCode, ctx *gin.Context, resp *Response)
 			ctx.JSON(statusCode, resp)
 			return
 		}
+	}
+}
+
+func BuildMenuTree(pages []*ppb.Page) []*ppb.MenuData {
+	idToMenu := make(map[string]*ppb.MenuData)
+	var roots []*ppb.MenuData
+
+	// Bước 1: Tạo map để ánh xạ từ ID sang MenuData
+	for _, page := range pages {
+		// Lấy danh sách roles và permissions
+		var roles []string
+		var perms []string
+		for _, ra := range page.RoleActions {
+			roles = AppendIfMissing(roles, ra.Role.Id)
+			for _, act := range ra.Actions {
+				perm := fmt.Sprintf("permission:%s", ConvertAction(act))
+				perms = AppendIfMissing(perms, perm)
+			}
+		}
+
+		menu := &ppb.MenuData{
+			Path: page.Path,
+			Handle: &ppb.Handle{
+				Icon:        page.Handle.Icon,
+				IconType:    page.Handle.IconType,
+				Title:       page.Handle.Title,
+				Order:       page.Handle.Order,
+				Roles:       roles,
+				Permissions: perms,
+				KeepAlive:   page.Handle.KeepAlive,
+				HideInMenu:  page.Handle.HideInMenu,
+			},
+			Children: []*ppb.MenuData{},
+		}
+
+		idToMenu[page.Id] = menu
+	}
+
+	// Bước 2: Gắn các node con vào cha
+	for _, page := range pages {
+		menu := idToMenu[page.Id]
+		if page.ParentId != "" {
+			parentMenu, ok := idToMenu[page.ParentId]
+			if ok {
+				parentMenu.Children = append(parentMenu.Children, menu)
+			}
+		} else {
+			roots = append(roots, menu)
+		}
+	}
+	return roots
+}
+
+func AppendIfMissing(slice []string, value string) []string {
+	for _, v := range slice {
+		if v == value {
+			return slice
+		}
+	}
+	return append(slice, value)
+}
+
+func ConvertAction(code string) string {
+	switch code {
+	case "c":
+		return "button:add"
+	case "r":
+		return "button:get"
+	case "u":
+		return "button:update"
+	case "d":
+		return "button:delete"
+	default:
+		return "unknown"
 	}
 }
