@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"errors"
+	"fmt"
 	"log"
 
 	"github.com/gin-gonic/gin"
@@ -100,12 +101,8 @@ func (r Router) isCanBeAccess(c context.Context, ctx *gin.Context, group, action
 	if !exist {
 		return errors.New(utils.E_invalid_role)
 	}
-	roleid, ok := rid.(string)
-	if !ok {
-		return errors.New(utils.E_invalid_role)
-	}
 	enforcer := &ppb.PolicyRequest{
-		RoleId: roleid, Group: group, Action: action,
+		RoleId: fmt.Sprint(rid), Group: group, Action: action,
 	}
 	log.Println("enforcer", enforcer)
 	_, err := r.permSer.CheckAccess(c, enforcer)

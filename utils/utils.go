@@ -3,8 +3,8 @@ package utils
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"log"
+	"slices"
 	"strings"
 	"time"
 
@@ -82,7 +82,7 @@ func HandleError(mLangs map[string]LangCode, ctx *gin.Context, err error) {
 	s := status.Convert(err)
 	statusCode := 200
 	lang := ctx.GetHeader("Accept-Language")
-	if strings.Contains(lang, "vi_VN") {
+	if strings.Contains(lang, "vi-VN") {
 		if data, ok := mLangs[s.Message()]; ok {
 			ctx.JSON(statusCode, ErrMsg{Code: -1, Message: data.Vi})
 			return
@@ -106,7 +106,7 @@ func HandleError(mLangs map[string]LangCode, ctx *gin.Context, err error) {
 func HandleSuccess(mLangs map[string]LangCode, ctx *gin.Context, resp *Response) {
 	statusCode := 200
 	lang := ctx.GetHeader("Accept-Language")
-	if strings.Contains(lang, "vi_VN") {
+	if strings.Contains(lang, "vi-VN") {
 		if data, ok := mLangs[resp.Message]; ok {
 			resp.Message = data.Vi
 			ctx.JSON(statusCode, resp)
@@ -125,30 +125,16 @@ func BuildMenuTree(pages []*ppb.Page) []*ppb.MenuData {
 	idToMenu := make(map[string]*ppb.MenuData)
 	var roots []*ppb.MenuData
 
-	// Bước 1: Tạo map để ánh xạ từ ID sang MenuData
 	for _, page := range pages {
-		// Lấy danh sách roles và permissions
-		var roles []string
-		var perms []string
-		for _, ra := range page.RoleActions {
-			roles = AppendIfMissing(roles, ra.Role.Id)
-			for _, act := range ra.Actions {
-				perm := fmt.Sprintf("permission:%s", ConvertAction(act))
-				perms = AppendIfMissing(perms, perm)
-			}
-		}
-
 		menu := &ppb.MenuData{
 			Path: page.Path,
 			Handle: &ppb.Handle{
-				Icon:        page.Handle.Icon,
-				IconType:    page.Handle.IconType,
-				Title:       page.Handle.Title,
-				Order:       page.Handle.Order,
-				Roles:       roles,
-				Permissions: perms,
-				KeepAlive:   page.Handle.KeepAlive,
-				HideInMenu:  page.Handle.HideInMenu,
+				Icon:       page.Handle.Icon,
+				IconType:   page.Handle.IconType,
+				Title:      page.Handle.Title,
+				Order:      page.Handle.Order,
+				KeepAlive:  page.Handle.KeepAlive,
+				HideInMenu: page.Handle.HideInMenu,
 			},
 			Children: []*ppb.MenuData{},
 		}
@@ -172,25 +158,8 @@ func BuildMenuTree(pages []*ppb.Page) []*ppb.MenuData {
 }
 
 func AppendIfMissing(slice []string, value string) []string {
-	for _, v := range slice {
-		if v == value {
-			return slice
-		}
+	if slices.Contains(slice, value) {
+		return slice
 	}
 	return append(slice, value)
-}
-
-func ConvertAction(code string) string {
-	switch code {
-	case "c":
-		return "button:add"
-	case "r":
-		return "button:get"
-	case "u":
-		return "button:update"
-	case "d":
-		return "button:delete"
-	default:
-		return "unknown"
-	}
 }
