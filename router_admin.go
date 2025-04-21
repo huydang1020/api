@@ -9,6 +9,7 @@ func (r *Router) mappingRouterAdmin() {
 	r1.POST("/upload-image", r.handleUploadImage)
 
 	// user
+	r1.POST("/user/sign-out", r.handleSignOutAdmin)
 	r1.GET("/me", r.handleGetMe)
 	r1.GET("/user", r.handleGetListUser)
 	r1.POST("/user", r.handleCreateUser)

@@ -26,6 +26,22 @@ func (r *Router) handleSignInAdmin(ctx *gin.Context) {
 	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: resp})
 }
 
+func (r *Router) handleSignOutAdmin(ctx *gin.Context) {
+	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
+	defer cancel()
+	uid, exist := ctx.Get("user_id")
+	if !exist {
+		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_invalid_user_id))
+		return
+	}
+	_, err := r.userSer.SignOut(c, &userpb.User{Id: fmt.Sprint(uid)})
+	if err != nil {
+		utils.HandleError(LangMappingErr, ctx, err)
+		return
+	}
+	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success"})
+}
+
 func (r *Router) handleGetMe(ctx *gin.Context) {
 	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
 	defer cancel()
