@@ -22,4 +22,5 @@ const (
 	E_internal_errors           = "internal_errors"
 	E_name_cannot_empty         = "name_cannot_empty"
 	E_full_name_cannot_empty    = "full_name_cannot_empty"
+	E_user_existed              = "user_existed"
 )

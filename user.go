@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"reflect"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -141,7 +142,11 @@ func (r *Router) handleCreateUser(ctx *gin.Context) {
 		}
 		req.Birthday = int64(birth)
 	}
-
+	check, _ := r.userSer.IsExistUser(c, &userpb.User{Email: req.Email, Username: req.Username, PhoneNumber: req.PhoneNumber})
+	if check.Exist {
+		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_user_existed))
+		return
+	}
 	// Xử lý file avatar (nếu có)
 	form, err := ctx.MultipartForm()
 	if err == nil && form.File["avatar"] != nil {
@@ -202,7 +207,18 @@ func (r *Router) handleUpdateUser(ctx *gin.Context) {
 		}
 		req.Birthday = int64(birth)
 	}
-
+	user, err := r.userSer.GetUser(c, &userpb.UserRequest{Id: id})
+	if err != nil {
+		utils.HandleError(LangMappingErr, ctx, err)
+		return
+	}
+	if !reflect.DeepEqual(&userpb.User{Username: user.Username, Email: user.Email, PhoneNumber: user.PhoneNumber}, &userpb.User{Username: req.Username, Email: req.Email, PhoneNumber: req.PhoneNumber}) {
+		check, _ := r.userSer.IsExistUser(c, &userpb.User{Email: req.Email, Username: req.Username, PhoneNumber: req.PhoneNumber})
+		if check.Exist {
+			utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_user_existed))
+			return
+		}
+	}
 	// Xử lý file avatar (nếu có)
 	form, err := ctx.MultipartForm()
 	if err == nil && form.File["avatar"] != nil {
