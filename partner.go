@@ -1,58 +1,64 @@
 package main
 
 import (
-	"context"
 	"log"
 
 	"github.com/gin-gonic/gin"
 	"github.com/huyshop/api/jwt"
 	"github.com/huyshop/api/utils"
-	ppb "github.com/huyshop/header/permission"
+	userpb "github.com/huyshop/header/user"
 )
 
-func (r *Router) handleListRole(ctx *gin.Context) {
+func (r *Router) handleListPartner(ctx *gin.Context) {
 	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
 	defer cancel()
-	req := &ppb.RoleRequest{}
+	req := &userpb.PartnerRequest{}
 	utils.BindQuery(req, ctx)
-	if err := r.isCanBeAccess(c, ctx, "role", "r"); err != nil {
+	if err := r.isCanBeAccess(c, ctx, "partner", "r"); err != nil {
+		log.Println("err", err)
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
 	}
-	roles, err := r.permSer.ListRoles(c, req)
+	partners, err := r.userSer.ListPartner(c, req)
 	if err != nil {
+		log.Println("err", err)
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
 	}
-	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: roles})
+	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: partners})
 }
 
-func (r *Router) handleGetRole(ctx *gin.Context) {
+func (r *Router) handleGetPartner(ctx *gin.Context) {
 	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
 	defer cancel()
 	id := ctx.Param("id")
-	if err := r.isCanBeAccess(c, ctx, "role", "r"); err != nil {
+	if err := r.isCanBeAccess(c, ctx, "partner", "r"); err != nil {
+		log.Println("err", err)
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
 	}
-	role, err := r.permSer.GetRole(c, &ppb.RoleRequest{Id: id})
+	partner, err := r.userSer.GetPartner(c, &userpb.PartnerRequest{Id: id})
 	if err != nil {
+		log.Println("err", err)
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
 	}
-	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: role})
+	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: partner})
 }
 
-func (r *Router) handleCreateRole(ctx *gin.Context) {
+func (r *Router) handleCreatePartner(ctx *gin.Context) {
+	claims, _ := ctx.MustGet("claims").(*jwt.JWTClaim)
 	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
 	defer cancel()
-	req := &ppb.Role{}
+	req := &userpb.Partner{}
 	ctx.ShouldBindJSON(req)
-	if err := r.isCanBeAccess(c, ctx, "role", "c"); err != nil {
+	if err := r.isCanBeAccess(c, ctx, "partner", "c"); err != nil {
+		log.Println("err", err)
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
 	}
-	_, err := r.permSer.CreateRole(c, req)
+	req.Type = claims.PartnerType
+	_, err := r.userSer.CreatePartner(c, req)
 	if err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
@@ -60,18 +66,20 @@ func (r *Router) handleCreateRole(ctx *gin.Context) {
 	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success"})
 }
 
-func (r *Router) handleUpdateRole(ctx *gin.Context) {
+func (r *Router) handleUpdatePartner(ctx *gin.Context) {
+	claims, _ := ctx.MustGet("claims").(*jwt.JWTClaim)
 	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
 	defer cancel()
 	id := ctx.Param("id")
-	req := &ppb.Role{}
+	req := &userpb.Partner{}
 	ctx.ShouldBindJSON(req)
-	if err := r.isCanBeAccess(c, ctx, "role", "u"); err != nil {
+	if err := r.isCanBeAccess(c, ctx, "partner", "u"); err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
 	}
 	req.Id = id
-	_, err := r.permSer.UpdateRole(c, req)
+	req.Type = claims.PartnerType
+	_, err := r.userSer.UpdatePartner(c, req)
 	if err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
@@ -79,28 +87,18 @@ func (r *Router) handleUpdateRole(ctx *gin.Context) {
 	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success"})
 }
 
-func (r *Router) handleDeleteRole(ctx *gin.Context) {
+func (r *Router) handleDeletePartner(ctx *gin.Context) {
 	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
 	defer cancel()
 	id := ctx.Param("id")
-	if err := r.isCanBeAccess(c, ctx, "role", "d"); err != nil {
+	if err := r.isCanBeAccess(c, ctx, "partner", "d"); err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
 	}
-	_, err := r.permSer.DeleteRole(c, &ppb.Role{Id: id})
+	_, err := r.userSer.DeletePartner(c, &userpb.Partner{Id: id})
 	if err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
 	}
 	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success"})
-}
-
-func (r Router) isCanBeAccess(c context.Context, ctx *gin.Context, group, action string) error {
-	claims, _ := ctx.MustGet("claims").(*jwt.JWTClaim)
-	enforcer := &ppb.PolicyRequest{
-		RoleId: claims.RoleId, Group: group, Action: action,
-	}
-	log.Println("enforcer", enforcer)
-	_, err := r.permSer.CheckAccess(c, enforcer)
-	return err
 }

@@ -2,12 +2,12 @@ package main
 
 import (
 	"errors"
-	"fmt"
 	"log"
 	"reflect"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/huyshop/api/jwt"
 	"github.com/huyshop/api/utils"
 	permpb "github.com/huyshop/header/permission"
 	userpb "github.com/huyshop/header/user"
@@ -27,14 +27,10 @@ func (r *Router) handleSignInAdmin(ctx *gin.Context) {
 }
 
 func (r *Router) handleSignOutAdmin(ctx *gin.Context) {
+	claims, _ := ctx.MustGet("claims").(*jwt.JWTClaim)
 	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
 	defer cancel()
-	uid, exist := ctx.Get("user_id")
-	if !exist {
-		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_invalid_user_id))
-		return
-	}
-	_, err := r.userSer.SignOut(c, &userpb.User{Id: fmt.Sprint(uid)})
+	_, err := r.userSer.SignOut(c, &userpb.User{Id: claims.UserId})
 	if err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
@@ -43,14 +39,10 @@ func (r *Router) handleSignOutAdmin(ctx *gin.Context) {
 }
 
 func (r *Router) handleGetMe(ctx *gin.Context) {
+	claims, _ := ctx.MustGet("claims").(*jwt.JWTClaim)
 	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
 	defer cancel()
-	uid, exist := ctx.Get("user_id")
-	if !exist {
-		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_invalid_user_id))
-		return
-	}
-	user, err := r.userSer.GetUser(c, &userpb.UserRequest{Id: fmt.Sprint(uid)})
+	user, err := r.userSer.GetUser(c, &userpb.UserRequest{Id: claims.UserId})
 	if err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
@@ -274,269 +266,6 @@ func (r *Router) handleDeleteUser(ctx *gin.Context) {
 	defer cancel()
 	id := ctx.Param("id")
 	_, err := r.userSer.DeleteUser(c, &userpb.User{Id: id})
-	if err != nil {
-		utils.HandleError(LangMappingErr, ctx, err)
-		return
-	}
-	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success"})
-}
-
-func (r *Router) handleListStore(ctx *gin.Context) {
-	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
-	defer cancel()
-	req := &userpb.StoreRequest{}
-	utils.BindQuery(req, ctx)
-	if err := r.isCanBeAccess(c, ctx, "store", "r"); err != nil {
-		log.Println("err", err)
-		utils.HandleError(LangMappingErr, ctx, err)
-		return
-	}
-	stores, err := r.userSer.ListStore(c, req)
-	if err != nil {
-		log.Println("err", err)
-		utils.HandleError(LangMappingErr, ctx, err)
-		return
-	}
-	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: stores})
-}
-
-func (r *Router) handleGetStore(ctx *gin.Context) {
-	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
-	defer cancel()
-	id := ctx.Param("id")
-	if err := r.isCanBeAccess(c, ctx, "store", "r"); err != nil {
-		log.Println("err", err)
-		utils.HandleError(LangMappingErr, ctx, err)
-		return
-	}
-	store, err := r.userSer.GetStore(c, &userpb.StoreRequest{Id: id})
-	if err != nil {
-		log.Println("err", err)
-		utils.HandleError(LangMappingErr, ctx, err)
-		return
-	}
-	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: store})
-}
-
-func (r *Router) handleCreateStore(ctx *gin.Context) {
-	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
-	defer cancel()
-	req := &userpb.Store{}
-	ctx.ShouldBindJSON(req)
-	if err := r.isCanBeAccess(c, ctx, "store", "c"); err != nil {
-		log.Println("err", err)
-		utils.HandleError(LangMappingErr, ctx, err)
-		return
-	}
-	uid, exist := ctx.Get("user_id")
-	if !exist {
-		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_invalid_user_id))
-		return
-	}
-	user, err := r.userSer.GetUser(c, &userpb.UserRequest{Id: fmt.Sprint(uid)})
-	if err != nil {
-		utils.HandleError(LangMappingErr, ctx, err)
-		return
-	}
-	if user != nil {
-		req.PartnerId = user.PartnerId
-	}
-	_, err = r.userSer.CreateStore(c, req)
-	if err != nil {
-		utils.HandleError(LangMappingErr, ctx, err)
-		return
-	}
-	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success"})
-}
-
-func (r *Router) handleUpdateStore(ctx *gin.Context) {
-	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
-	defer cancel()
-	id := ctx.Param("id")
-	req := &userpb.Store{}
-	ctx.ShouldBindJSON(req)
-	if err := r.isCanBeAccess(c, ctx, "store", "u"); err != nil {
-		utils.HandleError(LangMappingErr, ctx, err)
-		return
-	}
-	req.Id = id
-	_, err := r.userSer.UpdateStore(c, req)
-	if err != nil {
-		utils.HandleError(LangMappingErr, ctx, err)
-		return
-	}
-	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success"})
-}
-
-func (r *Router) handleDeleteStore(ctx *gin.Context) {
-	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
-	defer cancel()
-	id := ctx.Param("id")
-	if err := r.isCanBeAccess(c, ctx, "store", "d"); err != nil {
-		utils.HandleError(LangMappingErr, ctx, err)
-		return
-	}
-	_, err := r.userSer.DeleteStore(c, &userpb.Store{Id: id})
-	if err != nil {
-		utils.HandleError(LangMappingErr, ctx, err)
-		return
-	}
-	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success"})
-}
-
-func (r *Router) handleListPartner(ctx *gin.Context) {
-	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
-	defer cancel()
-	req := &userpb.PartnerRequest{}
-	utils.BindQuery(req, ctx)
-	if err := r.isCanBeAccess(c, ctx, "partner", "r"); err != nil {
-		log.Println("err", err)
-		utils.HandleError(LangMappingErr, ctx, err)
-		return
-	}
-	partners, err := r.userSer.ListPartner(c, req)
-	if err != nil {
-		log.Println("err", err)
-		utils.HandleError(LangMappingErr, ctx, err)
-		return
-	}
-	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: partners})
-}
-
-func (r *Router) handleGetPartner(ctx *gin.Context) {
-	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
-	defer cancel()
-	id := ctx.Param("id")
-	if err := r.isCanBeAccess(c, ctx, "partner", "r"); err != nil {
-		log.Println("err", err)
-		utils.HandleError(LangMappingErr, ctx, err)
-		return
-	}
-	partner, err := r.userSer.GetPartner(c, &userpb.PartnerRequest{Id: id})
-	if err != nil {
-		log.Println("err", err)
-		utils.HandleError(LangMappingErr, ctx, err)
-		return
-	}
-	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: partner})
-}
-
-func (r *Router) handleCreatePartner(ctx *gin.Context) {
-	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
-	defer cancel()
-	req := &userpb.Partner{}
-	if err := r.isCanBeAccess(c, ctx, "partner", "c"); err != nil {
-		log.Println("err", err)
-		utils.HandleError(LangMappingErr, ctx, err)
-		return
-	}
-	req.State = ctx.PostForm("state")
-	if req.State == "" {
-		req.State = userpb.Partner_active.String()
-	}
-	req.Name = ctx.PostForm("name")
-	if req.Name == "" {
-		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_name_cannot_empty))
-		return
-	}
-	req.Description = ctx.PostForm("description")
-	req.Address = ctx.PostForm("address")
-	req.UserId = ctx.PostForm("user_id")
-	form, err := ctx.MultipartForm()
-	if err == nil && form.File["logo"] != nil {
-		logo := []string{}
-		files := form.File["logo"]
-		for _, file := range files {
-			imageName := file.Filename
-			image, err := file.Open()
-			if err != nil {
-				log.Println("file open err:", err)
-				continue
-			}
-			defer image.Close()
-
-			imageUrl, err := UploadImageToCloudinary(c, image, imageName)
-			if err != nil {
-				log.Println("upload img err:", err)
-				continue
-			}
-			logo = append(logo, imageUrl)
-		}
-		if len(logo) > 0 {
-			req.Logo = logo[0]
-		}
-	}
-	uid, exist := ctx.Get("user_id")
-	if !exist {
-		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_invalid_user_id))
-		return
-	}
-	req.UserId = fmt.Sprint(uid)
-	_, err = r.userSer.CreatePartner(c, req)
-	if err != nil {
-		utils.HandleError(LangMappingErr, ctx, err)
-		return
-	}
-	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success"})
-}
-
-func (r *Router) handleUpdatePartner(ctx *gin.Context) {
-	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
-	defer cancel()
-	id := ctx.Param("id")
-	req := &userpb.Partner{}
-	if err := r.isCanBeAccess(c, ctx, "partner", "u"); err != nil {
-		utils.HandleError(LangMappingErr, ctx, err)
-		return
-	}
-	req.State = ctx.PostForm("state")
-	req.Name = ctx.PostForm("name")
-	req.Description = ctx.PostForm("description")
-	req.Address = ctx.PostForm("address")
-	req.UserId = ctx.PostForm("user_id")
-	form, err := ctx.MultipartForm()
-	if err == nil && form.File["logo"] != nil {
-		logo := []string{}
-		files := form.File["logo"]
-		for _, file := range files {
-			imageName := file.Filename
-			image, err := file.Open()
-			if err != nil {
-				log.Println("file open err:", err)
-				continue
-			}
-			defer image.Close()
-
-			imageUrl, err := UploadImageToCloudinary(c, image, imageName)
-			if err != nil {
-				log.Println("upload img err:", err)
-				continue
-			}
-			logo = append(logo, imageUrl)
-		}
-		if len(logo) > 0 {
-			req.Logo = logo[0]
-		}
-	}
-	req.Id = id
-	log.Println("partner", req)
-	_, err = r.userSer.UpdatePartner(c, req)
-	if err != nil {
-		utils.HandleError(LangMappingErr, ctx, err)
-		return
-	}
-	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success"})
-}
-
-func (r *Router) handleDeletePartner(ctx *gin.Context) {
-	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
-	defer cancel()
-	id := ctx.Param("id")
-	if err := r.isCanBeAccess(c, ctx, "partner", "d"); err != nil {
-		utils.HandleError(LangMappingErr, ctx, err)
-		return
-	}
-	_, err := r.userSer.DeletePartner(c, &userpb.Partner{Id: id})
 	if err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return

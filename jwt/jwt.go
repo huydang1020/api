@@ -10,16 +10,20 @@ import (
 )
 
 type JWTClaim struct {
-	UserId string `json:"user_id"`
-	RoleId string `json:"role_id"`
+	UserId      string `json:"user_id"`
+	RoleId      string `json:"role_id"`
+	PartnerId   string `json:"partner_id"`
+	PartnerType string `json:"partner_type"`
 	jwt.StandardClaims
 }
 
-func GenerateAccessToken(user_id, role_id string, expireTime time.Duration, secretKey string) (string, error) {
+func GenerateAccessToken(newClaims *JWTClaim, expireTime time.Duration, secretKey string) (string, error) {
 	expirationTime := time.Now().Add(expireTime * time.Minute)
 	claims := &JWTClaim{
-		UserId: user_id,
-		RoleId: role_id,
+		UserId:      newClaims.UserId,
+		RoleId:      newClaims.RoleId,
+		PartnerId:   newClaims.PartnerId,
+		PartnerType: newClaims.PartnerType,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: expirationTime.Unix(),
 		},
@@ -33,11 +37,13 @@ func GenerateAccessToken(user_id, role_id string, expireTime time.Duration, secr
 	return tokenString, nil
 }
 
-func GenerateRefreshToken(user_id, role_id string, expireTime time.Duration, secretKey string) (string, error) {
+func GenerateRefreshToken(newClaims *JWTClaim, expireTime time.Duration, secretKey string) (string, error) {
 	expirationTime := time.Now().Add(expireTime * time.Minute)
 	claims := &JWTClaim{
-		UserId: user_id,
-		RoleId: role_id,
+		UserId:      newClaims.UserId,
+		RoleId:      newClaims.RoleId,
+		PartnerId:   newClaims.PartnerId,
+		PartnerType: newClaims.PartnerType,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: expirationTime.Unix(),
 		},

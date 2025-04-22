@@ -56,15 +56,14 @@ func authMiddleware(r *Router) gin.HandlerFunc {
 						return
 					}
 					exprAct, _ := strconv.Atoi(os.Getenv("JWT_EXPIRE_ACCESS_TOKEN"))
-					newToken, err := jt.GenerateAccessToken(validRefreshToken.UserId, validRefreshToken.RoleId, time.Duration(exprAct), config.JwtSecretKey)
+					newToken, err := jt.GenerateAccessToken(validRefreshToken, time.Duration(exprAct), config.JwtSecretKey)
 					if err != nil {
 						utils.HandleError(LangMappingErr, c, fmt.Errorf(utils.E_invalid_token))
 						c.Abort()
 						return
 					}
 					c.Header("access-token", newToken)
-					c.Set("user_id", claims.UserId)
-					c.Set("role_id", claims.RoleId)
+					c.Set("claims", claims)
 					c.Next()
 					return
 				}
@@ -80,8 +79,7 @@ func authMiddleware(r *Router) gin.HandlerFunc {
 		}
 
 		if claims, ok := token.Claims.(*jt.JWTClaim); ok && token.Valid {
-			c.Set("user_id", claims.UserId)
-			c.Set("role_id", claims.RoleId)
+			c.Set("claims", claims)
 			c.Next()
 		} else {
 			utils.HandleError(LangMappingErr, c, fmt.Errorf(utils.E_unauthorized))

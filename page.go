@@ -2,26 +2,22 @@ package main
 
 import (
 	"errors"
-	"fmt"
 	"log"
 
 	"github.com/gin-gonic/gin"
+	"github.com/huyshop/api/jwt"
 	"github.com/huyshop/api/utils"
 	ppb "github.com/huyshop/header/permission"
 	upb "github.com/huyshop/header/user"
 )
 
 func (r *Router) handleListUserPage(ctx *gin.Context) {
+	claims, _ := ctx.MustGet("claims").(*jwt.JWTClaim)
 	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
 	defer cancel()
 	req := &ppb.PageRequest{}
 	utils.BindQuery(req, ctx)
-	uid, exist := ctx.Get("user_id")
-	if !exist {
-		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_invalid_user))
-		return
-	}
-	user, err := r.userSer.GetUser(c, &upb.UserRequest{Id: fmt.Sprint(uid)})
+	user, err := r.userSer.GetUser(c, &upb.UserRequest{Id: claims.UserId})
 	if err != nil {
 		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_access_denied))
 		return
