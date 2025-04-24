@@ -87,7 +87,7 @@ func HandleError(mLangs map[string]LangCode, ctx *gin.Context, err error) {
 			ctx.JSON(statusCode, ErrMsg{Code: -1, Message: data.Vi})
 			return
 		} else {
-			log.Println("error:", err)
+			// log.Println("error:", err)
 			ctx.JSON(statusCode, ErrMsg{Code: -1, Message: "Có lỗi xảy ra"})
 			return
 		}
@@ -96,7 +96,7 @@ func HandleError(mLangs map[string]LangCode, ctx *gin.Context, err error) {
 			ctx.JSON(statusCode, ErrMsg{Code: -1, Message: data.En})
 			return
 		} else {
-			log.Println("error:", err)
+			// log.Println("error:", err)
 			ctx.JSON(statusCode, ErrMsg{Code: -1, Message: "An error occurred"})
 			return
 		}

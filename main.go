@@ -27,6 +27,7 @@ type Configs struct {
 	CloudinaryName    string
 	CloudinaryApiKey  string
 	CloudinarySecret  string
+	AdminId           string
 }
 
 var config *Configs
@@ -51,6 +52,7 @@ func init() {
 		CloudinaryName:    os.Getenv("CLOUDINARY_NAME"),
 		CloudinaryApiKey:  os.Getenv("CLOUDINARY_API_KEY"),
 		CloudinarySecret:  os.Getenv("CLOUDINARY_SECRET"),
+		AdminId:           os.Getenv("ADMIN_ID"),
 	}
 }
 

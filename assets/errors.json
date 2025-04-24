@@ -135,6 +135,14 @@
     "en": "Invalid name",
     "vi": "Tên không hợp lệ"
   },
+  "invalid_email": {
+    "en": "Invalid email",
+    "vi": "Email không hợp lệ"
+  },
+  "invalid_phone_number": {
+    "en": "Invalid phone number",
+    "vi": "Số điện thoại không hợp lệ"
+  },
   "not_found_username": {
     "en": "Not found username",
     "vi": "Không tìm thấy tên người dùng"
@@ -182,5 +190,65 @@
   "full_name_cannot_empty": {
     "en": "Full name cannot empty",
     "vi": "Họ tên không được để trống"
+  },
+  "category_name_empty": {
+    "en": "Category name cannot empty",
+    "vi": "Tên danh mục không được để trống"
+  },
+  "product_banner_word": {
+    "en": "The product name or description contains prohibited words. Please revise it.",
+    "vi": "Tên hoặc mô tả sản phẩm chứa từ ngữ bị cấm. Vui lòng chỉnh sửa lại."
+  },
+  "not_found_product_type": {
+    "en": "Not found product type",
+    "vi": "Không tìm thấy loại sản phẩm"
+  },
+  "not_found_product_type_id": {
+    "en": "Not found product type id",
+    "vi": "Không tìm thấy mã loại sản phẩm"
+  },
+  "not_found_product": {
+    "en": "Not found product",
+    "vi": "Không tìm thấy sản phẩm"
+  },
+  "not_found_product_id": {
+    "en": "Not found product id",
+    "vi": "Không tìm thấy mã sản phẩm"
+  },
+  "can_not_delete_product": {
+    "en": "Can not delete product",
+    "vi": "Không thể xóa sản phẩm"
+  },
+  "can_not_update_product": {
+    "en": "Can not update product",
+    "vi": "Không thể cập nhật sản phẩm"
+  },
+  "can_not_insert_product": {
+    "en": "Can not insert product",
+    "vi": "Không thể thêm mới sản phẩm"
+  },
+  "can_not_update_product_type": {
+    "en": "Can not update product type",
+    "vi": "Không thể cập nhật loại sản phẩm"
+  },
+  "can_not_insert_product_type": {
+    "en": "Can not insert product type",
+    "vi": "Không thể thêm mới loại sản phẩm"
+  },
+  "can_not_delete_product_type": {
+    "en": "Can not delete product type",
+    "vi": "Không thể xóa loại sản phẩm"
+  },
+  "not_found_category_id": {
+    "en": "Not found category id",
+    "vi": "Không tìm thấy mã danh mục"
+  },
+  "category_logo_empty": {
+    "en": "Category logo cannot empty",
+    "vi": "Logo danh mục không được để trống"
+  },
+  "invalid_store_id": {
+    "en": "Invalid store id",
+    "vi": "Mã cửa hàng không hợp lệ"
   }
 }
