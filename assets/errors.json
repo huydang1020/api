@@ -250,5 +250,9 @@
   "invalid_store_id": {
     "en": "Invalid store id",
     "vi": "Mã cửa hàng không hợp lệ"
+  },
+  "invalid_price": {
+    "en": "Original price cannot be less than 0",
+    "vi": "Giá gốc không được nhỏ hơn 0"
   }
 }
