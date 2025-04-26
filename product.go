@@ -55,8 +55,10 @@ func (r *Router) handleCreateProductType(ctx *gin.Context) {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
 	}
-	if claims.PartnerType != userpb.Partner_admin.String() {
-		req.State = ptpb.ProductType_approving.String()
+	if claims.PartnerType == userpb.Partner_admin.String() {
+		req.State = ptpb.ProductType_active.String()
+	} else {
+		req.State = ptpb.ProductType_pending.String()
 	}
 	req.PartnerId = claims.PartnerId
 	_, err := r.productSer.CreateProductType(c, req)
@@ -81,7 +83,9 @@ func (r *Router) handleUpdateProductType(ctx *gin.Context) {
 		return
 	}
 	if claims.PartnerType != userpb.Partner_admin.String() {
-		req.State = ptpb.ProductType_approving.String()
+		req.State = ptpb.ProductType_active.String()
+	} else {
+		req.State = ptpb.ProductType_pending.String()
 	}
 	_, err := r.productSer.UpdateProductType(c, req)
 	if err != nil {
@@ -149,6 +153,24 @@ func (r *Router) handleListProductType(ctx *gin.Context) {
 		log.Println("err", err)
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
+	}
+	for _, pty := range productTypes.GetProductTypes() {
+		if pty.PartnerId != "" {
+			partner, err := r.userSer.GetPartner(c, &userpb.PartnerRequest{Id: pty.PartnerId})
+			if err != nil {
+				log.Println("err", err)
+				continue
+			}
+			pty.Partner = partner
+		}
+		if pty.StoreId != "" {
+			store, err := r.userSer.GetStore(c, &userpb.StoreRequest{Id: pty.StoreId})
+			if err != nil {
+				log.Println("err", err)
+				continue
+			}
+			pty.Store = store
+		}
 	}
 	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: productTypes})
 }

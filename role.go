@@ -102,5 +102,8 @@ func (r Router) isCanBeAccess(c context.Context, ctx *gin.Context, group, action
 	}
 	log.Println("enforcer", enforcer)
 	_, err := r.permSer.CheckAccess(c, enforcer)
+	if err != nil {
+		log.Println("err", err)
+	}
 	return err
 }
