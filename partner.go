@@ -106,6 +106,7 @@ func (r *Router) handleDeletePartner(ctx *gin.Context) {
 
 // Store
 func (r *Router) handleListStore(ctx *gin.Context) {
+	claims, _ := ctx.MustGet("claims").(*jwt.JWTClaim)
 	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
 	defer cancel()
 	req := &userpb.StoreRequest{}
@@ -113,6 +114,9 @@ func (r *Router) handleListStore(ctx *gin.Context) {
 	if err := r.isCanBeAccess(c, ctx, "store", "r"); err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
+	}
+	if claims.PartnerType != userpb.Partner_admin.String() {
+		req.PartnerId = claims.PartnerId
 	}
 	stores, err := r.userSer.ListStore(c, req)
 	if err != nil {

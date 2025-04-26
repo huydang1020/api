@@ -140,6 +140,7 @@ func (r *Router) handleUpdateStateProductType(ctx *gin.Context) {
 }
 
 func (r *Router) handleListProductType(ctx *gin.Context) {
+	claims, _ := ctx.MustGet("claims").(*jwt.JWTClaim)
 	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
 	defer cancel()
 	req := &ptpb.ProductTypeRequest{}
@@ -147,6 +148,9 @@ func (r *Router) handleListProductType(ctx *gin.Context) {
 	if err := r.isCanBeAccess(c, ctx, "product_type", "r"); err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
+	}
+	if claims.PartnerType != userpb.Partner_admin.String() {
+		req.PartnerId = claims.PartnerId
 	}
 	productTypes, err := r.productSer.ListProductType(c, req)
 	if err != nil {
