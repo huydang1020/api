@@ -254,5 +254,25 @@
   "invalid_price": {
     "en": "Original price cannot be less than 0",
     "vi": "Giá gốc không được nhỏ hơn 0"
+  },
+  "banner_name_empty": {
+    "en": "Banner name cannot empty",
+    "vi": "Tên banner không được để trống"
+  },
+  "banner_logo_empty": {
+    "en": "Banner logo cannot empty",
+    "vi": "Logo banner không được để trống"
+  },
+  "banner_link_empty": {
+    "en": "Banner link cannot empty",
+    "vi": "Link banner không được để trống"
+  },
+  "not_found_banner_id": {
+    "en": "Not found banner id",
+    "vi": "Không tìm thấy mã banner"
+  },
+  "not_found_banner": {
+    "en": "Not found banner",
+    "vi": "Không tìm thấy banner"
   }
 }

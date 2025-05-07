@@ -63,4 +63,12 @@ func (r *Router) mappingRouterAdmin() {
 	r1.GET("/category/:id", r.handleGetCategory)
 	r1.PUT("/category/:id", r.handleUpdateCategory)
 	r1.DELETE("/category/:id", r.handleDeleteCategory)
+
+	// banner
+	r1.GET("/banner", r.handleListBanner)
+	r1.POST("/banner", r.handleCreateBanner)
+	r1.GET("/banner/:id", r.handleGetBanner)
+	r1.PUT("/banner/:id", r.handleUpdateBanner)
+	r1.DELETE("/banner/:id", r.handleDeleteBanner)
+	
 }

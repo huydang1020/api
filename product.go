@@ -213,6 +213,7 @@ func (r *Router) handleListCategory(ctx *gin.Context) {
 	}
 	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: productCategories})
 }
+
 func (r *Router) handleGetCategory(ctx *gin.Context) {
 	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
 	defer cancel()
@@ -228,6 +229,7 @@ func (r *Router) handleGetCategory(ctx *gin.Context) {
 	}
 	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: Category})
 }
+
 func (r *Router) handleCreateCategory(ctx *gin.Context) {
 	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
 	defer cancel()
@@ -269,6 +271,7 @@ func (r *Router) handleCreateCategory(ctx *gin.Context) {
 	}
 	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success"})
 }
+
 func (r *Router) handleUpdateCategory(ctx *gin.Context) {
 	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
 	defer cancel()
@@ -313,6 +316,7 @@ func (r *Router) handleUpdateCategory(ctx *gin.Context) {
 	}
 	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success"})
 }
+
 func (r *Router) handleDeleteCategory(ctx *gin.Context) {
 	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
 	defer cancel()
@@ -327,4 +331,129 @@ func (r *Router) handleDeleteCategory(ctx *gin.Context) {
 		return
 	}
 	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success"})
+}
+
+func (r *Router) handleCreateBanner(ctx *gin.Context) {
+	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
+	defer cancel()
+	req := &ptpb.Banner{}
+	ctx.ShouldBindJSON(req)
+	if err := r.isCanBeAccess(c, ctx, "banner", "c"); err != nil {
+		log.Println("err", err)
+		utils.HandleError(LangMappingErr, ctx, err)
+		return
+	}
+	_, err := r.productSer.CreateBanner(c, req)
+	if err != nil {
+		log.Println("err", err)
+		utils.HandleError(LangMappingErr, ctx, err)
+		return
+	}
+	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success"})
+}
+
+func (r *Router) handleUpdateBanner(ctx *gin.Context) {
+	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
+	defer cancel()
+	id := ctx.Param("id")
+	req := &ptpb.Banner{Id: id}
+	ctx.ShouldBindJSON(req)
+	if err := r.isCanBeAccess(c, ctx, "banner", "u"); err != nil {
+		utils.HandleError(LangMappingErr, ctx, err)
+		return
+	}
+	_, err := r.productSer.UpdateBanner(c, req)
+	if err != nil {
+		utils.HandleError(LangMappingErr, ctx, err)
+		return
+	}
+	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success"})
+}
+
+func (r *Router) handleDeleteBanner(ctx *gin.Context) {
+	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
+	defer cancel()
+	id := ctx.Param("id")
+	if err := r.isCanBeAccess(c, ctx, "banner", "d"); err != nil {
+		utils.HandleError(LangMappingErr, ctx, err)
+		return
+	}
+	_, err := r.productSer.DeleteBanner(c, &ptpb.Banner{Id: id})
+	if err != nil {
+		utils.HandleError(LangMappingErr, ctx, err)
+		return
+	}
+	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success"})
+}
+
+func (r *Router) handleListBanner(ctx *gin.Context) {
+	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
+	defer cancel()
+	req := &ptpb.BannerRequest{}
+	utils.BindQuery(req, ctx)
+	if err := r.isCanBeAccess(c, ctx, "banner", "r"); err != nil {
+		utils.HandleError(LangMappingErr, ctx, err)
+		return
+	}
+	banners, err := r.productSer.ListBanner(c, req)
+	if err != nil {
+		utils.HandleError(LangMappingErr, ctx, err)
+		return
+	}
+	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: banners})
+}
+
+func (r *Router) handleGetBanner(ctx *gin.Context) {
+	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
+	defer cancel()
+	id := ctx.Param("id")
+	if err := r.isCanBeAccess(c, ctx, "banner", "r"); err != nil {
+		utils.HandleError(LangMappingErr, ctx, err)
+		return
+	}
+	banner, err := r.productSer.GetBanner(c, &ptpb.BannerRequest{Id: id})
+	if err != nil {
+		utils.HandleError(LangMappingErr, ctx, err)
+		return
+	}
+	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: banner})
+}
+
+type Home struct {
+	Categories []*ptpb.Category    `json:"categories"`
+	Products   []*ptpb.ProductType `json:"products"`
+	Banners    []*ptpb.Banner      `json:"banners"`
+}
+
+type HomeRequest struct {
+	CategoryId string `json:"category_id"`
+}
+
+func (r *Router) handleHome(ctx *gin.Context) {
+	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
+	defer cancel()
+	req := &HomeRequest{}
+	utils.BindQuery(req, ctx)
+	log.Println("req", req)
+	cates, err := r.productSer.ListCategory(c, &ptpb.CategoryRequest{State: ptpb.Category_active.String()})
+	if err != nil {
+		utils.HandleError(LangMappingErr, ctx, err)
+		return
+	}
+	products, err := r.productSer.ListProductType(c, &ptpb.ProductTypeRequest{State: ptpb.Product_active.String(), CategoryId: req.CategoryId})
+	if err != nil {
+		utils.HandleError(LangMappingErr, ctx, err)
+		return
+	}
+	banners, err := r.productSer.ListBanner(c, &ptpb.BannerRequest{State: ptpb.Banner_active.String()})
+	if err != nil {
+		utils.HandleError(LangMappingErr, ctx, err)
+		return
+	}
+	home := &Home{
+		Categories: cates.GetCategories(),
+		Products:   products.GetProductTypes(),
+		Banners:    banners.GetBanners(),
+	}
+	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: home})
 }

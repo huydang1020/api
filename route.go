@@ -6,4 +6,5 @@ const (
 
 func (r *Router) router() {
 	r.mappingRouterAdmin()
+	r.mappingRouterCustomer()
 }

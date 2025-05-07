@@ -2,13 +2,13 @@ module github.com/huyshop/api
 
 go 1.23.7
 
-replace github.com/huyshop/header v0.0.38 => ../header
+replace github.com/huyshop/header v0.0.40 => ../header
 
 require (
 	github.com/gin-contrib/cors v1.7.5
 	github.com/gin-gonic/gin v1.10.0
 	github.com/gorilla/schema v1.4.1
-	github.com/huyshop/header v0.0.40
+	github.com/huyshop/header v0.0.41
 	github.com/joho/godotenv v1.5.1
 	github.com/urfave/cli/v2 v2.27.6
 	go.elastic.co/apm/module/apmgin v1.15.0
@@ -20,7 +20,6 @@ require (
 	github.com/creasty/defaults v1.8.0 // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
 	github.com/google/uuid v1.6.0 // indirect
-	github.com/knz/go-libedit v1.10.1 // indirect
 	golang.org/x/sync v0.13.0 // indirect
 )
 
@@ -30,7 +29,6 @@ require (
 	github.com/bytedance/sonic/loader v0.2.4 // indirect
 	github.com/cloudinary/cloudinary-go v1.7.0
 	github.com/cloudwego/base64x v0.1.5 // indirect
-	github.com/cloudwego/iasm v0.2.0 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.6 // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/elastic/go-licenser v0.4.2 // indirect
@@ -44,7 +42,6 @@ require (
 	github.com/go-redis/redis/v8 v8.11.5
 	github.com/goccy/go-json v0.10.5 // indirect
 	github.com/jcchavezs/porto v0.7.0 // indirect
-	github.com/joeshaw/multierror v0.0.0-20140124173710-69b34d4ec901 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/klauspost/cpuid/v2 v2.2.10 // indirect
 	github.com/leodido/go-urn v1.4.0 // indirect
