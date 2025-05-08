@@ -274,5 +274,9 @@
   "not_found_banner": {
     "en": "Not found banner",
     "vi": "Không tìm thấy banner"
+  },
+  "not_found_code": {
+    "en": "Not found code",
+    "vi": "Không tìm thấy mã"
   }
 }

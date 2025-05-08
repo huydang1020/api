@@ -13,6 +13,10 @@ import (
 	userpb "github.com/huyshop/header/user"
 )
 
+const (
+	ROLE_CUSTOMER = "roled0di17m9ipf12jq5ndlg"
+)
+
 func (r *Router) handleSignInAdmin(ctx *gin.Context) {
 	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
 	defer cancel()
@@ -350,7 +354,7 @@ func (r *Router) handleSignInCustomer(ctx *gin.Context) {
 	defer cancel()
 	req := &userpb.User{}
 	ctx.ShouldBindJSON(req)
-	resp, err := r.userSer.SignIn(c, req)
+	resp, err := r.userSer.SignInCustomer(c, req)
 	if err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
@@ -384,10 +388,36 @@ func (r *Router) handleSignUpCustomer(ctx *gin.Context) {
 		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_email_cannot_empty))
 		return
 	}
+	if req.Password == "" {
+		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_password_cannot_empty))
+		return
+	}
+	req.RoleId = ROLE_CUSTOMER
 	_, err := r.userSer.CreateUser(c, req)
 	if err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
 	}
 	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success"})
+}
+
+func (r *Router) handleVerifyCode(ctx *gin.Context) {
+	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
+	defer cancel()
+	req := &userpb.User{}
+	ctx.ShouldBindJSON(req)
+	if req.PhoneNumber == "" {
+		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_phone_number_cannot_empty))
+		return
+	}
+	if req.VerifyCode == "" {
+		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_not_found_code))
+		return
+	}
+	resp, err := r.userSer.VerifyCode(c, req)
+	if err != nil {
+		utils.HandleError(LangMappingErr, ctx, err)
+		return
+	}
+	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: resp})
 }
