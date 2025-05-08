@@ -393,7 +393,7 @@ func (r *Router) handleSignUpCustomer(ctx *gin.Context) {
 		return
 	}
 	req.RoleId = ROLE_CUSTOMER
-	_, err := r.userSer.CreateUser(c, req)
+	_, err := r.userSer.CreateCustomer(c, req)
 	if err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
@@ -401,7 +401,7 @@ func (r *Router) handleSignUpCustomer(ctx *gin.Context) {
 	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success"})
 }
 
-func (r *Router) handleVerifyCode(ctx *gin.Context) {
+func (r *Router) handleVerifyEmail(ctx *gin.Context) {
 	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
 	defer cancel()
 	req := &userpb.User{}
@@ -415,6 +415,23 @@ func (r *Router) handleVerifyCode(ctx *gin.Context) {
 		return
 	}
 	_, err := r.userSer.VerifyEmail(c, req)
+	if err != nil {
+		utils.HandleError(LangMappingErr, ctx, err)
+		return
+	}
+	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success"})
+}
+
+func (r *Router) handleSendCode(ctx *gin.Context) {
+	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
+	defer cancel()
+	req := &userpb.User{}
+	ctx.ShouldBindJSON(req)
+	if req.Email == "" {
+		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_email_cannot_empty))
+		return
+	}
+	_, err := r.userSer.SendVerifyCode(c, req)
 	if err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return

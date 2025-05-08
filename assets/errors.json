@@ -35,6 +35,10 @@
     "en": "user existed",
     "vi": "Người dùng tồn tại"
   },
+  "user_not_existed": {
+    "en": "user not existed",
+    "vi": "Người dùng không tồn tại"
+  },
   "user_not_found": {
     "en": "user not found",
     "vi": "Không tìm thấy người dùng"
@@ -146,6 +150,14 @@
   "not_found_username": {
     "en": "Not found username",
     "vi": "Không tìm thấy tên người dùng"
+  },
+  "invalid_username": {
+    "en": "Invalid username",
+    "vi": "Tên người dùng không hợp lệ"
+  },
+  "invalid_password": {
+    "en": "Invalid password",
+    "vi": "Mật khẩu không hợp lệ"
   },
   "E_username_is_incorrect": {
     "en": "Username is incorrect",
@@ -278,5 +290,13 @@
   "not_found_code": {
     "en": "Not found code",
     "vi": "Không tìm thấy mã"
+  },
+  "verify_code_is_expired": {
+    "en": "Verification code has expired. Please request a new one.",
+    "vi": "Mã xác nhận đã hết hạn. Vui lòng yêu cầu mã mới."
+  },
+  "verify_code_incorrect": {
+    "en": "Verification code is incorrect. Please check and try again.",
+    "vi": "Mã xác nhận không chính xác. Vui lòng kiểm tra và thử lại."
   }
 }

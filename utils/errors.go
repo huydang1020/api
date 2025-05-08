@@ -23,5 +23,5 @@ const (
 	E_name_cannot_empty         = "name_cannot_empty"
 	E_full_name_cannot_empty    = "full_name_cannot_empty"
 	E_user_existed              = "user_existed"
-	E_not_found_code         = "not_found_code"
+	E_not_found_code            = "not_found_code"
 )
