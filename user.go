@@ -409,7 +409,7 @@ func (r *Router) handleVerifyEmail(ctx *gin.Context) {
 		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_email_cannot_empty))
 		return
 	}
-	if req.VerifyCode == "" {
+	if req.VerifyOtp == "" {
 		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_not_found_code))
 		return
 	}
@@ -430,7 +430,7 @@ func (r *Router) handleSendCode(ctx *gin.Context) {
 		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_email_cannot_empty))
 		return
 	}
-	_, err := r.userSer.SendVerifyCode(c, req)
+	_, err := r.userSer.SendVerifyOtp(c, req)
 	if err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
