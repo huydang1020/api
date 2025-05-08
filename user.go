@@ -421,7 +421,7 @@ func (r *Router) handleVerifyEmail(ctx *gin.Context) {
 	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success"})
 }
 
-func (r *Router) handleSendCode(ctx *gin.Context) {
+func (r *Router) handleSendOtp(ctx *gin.Context) {
 	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
 	defer cancel()
 	req := &userpb.User{}

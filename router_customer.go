@@ -6,7 +6,7 @@ func (r *Router) mappingRouterCustomer() {
 	r.route.POST("/api/customer/sign-in", r.handleSignInCustomer)
 	r.route.POST("/api/customer/sign-up", r.handleSignUpCustomer)
 	r.route.POST("/api/customer/verify-email", r.handleVerifyEmail)
-	r.route.POST("/api/customer/send-code", r.handleSendCode)
+	r.route.POST("/api/customer/send-otp", r.handleSendOtp)
 
 	// productType
 	r.route.GET("/api/product", r.handleListProduct)
