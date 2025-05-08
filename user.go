@@ -379,7 +379,6 @@ func (r *Router) handleSignUpCustomer(ctx *gin.Context) {
 	defer cancel()
 	req := &userpb.User{}
 	ctx.ShouldBindJSON(req)
-	log.Println("req:", req)
 	if req.PhoneNumber == "" {
 		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_phone_number_cannot_empty))
 		return
