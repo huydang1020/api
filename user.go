@@ -406,18 +406,18 @@ func (r *Router) handleVerifyCode(ctx *gin.Context) {
 	defer cancel()
 	req := &userpb.User{}
 	ctx.ShouldBindJSON(req)
-	if req.PhoneNumber == "" {
-		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_phone_number_cannot_empty))
+	if req.Email == "" {
+		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_email_cannot_empty))
 		return
 	}
 	if req.VerifyCode == "" {
 		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_not_found_code))
 		return
 	}
-	resp, err := r.userSer.VerifyCode(c, req)
+	_, err := r.userSer.VerifyEmail(c, req)
 	if err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
 	}
-	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: resp})
+	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success"})
 }
