@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 	"mime/multipart"
+	"strings"
 	"time"
 
 	"github.com/cloudinary/cloudinary-go"
@@ -44,13 +45,12 @@ func (r *Router) handleUploadImage(ctx *gin.Context) {
 	t1 := time.Now()
 	files := form.File["images"]
 	for _, file := range files {
-		imageName := file.Filename
 		image, err := file.Open()
 		if err != nil {
 			log.Println("file open err:", err)
 			continue
 		}
-		imageUrl, err := UploadImageToCloudinary(c, image, imageName)
+		imageUrl, err := UploadImageToCloudinary(c, image, strings.Split(file.Filename, ".")[0])
 		if err != nil {
 			log.Println("upload img err:", err)
 			return
