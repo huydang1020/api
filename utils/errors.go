@@ -25,4 +25,6 @@ const (
 	E_user_existed              = "user_existed"
 	E_not_found_code            = "not_found_code"
 	E_not_found_item_cart       = "not_found_item_cart"
+	E_not_found_user_id         = "not_found_user_id"
+	E_not_found_user            = "not_found_user"
 )

@@ -298,5 +298,65 @@
   "verify_code_incorrect": {
     "en": "Verification code is incorrect. Please check and try again.",
     "vi": "Mã xác nhận không chính xác. Vui lòng kiểm tra và thử lại."
+  },
+  "not_found_item_cart": {
+    "en": "Not found item cart",
+    "vi": "Không tìm thấy mặt hàng trong giỏ hàng"
+  },
+  "not_found_cart": {
+    "en": "Not found cart",
+    "vi": "Không tìm thấy giỏ hàng"
+  },
+  "not_found_order": {
+    "en": "Not found order",
+    "vi": "Không tìm thấy đơn hàng"
+  },
+  "not_found_order_id": {
+    "en": "Not found order id",
+    "vi": "Không tìm thấy mã đơn hàng"
+  },
+  "not_found_order_item": {
+    "en": "Not found order item",
+    "vi": "Không tìm thấy mặt hàng trong đơn hàng"
+  },
+  "inventory_quantity_not_enough": {
+    "en": "Inventory quantity not enough",
+    "vi": "Số lượng tồn kho không đủ"
+  },
+  "invalid_amount_product": {
+    "en": "Invalid amount product",
+    "vi": "Số lượng sản phẩm không hợp lệ"
+  },
+  "can_not_insert_order": {
+    "en": "Can not insert order",
+    "vi": "Không thể thêm mới đơn hàng"
+  },
+  "scan_not_update_order": {
+    "en": "Can not update order",
+    "vi": "Không thể cập nhật đơn hàng"
+  },
+  "invalid_method_payment": {
+    "en": "Invalid method payment",
+    "vi": "Phương thức thanh toán không hợp lệ"
+  },
+  "invalid_receiver_name": {
+    "en": "Invalid receiver name",
+    "vi": "Tên người nhận không hợp lệ"
+  },
+  "invalid_receiver_phone": {
+    "en": "Invalid receiver phone",
+    "vi": "Số điện thoại người nhận không hợp lệ"
+  },
+  "invalid_receiver_address": {
+    "en": "Invalid receiver address",
+    "vi": "Địa chỉ người nhận không hợp lệ"
+  },
+  "not_found_payment": {
+    "en": "Not found payment",
+    "vi": "Không tìm thấy phương thức thanh toán"
+  },
+  "not_found_order_code": {
+    "en": "Not found order code",
+    "vi": "Không tìm thấy mã đơn hàng"
   }
 }

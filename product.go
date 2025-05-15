@@ -466,7 +466,6 @@ func (r *Router) handleGetBanner(ctx *gin.Context) {
 
 type Home struct {
 	Categories []*ptpb.Category    `json:"categories"`
-	Products   []*ptpb.ProductType `json:"products"`
 	Banners    []*ptpb.Banner      `json:"banners"`
 }
 
@@ -485,11 +484,6 @@ func (r *Router) handleHome(ctx *gin.Context) {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
 	}
-	// products, err := r.productSer.ListProductType(c, &ptpb.ProductTypeRequest{State: ptpb.Product_active.String(), CategoryId: req.CategoryId})
-	// if err != nil {
-	// 	utils.HandleError(LangMappingErr, ctx, err)
-	// 	return
-	// }
 	banners, err := r.productSer.ListBanner(c, &ptpb.BannerRequest{State: ptpb.Banner_active.String()})
 	if err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
@@ -497,7 +491,6 @@ func (r *Router) handleHome(ctx *gin.Context) {
 	}
 	home := &Home{
 		Categories: cates.GetCategories(),
-		// Products:   products.GetProductTypes(),
 		Banners:    banners.GetBanners(),
 	}
 	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: home})
