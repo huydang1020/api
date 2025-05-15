@@ -18,15 +18,13 @@ func (r *Router) handleUpsertCart(ctx *gin.Context) {
 	req := []*ptpb.OrderDetail{}
 	ctx.ShouldBindJSON(&req)
 	user_id := claims.UserId
-	log.Println("user_id", user_id)
-	log.Println("req", req)
-	cart, err := r.productSer.AddToCart(c, &ptpb.Cart{Item: req, UserId: user_id})
+	_, err := r.productSer.AddToCart(c, &ptpb.Cart{Item: req, UserId: user_id})
 	if err != nil {
 		log.Println("err ", err)
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
 	}
-	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: cart})
+	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success"})
 }
 
 func (r *Router) handleListCart(ctx *gin.Context) {
@@ -36,7 +34,6 @@ func (r *Router) handleListCart(ctx *gin.Context) {
 	req := &ptpb.Cart{}
 	ctx.ShouldBindQuery(&req)
 	req.UserId = claims.UserId
-	log.Println("user_id", req.UserId)
 	cart, err := r.productSer.ListCart(c, req)
 	if err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)

@@ -232,13 +232,29 @@ func (r *Router) handleGetProductTypeCustomer(ctx *gin.Context) {
 	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
 	defer cancel()
 	id := ctx.Param("id")
-	productType, err := r.productSer.GetProductType(c, &ptpb.ProductTypeRequest{Id: id})
+	pty, err := r.productSer.GetProductType(c, &ptpb.ProductTypeRequest{Id: id})
 	if err != nil {
 		log.Println("err", err)
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
 	}
-	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: productType})
+	if pty.StoreId != "" {
+		store, err := r.userSer.GetStore(c, &userpb.StoreRequest{Id: pty.StoreId})
+		if err != nil {
+			log.Println("err", err)
+		}
+		pty.Store = store
+	}
+	countpty, err := r.productSer.CountProductType(ctx, &ptpb.ProductTypeRequest{StoreId: pty.StoreId})
+	if err != nil {
+		log.Println("err", err)
+		utils.HandleError(LangMappingErr, ctx, err)
+		return
+	}
+	if countpty.GetCount() > 0 {
+		pty.Store.QuantityProduct = int32(countpty.GetCount())
+	}
+	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: pty})
 }
 
 func (r *Router) handleListCategory(ctx *gin.Context) {
@@ -465,8 +481,8 @@ func (r *Router) handleGetBanner(ctx *gin.Context) {
 }
 
 type Home struct {
-	Categories []*ptpb.Category    `json:"categories"`
-	Banners    []*ptpb.Banner      `json:"banners"`
+	Categories []*ptpb.Category `json:"categories"`
+	Banners    []*ptpb.Banner   `json:"banners"`
 }
 
 type HomeRequest struct {
