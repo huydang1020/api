@@ -58,7 +58,11 @@ func (r *Router) handleGetMe(ctx *gin.Context) {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
 	}
-	user.CartQuantity = int32(len(cart.GetItem()))
+	var total int
+	for _, item := range cart.GetItem() {
+		total += int(item.Quantity)
+	}
+	user.CartQuantity = int32(total)
 	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: user})
 }
 
