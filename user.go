@@ -10,6 +10,7 @@ import (
 	"github.com/huyshop/api/jwt"
 	"github.com/huyshop/api/utils"
 	permpb "github.com/huyshop/header/permission"
+	"github.com/huyshop/header/product"
 	userpb "github.com/huyshop/header/user"
 )
 
@@ -52,6 +53,12 @@ func (r *Router) handleGetMe(ctx *gin.Context) {
 		return
 	}
 	user.Password = ""
+	cart, err := r.productSer.ListCart(c, &product.Cart{UserId: claims.UserId})
+	if err != nil {
+		utils.HandleError(LangMappingErr, ctx, err)
+		return
+	}
+	user.CartQuantity = int32(len(cart.GetItem()))
 	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: user})
 }
 
