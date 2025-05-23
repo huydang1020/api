@@ -147,45 +147,13 @@ func (r *Router) handleCreateStore(ctx *gin.Context) {
 	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
 	defer cancel()
 	req := &userpb.Store{}
+	ctx.ShouldBindJSON(req)
 	if err := r.isCanBeAccess(c, ctx, "store", "c"); err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
 	}
-	req.Name = ctx.PostForm("name")
-	req.Province = ctx.PostForm("province")
-	req.District = ctx.PostForm("district")
-	req.Ward = ctx.PostForm("ward")
-	req.Address = ctx.PostForm("address")
-	req.Lat = ctx.PostForm("lat")
-	req.Lng = ctx.PostForm("lng")
-	req.PhoneNumber = ctx.PostForm("phone_number")
-	req.Description = ctx.PostForm("description")
-	form, err := ctx.MultipartForm()
-	if err == nil && form.File["logo"] != nil {
-		logo := []string{}
-		files := form.File["logo"]
-		for _, file := range files {
-			imageName := file.Filename
-			image, err := file.Open()
-			if err != nil {
-				log.Println("file open err:", err)
-				continue
-			}
-			defer image.Close()
-
-			imageUrl, err := UploadImageToCloudinary(c, image, imageName)
-			if err != nil {
-				log.Println("upload img err:", err)
-				continue
-			}
-			logo = append(logo, imageUrl)
-		}
-		if len(logo) > 0 {
-			req.Logo = logo[0]
-		}
-	}
 	req.PartnerId = claims.PartnerId
-	_, err = r.userSer.CreateStore(c, req)
+	_, err := r.userSer.CreateStore(c, req)
 	if err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
@@ -199,46 +167,14 @@ func (r *Router) handleUpdateStore(ctx *gin.Context) {
 	defer cancel()
 	id := ctx.Param("id")
 	req := &userpb.Store{}
+	ctx.ShouldBindJSON(req)
 	if err := r.isCanBeAccess(c, ctx, "store", "u"); err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
 	}
-	req.Name = ctx.PostForm("name")
-	req.Province = ctx.PostForm("province")
-	req.District = ctx.PostForm("district")
-	req.Ward = ctx.PostForm("ward")
-	req.Address = ctx.PostForm("address")
-	req.Lat = ctx.PostForm("lat")
-	req.Lng = ctx.PostForm("lng")
-	req.PhoneNumber = ctx.PostForm("phone_number")
-	req.Description = ctx.PostForm("description")
-	form, err := ctx.MultipartForm()
-	if err == nil && form.File["logo"] != nil {
-		logo := []string{}
-		files := form.File["logo"]
-		for _, file := range files {
-			imageName := file.Filename
-			image, err := file.Open()
-			if err != nil {
-				log.Println("file open err:", err)
-				continue
-			}
-			defer image.Close()
-
-			imageUrl, err := UploadImageToCloudinary(c, image, imageName)
-			if err != nil {
-				log.Println("upload img err:", err)
-				continue
-			}
-			logo = append(logo, imageUrl)
-		}
-		if len(logo) > 0 {
-			req.Logo = logo[0]
-		}
-	}
 	req.Id = id
 	req.PartnerId = claims.PartnerId
-	_, err = r.userSer.UpdateStore(c, req)
+	_, err := r.userSer.UpdateStore(c, req)
 	if err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return

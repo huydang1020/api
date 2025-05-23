@@ -113,90 +113,38 @@ func (r *Router) handleCreateUser(ctx *gin.Context) {
 	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
 	defer cancel()
 	req := &userpb.User{}
-	fullName := ctx.PostForm("full_name")
-	if fullName == "" {
+	ctx.ShouldBindJSON(req)
+	if req.FullName == "" {
 		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_full_name_cannot_empty))
 		return
 	}
-	req.FullName = fullName
-
-	email := ctx.PostForm("email")
-	if email == "" {
+	if req.Email == "" {
 		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_email_cannot_empty))
 		return
 	}
-	req.Email = email
-
-	username := ctx.PostForm("username")
-	if username == "" {
+	if req.Username == "" {
 		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_username_cannot_empty))
 		return
 	}
-	req.Username = username
-
-	password := ctx.PostForm("password")
-	if password == "" {
+	if req.Password == "" {
 		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_password_cannot_empty))
 		return
 	}
-	req.Password = password
-
-	roleId := ctx.PostForm("role_id")
-	if roleId == "" {
+	if req.RoleId == "" {
 		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_role_cannot_empty))
 		return
 	}
-	req.PhoneNumber = ctx.PostForm("phone_number")
 	if req.PhoneNumber == "" {
 		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_phone_number_cannot_empty))
 		return
-	}
-	req.RoleId = roleId
-	req.Province = ctx.PostForm("province")
-	req.District = ctx.PostForm("district")
-	req.Ward = ctx.PostForm("ward")
-	req.Address = ctx.PostForm("address")
-	if birthday := ctx.PostForm("birthday"); birthday != "" {
-		birth, err := strconv.Atoi(birthday)
-		if err != nil {
-			log.Println("birthday err:", err)
-			utils.HandleError(LangMappingErr, ctx, err)
-			return
-		}
-		req.Birthday = int64(birth)
 	}
 	check, _ := r.userSer.IsExistUser(c, &userpb.User{Email: req.Email, Username: req.Username, PhoneNumber: req.PhoneNumber})
 	if check.Exist {
 		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_user_existed))
 		return
 	}
-	// Xử lý file avatar (nếu có)
-	form, err := ctx.MultipartForm()
-	if err == nil && form.File["avatar"] != nil {
-		avatar := []string{}
-		files := form.File["avatar"]
-		for _, file := range files {
-			imageName := file.Filename
-			image, err := file.Open()
-			if err != nil {
-				log.Println("file open err:", err)
-				continue
-			}
-			defer image.Close()
-
-			imageUrl, err := UploadImageToCloudinary(c, image, imageName)
-			if err != nil {
-				log.Println("upload img err:", err)
-				continue
-			}
-			avatar = append(avatar, imageUrl)
-		}
-		if len(avatar) > 0 {
-			req.Avatar = avatar[0]
-		}
-	}
 	log.Println("req:", req)
-	_, err = r.userSer.CreateUser(c, req)
+	_, err := r.userSer.CreateUser(c, req)
 	if err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
@@ -209,62 +157,36 @@ func (r *Router) handleUpdateUser(ctx *gin.Context) {
 	defer cancel()
 	id := ctx.Param("id")
 	req := &userpb.User{}
+	ctx.ShouldBindJSON(req)
 	req.Id = id
-	req.FullName = ctx.PostForm("full_name")
-	req.Email = ctx.PostForm("email")
-	req.PhoneNumber = ctx.PostForm("phone_number")
-	req.Username = ctx.PostForm("username")
-	req.Password = ctx.PostForm("password")
-	req.RoleId = ctx.PostForm("role_id")
-	req.Province = ctx.PostForm("province")
-	req.District = ctx.PostForm("district")
-	req.Ward = ctx.PostForm("ward")
-	req.State = ctx.PostForm("state")
-	req.Address = ctx.PostForm("address")
-	if birthday := ctx.PostForm("birthday"); birthday != "" {
-		birth, err := strconv.Atoi(birthday)
-		if err != nil {
-			log.Println("birthday err:", err)
-			utils.HandleError(LangMappingErr, ctx, err)
-			return
-		}
-		req.Birthday = int64(birth)
-	}
+	log.Println("req:", req)
 	user, err := r.userSer.GetUser(c, &userpb.UserRequest{Id: id})
 	if err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
 	}
-	if !reflect.DeepEqual(&userpb.User{Username: user.Username, Email: user.Email, PhoneNumber: user.PhoneNumber}, &userpb.User{Username: req.Username, Email: req.Email, PhoneNumber: req.PhoneNumber}) {
-		check, _ := r.userSer.IsExistUser(c, &userpb.User{Email: req.Email, Username: req.Username, PhoneNumber: req.PhoneNumber})
+	newUsername := req.Username
+	if newUsername == "" {
+		newUsername = user.Username
+	}
+	newEmail := req.Email
+	if newEmail == "" {
+		newEmail = user.Email
+	}
+	newPhone := req.PhoneNumber
+	if newPhone == "" {
+		newPhone = user.PhoneNumber
+	}
+	if !reflect.DeepEqual(
+		&userpb.User{Username: user.Username, Email: user.Email, PhoneNumber: user.PhoneNumber},
+		&userpb.User{Username: newUsername, Email: newEmail, PhoneNumber: newPhone},
+	) {
+		check, _ := r.userSer.IsExistUser(c, &userpb.User{
+			Email: newEmail, Username: newUsername, PhoneNumber: newPhone,
+		})
 		if check.Exist {
 			utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_user_existed))
 			return
-		}
-	}
-	// Xử lý file avatar (nếu có)
-	form, err := ctx.MultipartForm()
-	if err == nil && form.File["avatar"] != nil {
-		avatar := []string{}
-		files := form.File["avatar"]
-		for _, file := range files {
-			imageName := file.Filename
-			image, err := file.Open()
-			if err != nil {
-				log.Println("file open err:", err)
-				continue
-			}
-			defer image.Close()
-
-			imageUrl, err := UploadImageToCloudinary(c, image, imageName)
-			if err != nil {
-				log.Println("upload img err:", err)
-				continue
-			}
-			avatar = append(avatar, imageUrl)
-		}
-		if len(avatar) > 0 {
-			req.Avatar = avatar[0]
 		}
 	}
 	log.Println("req:", req)

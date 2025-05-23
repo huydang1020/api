@@ -295,37 +295,13 @@ func (r *Router) handleCreateCategory(ctx *gin.Context) {
 	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
 	defer cancel()
 	req := &ptpb.Category{}
+	ctx.ShouldBindJSON(req)
 	if err := r.isCanBeAccess(c, ctx, "category", "c"); err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
 	}
-	req.Name = ctx.PostForm("name")
-	// Xử lý file logo (nếu có)
-	form, err := ctx.MultipartForm()
-	if err == nil && form.File["logo"] != nil {
-		logo := []string{}
-		files := form.File["logo"]
-		for _, file := range files {
-			imageName := file.Filename
-			image, err := file.Open()
-			if err != nil {
-				log.Println("file open err:", err)
-				continue
-			}
-			defer image.Close()
-
-			imageUrl, err := UploadImageToCloudinary(c, image, imageName)
-			if err != nil {
-				log.Println("upload img err:", err)
-				continue
-			}
-			logo = append(logo, imageUrl)
-		}
-		if len(logo) > 0 {
-			req.Logo = logo[0]
-		}
-	}
-	_, err = r.productSer.CreateCategory(c, req)
+	
+	_, err := r.productSer.CreateCategory(c, req)
 	if err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
@@ -338,39 +314,14 @@ func (r *Router) handleUpdateCategory(ctx *gin.Context) {
 	defer cancel()
 	id := ctx.Param("id")
 	req := &ptpb.Category{Id: id}
+	ctx.ShouldBindJSON(req)
 	if err := r.isCanBeAccess(c, ctx, "category", "u"); err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
 	}
-	req.Name = ctx.PostForm("name")
-	// Xử lý file logo (nếu có)
-	form, err := ctx.MultipartForm()
-	if err == nil && form.File["logo"] != nil {
-		logo := []string{}
-		files := form.File["logo"]
-		for _, file := range files {
-			imageName := file.Filename
-			image, err := file.Open()
-			if err != nil {
-				log.Println("file open err:", err)
-				continue
-			}
-			defer image.Close()
-
-			imageUrl, err := UploadImageToCloudinary(c, image, imageName)
-			if err != nil {
-				log.Println("upload img err:", err)
-				continue
-			}
-			logo = append(logo, imageUrl)
-		}
-		if len(logo) > 0 {
-			req.Logo = logo[0]
-		}
-	}
 	req.Id = id
 	log.Println("req:", req)
-	_, err = r.productSer.UpdateCategory(c, req)
+	_, err := r.productSer.UpdateCategory(c, req)
 	if err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
