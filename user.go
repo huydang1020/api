@@ -370,6 +370,16 @@ func (r *Router) handleSignInCustomer(ctx *gin.Context) {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
 	}
+	cart, err := r.productSer.ListCart(c, &product.Cart{UserId: resp.User.Id})
+	if err != nil {
+		utils.HandleError(LangMappingErr, ctx, err)
+		return
+	}
+	var total int
+	for _, item := range cart.GetItem() {
+		total += int(item.Quantity)
+	}
+	resp.User.CartQuantity = int32(total)
 	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: resp})
 }
 
