@@ -362,5 +362,9 @@
   "email_activated": {
     "en": "Email activated",
     "vi": "Email đã được sử dụng"
+  },
+  "verify_otp_incorrect": {
+    "en": "Verify otp incorrect",
+    "vi": "Mã kích hoạt không chính xác hoặc đã hết hạn"
   }
 }
