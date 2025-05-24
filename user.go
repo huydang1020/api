@@ -350,7 +350,7 @@ func (r *Router) handleSignUpCustomer(ctx *gin.Context) {
 	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success"})
 }
 
-func (r *Router) handleVerifyEmail(ctx *gin.Context) {
+func (r *Router) handleVerifyOtp(ctx *gin.Context) {
 	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
 	defer cancel()
 	req := &userpb.User{}
