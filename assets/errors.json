@@ -358,5 +358,9 @@
   "not_found_order_code": {
     "en": "Not found order code",
     "vi": "Không tìm thấy mã đơn hàng"
+  },
+  "email_activated": {
+    "en": "Email activated",
+    "vi": "Email đã được sử dụng"
   }
 }
