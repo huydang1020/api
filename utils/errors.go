@@ -27,4 +27,5 @@ const (
 	E_not_found_item_cart       = "not_found_item_cart"
 	E_not_found_user_id         = "not_found_user_id"
 	E_not_found_user            = "not_found_user"
+	E_account_not_activated     = "account_not_activated"
 )

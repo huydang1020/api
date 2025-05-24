@@ -1,6 +1,10 @@
 {
-    "success" :{
-        "en": "success",
-        "vi": "Thành công"
-    }
+  "success": {
+    "en": "success",
+    "vi": "Thành công"
+  },
+  "account_not_activated": {
+    "en": "Account not activated",
+    "vi": "Tài khoản chưa được kích hoạt"
+  }
 }

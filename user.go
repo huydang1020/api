@@ -12,6 +12,7 @@ import (
 	permpb "github.com/huyshop/header/permission"
 	"github.com/huyshop/header/product"
 	userpb "github.com/huyshop/header/user"
+	"google.golang.org/grpc/status"
 )
 
 const (
@@ -289,7 +290,12 @@ func (r *Router) handleSignInCustomer(ctx *gin.Context) {
 	ctx.ShouldBindJSON(req)
 	resp, err := r.userSer.SignInCustomer(c, req)
 	if err != nil {
-		utils.HandleError(LangMappingErr, ctx, err)
+		s := status.Convert(err)
+		if s.Message() != utils.E_account_not_activated {
+			utils.HandleError(LangMappingErr, ctx, err)
+			return
+		}
+		utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 1, Message: utils.E_account_not_activated})
 		return
 	}
 	cart, err := r.productSer.ListCart(c, &product.Cart{UserId: resp.User.Id})

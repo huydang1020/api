@@ -358,9 +358,5 @@
   "not_found_order_code": {
     "en": "Not found order code",
     "vi": "Không tìm thấy mã đơn hàng"
-  },
-  "account_not_activated": {
-    "en": "Account not activated",
-    "vi": "Tài khoản chưa được kích hoạt"
   }
 }
