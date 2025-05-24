@@ -300,6 +300,7 @@ func (r *Router) handleSignInCustomer(ctx *gin.Context) {
 	}
 	cart, err := r.productSer.ListCart(c, &product.Cart{UserId: resp.User.Id})
 	if err != nil {
+		log.Println("ListCart err:", err)
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
 	}
@@ -379,10 +380,10 @@ func (r *Router) handleSendOtp(ctx *gin.Context) {
 		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_email_cannot_empty))
 		return
 	}
-	_, err := r.userSer.SendVerifyOtp(c, req)
+	ttl, err := r.userSer.SendVerifyOtp(c, req)
 	if err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
 	}
-	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success"})
+	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: ttl})
 }
