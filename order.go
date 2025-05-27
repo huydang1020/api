@@ -36,6 +36,7 @@ func (r *Router) handleListCart(ctx *gin.Context) {
 	req.UserId = claims.UserId
 	cart, err := r.productSer.ListCart(c, req)
 	if err != nil {
+		log.Println("err ", err)
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
 	}
@@ -110,7 +111,7 @@ func (r *Router) handleCreateOrder(ctx *gin.Context) {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
 	}
-	if order == nil || order.Id == "" {
+	if order == nil {
 		utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success"})
 		return
 	}

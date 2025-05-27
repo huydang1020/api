@@ -366,5 +366,21 @@
   "verify_otp_incorrect": {
     "en": "Verify otp incorrect",
     "vi": "Mã kích hoạt không chính xác hoặc đã hết hạn"
+  },
+  "invalid_address": {
+    "en": "Invalid address",
+    "vi": "Địa chỉ không hợp lệ"
+  },
+  "invalid_full_name": {
+    "en": "Invalid full name",
+    "vi": "Họ tên không hợp lệ"
+  },
+  "invalid_partner_id": {
+    "en": "Invalid partner id",
+    "vi": "Mã đối tác không hợp lệ"
+  },
+  "invalid_user_id": {
+    "en": "Invalid user id",
+    "vi": "Mã người dùng không hợp lệ"
   }
 }

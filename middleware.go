@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"log"
 	"os"
 	"strconv"
 	"time"
@@ -18,12 +19,16 @@ func authMiddleware(r *Router) gin.HandlerFunc {
 	var jwtKey = []byte(config.JwtSecretKey)
 	return func(c *gin.Context) {
 		tokenString := c.GetHeader("access-token")
+		log.Println("tokenString", tokenString)
 		if tokenString == "" {
+			log.Println("123")
 			utils.HandleError(LangMappingErr, c, fmt.Errorf(utils.E_unauthorized))
 			c.Abort()
 			return
 		}
+		log.Println("tokenString", tokenString)
 		token, err := jwt.ParseWithClaims(tokenString, &jt.JWTClaim{}, func(token *jwt.Token) (interface{}, error) {
+			log.Println("token.Header", token.Header)
 			return jwtKey, nil
 		})
 		claims, ok := token.Claims.(*jt.JWTClaim)
