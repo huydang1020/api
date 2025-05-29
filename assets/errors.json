@@ -382,5 +382,49 @@
   "invalid_user_id": {
     "en": "Invalid user id",
     "vi": "Mã người dùng không hợp lệ"
+  },
+  "can_not_insert_order_detail": {
+    "en": "Can not insert order detail",
+    "vi": "Không thể thêm mới chi tiết đơn hàng"
+  },
+  "can_not_update_order_detail": {
+    "en": "Can not update order detail",
+    "vi": "Không thể cập nhật chi tiết đơn hàng"
+  },
+  "can_not_delete_order_detail": {
+    "en": "Can not delete order detail",
+    "vi": "Không thể xóa chi tiết đơn hàng"
+  },
+  "not_found_order_detail": {
+    "en": "Not found order detail",
+    "vi": "Không tìm thấy chi tiết đơn hàng"
+  },
+  "not_found_order_ship": {
+    "en": "Not found order ship",
+    "vi": "Không tìm thấy vận chuyển đơn hàng"
+  },
+  "can_not_insert_order_ship": {
+    "en": "Can not insert order ship",
+    "vi": "Không thể thêm mới vận chuyển đơn hàng"
+  },
+  "can_not_update_order_ship": {
+    "en": "Can not update order ship",
+    "vi": "Không thể cập nhật vận chuyển đơn hàng"
+  },
+  "can_not_delete_order_ship": {
+    "en": "Can not delete order ship",
+    "vi": "Không thể xóa vận chuyển đơn hàng"
+  },
+  "not_found_order_ship_id": {
+    "en": "Not found order ship id",
+    "vi": "Không tìm thấy mã vận chuyển đơn hàng"
+  },
+  "invalid_order_ship_state": {
+    "en": "Invalid order ship state",
+    "vi": "Trạng thái vận chuyển đơn hàng không hợp lệ"
+  },
+  "not_enough_quantity": {
+    "en": "Not enough quantity",
+    "vi": "Số lượng sản phẩm không đủ"
   }
 }
