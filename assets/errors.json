@@ -426,5 +426,49 @@
   "not_enough_quantity": {
     "en": "Not enough quantity",
     "vi": "Số lượng sản phẩm không đủ"
+  },
+  "invalid_state_for_sending_email": {
+    "en": "Invalid state for sending email",
+    "vi": "Trạng thái không hợp lệ để gửi email"
+  },
+  "can_not_insert_store": {
+    "en": "Can not insert store",
+    "vi": "Không thể thêm mới cửa hàng"
+  },
+  "invalid_logo": {
+    "en": "Invalid logo",
+    "vi": "Logo không hợp lệ"
+  },
+  "invalid_store_name": {
+    "en": "Invalid store name",
+    "vi": "Tên cửa hàng không hợp lệ"
+  },
+  "invalid_province": {
+    "en": "Invalid province",
+    "vi": "Tỉnh không hợp lệ"
+  },
+  "invalid_district": {
+    "en": "Invalid district",
+    "vi": "Quận không hợp lệ"
+  },
+  "invalid_ward": {
+    "en": "Invalid ward",
+    "vi": "Phường không hợp lệ"
+  },
+  "already_partner": {
+    "en": "This account has already been registered as a partner",
+    "vi": "Tài khoản này đã được đăng ký làm đối tác"
+  },
+  "seller_application_pending": {
+    "en": "Your seller application is pending approval",
+    "vi": "Đơn đăng ký đối tác của bạn đang chờ phê duyệt"
+  },
+  "not_found_partner_registration": {
+    "en": "Partner registration information not found",
+    "vi": "Không tìm thấy thông tin đăng ký đối tác"
+  },
+  "reason_reject_cannot_empty": {
+    "en": "Reason for rejection cannot be empty",
+    "vi": "Lý do từ chối không được để trống"
   }
 }

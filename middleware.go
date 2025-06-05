@@ -26,7 +26,7 @@ func authMiddleware(r *Router) gin.HandlerFunc {
 			return
 		}
 		token, err := jwt.ParseWithClaims(tokenString, &jt.JWTClaim{}, func(token *jwt.Token) (interface{}, error) {
-			log.Println("token.Header", token.Header)
+			// log.Println("token.Header", token.Header)
 			return jwtKey, nil
 		})
 		claims, ok := token.Claims.(*jt.JWTClaim)

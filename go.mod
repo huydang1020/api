@@ -2,13 +2,13 @@ module github.com/huyshop/api
 
 go 1.23.7
 
-replace github.com/huyshop/header v0.0.51 => ../header
+replace github.com/huyshop/header v0.0.52 => ../header
 
 require (
 	github.com/gin-contrib/cors v1.7.5
 	github.com/gin-gonic/gin v1.10.0
 	github.com/gorilla/schema v1.4.1
-	github.com/huyshop/header v0.0.52
+	github.com/huyshop/header v0.0.53
 	github.com/joho/godotenv v1.5.1
 	github.com/urfave/cli/v2 v2.27.6
 	go.elastic.co/apm/module/apmgin v1.15.0
