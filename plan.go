@@ -112,3 +112,19 @@ func (r *Router) handleUpdatePlanAdmin(ctx *gin.Context) {
 	}
 	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success"})
 }
+
+func (r *Router) handleDeletePlanAdmin(ctx *gin.Context) {
+	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
+	defer cancel()
+	id := ctx.Param("id")
+	if err := r.isCanBeAccess(c, ctx, "plan", "d"); err != nil {
+		utils.HandleError(LangMappingErr, ctx, err)
+		return
+	}
+	_, err := r.userSer.DeletePlan(c, &userpb.Plan{Id: id})
+	if err != nil {
+		utils.HandleError(LangMappingErr, ctx, err)
+		return
+	}
+	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success"})
+}
