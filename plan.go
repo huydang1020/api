@@ -14,10 +14,6 @@ func (r *Router) handleListPlan(ctx *gin.Context) {
 	defer cancel()
 	req := &userpb.PlansRequest{}
 	utils.BindQuery(req, ctx)
-	if err := r.isCanBeAccess(c, ctx, "plan", "r"); err != nil {
-		utils.HandleError(LangMappingErr, ctx, err)
-		return
-	}
 	resp, err := r.userSer.ListPlans(c, req)
 	if err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
@@ -30,10 +26,6 @@ func (r *Router) handleGetPlan(ctx *gin.Context) {
 	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
 	defer cancel()
 	id := ctx.Param("id")
-	if err := r.isCanBeAccess(c, ctx, "plan", "r"); err != nil {
-		utils.HandleError(LangMappingErr, ctx, err)
-		return
-	}
 	resp, err := r.userSer.GetPlan(c, &userpb.Plan{Id: id})
 	if err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
