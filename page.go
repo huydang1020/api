@@ -24,7 +24,6 @@ func (r *Router) handleListUserPage(ctx *gin.Context) {
 	}
 	req.RoleId = user.GetRoleId()
 	pages, err := r.permSer.ListPages(c, req)
-	log.Println("pages:", pages)
 	if err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
