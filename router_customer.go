@@ -9,6 +9,10 @@ func (r *Router) mappingRouterCustomer() {
 	r.route.POST("/api/customer/send-otp", r.handleSendOtp)
 	r.route.POST("/api/customer/upload-image", r.handleUploadImage)
 
+	// plan
+	r.route.GET("/api/customer/plan", r.handleListPlan)
+	r.route.GET("/api/customer/plan/:id", r.handleGetPlan)
+
 	// productType
 	r.route.GET("/api/customer/product-type", r.handleListProductTypeCustomer)
 	r.route.GET("/api/customer/product-type/:id", r.handleGetProductTypeCustomer)

@@ -81,8 +81,8 @@ func (r *Router) mappingRouterAdmin() {
 	r1.POST("/partner-registration/:id/reject", r.handleRejectPartnerRegistration)
 
 	// plan
-	r1.GET("/plan", r.handleListPlan)
-	r1.POST("/plan", r.handleCreatePlan)
-	r1.GET("/plan/:id", r.handleGetPlan)
-	r1.PUT("/plan/:id", r.handleUpdatePlan)
+	r1.GET("/plan", r.handleListPlanAdmin)
+	r1.POST("/plan", r.handleCreatePlanAdmin)
+	r1.GET("/plan/:id", r.handleGetPlanAdmin)
+	r1.PUT("/plan/:id", r.handleUpdatePlanAdmin)
 }
