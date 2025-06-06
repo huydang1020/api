@@ -470,5 +470,21 @@
   "reason_reject_cannot_empty": {
     "en": "Reason for rejection cannot be empty",
     "vi": "Lý do từ chối không được để trống"
+  },
+  "not_found_plan": {
+    "en": "Not found plans",
+    "vi": "Không tìm thấy gói"
+  },
+  "not_found_plan_id": {
+    "en": "Not found plan id",
+    "vi": "Không tìm thấy mã gói"
+  },
+  "invalid_prices": {
+    "en": "Invalid prices",
+    "vi": "Giá không hợp lệ"
+  },
+  "invalid_features": {
+    "en": "Invalid features",
+    "vi": "Giá trị gói không hợp lệ"
   }
 }
