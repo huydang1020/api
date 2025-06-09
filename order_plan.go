@@ -77,7 +77,7 @@ func (r *Router) handleGetOrderPlan(ctx *gin.Context) {
 		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_not_found_user_id))
 		return
 	}
-	resp, err := r.userSer.GetOrderPlan(c, &userpb.OrderPlan{Id: id})
+	resp, err := r.userSer.GetOrderPlan(c, &userpb.OrderPlan{Id: id, UserId: uid})
 	if err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
