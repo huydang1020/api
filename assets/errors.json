@@ -486,5 +486,41 @@
   "invalid_features": {
     "en": "Invalid features",
     "vi": "Giá trị gói không hợp lệ"
+  },
+  "order_plan_not_found": {
+    "en": "Order plan not found",
+    "vi": "Không tìm thấy đơn hàng"
+  },
+  "not_found_user_point": {
+    "en": "Not found user point",
+    "vi": "Không tìm thấy điểm người dùng"
+  },
+  "invalid_plan_id": {
+    "en": "Invalid plan id",
+    "vi": "Mã gói không hợp lệ"
+  },
+  "order_plan_existed": {
+    "en": "Order plan existed",
+    "vi": "Đơn hàng đã tồn tại"
+  },
+  "not_found_order_plan_id": {
+    "en": "Not found order plan id",
+    "vi": "Không tìm thấy mã đơn hàng"
+  },
+  "invalid_plan_type": {
+    "en": "Invalid plan type",
+    "vi": "Loại gói không hợp lệ"
+  },
+  "not_found_plan_type": {
+    "en": "Not found plan type",
+    "vi": "Không tìm thấy loại gói"
+  },
+  "order_plan_is_not_existed": {
+    "en": "Order plan is not existed",
+    "vi": "Đơn hàng không tồn tại"
+  },
+  "not_found_order_data": {
+    "en": "We received your payment, but your order is being verified",
+    "vi": "Thanh toán đã được ghi nhận. Đơn hàng của bạn đang được xử lý. Vui lòng chờ trong giây lát hoặc liên hệ CSKH."
   }
 }

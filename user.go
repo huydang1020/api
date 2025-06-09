@@ -388,18 +388,18 @@ func (r *Router) handleSendOtp(ctx *gin.Context) {
 	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: ttl})
 }
 
-func (r *Router) handleCreatePartnerRegistration(ctx *gin.Context) {
-	claims, _ := ctx.MustGet("claims").(*jwt.JWTClaim)
-	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
-	defer cancel()
-	userId := claims.UserId
-	_, err := r.userSer.CreatePartnerRegistration(c, &userpb.PartnerRegistration{UserId: userId})
-	if err != nil {
-		utils.HandleError(LangMappingErr, ctx, err)
-		return
-	}
-	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success"})
-}
+// func (r *Router) handleCreatePartnerRegistration(ctx *gin.Context) {
+// 	claims, _ := ctx.MustGet("claims").(*jwt.JWTClaim)
+// 	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
+// 	defer cancel()
+// 	userId := claims.UserId
+// 	_, err := r.userSer.CreatePartnerRegistration(c, &userpb.PartnerRegistration{UserId: userId})
+// 	if err != nil {
+// 		utils.HandleError(LangMappingErr, ctx, err)
+// 		return
+// 	}
+// 	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success"})
+// }
 
 func (r *Router) handleListPartnerRegistration(ctx *gin.Context) {
 	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)

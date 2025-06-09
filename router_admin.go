@@ -86,4 +86,9 @@ func (r *Router) mappingRouterAdmin() {
 	r1.GET("/plan/:id", r.handleGetPlanAdmin)
 	r1.PUT("/plan/:id", r.handleUpdatePlanAdmin)
 	r1.DELETE("/plan/:id", r.handleDeletePlanAdmin)
+
+	// order plan
+	r1.GET("/order-plan", r.handleListOrderPlanAdmin)
+	r1.POST("/order-plan", r.handleCreateOrderPlanAdmin)
+	r1.GET("/order-plan/:id", r.handleGetOrderPlanAdmin)
 }

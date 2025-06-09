@@ -6,8 +6,10 @@ const (
 	E_invalid_sigature           = "invalid_signature"
 	E_bad_request                = "bad_request"
 	E_access_denied              = "access_is_denied"
-	E_invalid_user               = "not_found_user"
-	E_invalid_user_id            = "not_found_user_id"
+	E_invalid_user               = "invalid_user"
+	E_invalid_user_id            = "invalid_user_id"
+	E_invalid_partner_id         = "invalid_partner_id"
+	E_invalid_plan_id            = "invalid_plan_id"
 	E_invalid_role               = "not_found_role"
 	E_invalid_permission         = "not_found_permission"
 	E_email_cannot_empty         = "email_cannot_empty"
@@ -35,4 +37,5 @@ const (
 	E_account_not_activated      = "account_not_activated"
 	E_not_found_order_id         = "not_found_order_id"
 	E_reason_reject_cannot_empty = "reason_reject_cannot_empty"
+	E_not_found_partner_id       = "not_found_partner_id"
 )

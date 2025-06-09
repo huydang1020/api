@@ -39,5 +39,11 @@ func (r *Router) mappingRouterCustomer() {
 	r1.POST("order/:id/update-state", r.handleUpdateStateOrder)
 
 	// partner registration
-	r1.POST("/partner-registration", r.handleCreatePartnerRegistration)
+	// r1.POST("/partner-registration", r.handleCreatePartnerRegistration)
+
+	// order plan
+	r1.POST("/order-plan", r.handleCreateOrderPlan)
+	r1.GET("/order-plan", r.handleListOrderPlan)
+	r1.GET("/order-plan/:id", r.handleGetOrderPlan)
+	r1.POST("order-plan/vnpay", r.handleCreateOrderPlanVNPay)
 }
