@@ -522,5 +522,45 @@
   "not_found_order_data": {
     "en": "We received your payment, but your order is being verified",
     "vi": "Thanh toán đã được ghi nhận. Đơn hàng của bạn đang được xử lý. Vui lòng chờ trong giây lát hoặc liên hệ CSKH."
+  },
+  "invalid_action_type": {
+    "en": "Invalid action type",
+    "vi": "Loại hành động không hợp lệ"
+  },
+  "not_found_action": {
+    "en": "Not found action",
+    "vi": "Không tìm thấy hành động"
+  },
+  "can_not_insert_review": {
+    "en": "Can not insert review",
+    "vi": "Không thể thêm mới đánh giá"
+  },
+  "can_not_update_review": {
+    "en": "Can not update review",
+    "vi": "Không thể cập nhật đánh giá"
+  },
+  "can_not_delete_review": {
+    "en": "Can not delete review",
+    "vi": "Không thể xóa đánh giá"
+  },
+  "not_found_review": {
+    "en": "Not found review",
+    "vi": "Không tìm thấy đánh giá"
+  },
+  "not_found_review_id": {
+    "en": "Not found review id",
+    "vi": "Không tìm thấy mã đánh giá"
+  },
+  "invalid_rating": {
+    "en": "Invalid rating",
+    "vi": "Đánh giá không hợp lệ"
+  },
+  "product_not_bought": {
+    "en": "Product not bought",
+    "vi": "Sản phẩm chưa được mua"
+  },
+  "not_found_product_review": {
+    "en": "Not found product review",
+    "vi": "Không tìm thấy đánh giá sản phẩm"
   }
 }

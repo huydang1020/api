@@ -38,4 +38,6 @@ const (
 	E_not_found_order_id         = "not_found_order_id"
 	E_reason_reject_cannot_empty = "reason_reject_cannot_empty"
 	E_not_found_partner_id       = "not_found_partner_id"
+	E_not_found_product_id       = "not_found_product_id"
+	E_invalid_rating             = "invalid_rating"
 )

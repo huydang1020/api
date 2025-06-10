@@ -46,4 +46,9 @@ func (r *Router) mappingRouterCustomer() {
 	r1.GET("/order-plan", r.handleListOrderPlan)
 	r1.GET("/order-plan/:id", r.handleGetOrderPlan)
 	r1.POST("order-plan/vnpay", r.handleCreateOrderPlanVNPay)
+
+	// review
+	r1.GET("/review", r.handleListRewivewByUser)
+	r1.POST("/review", r.handleCreateReview)
+	r1.GET("/review/:id", r.handleGetReview)
 }

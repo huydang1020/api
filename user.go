@@ -426,7 +426,7 @@ func (r *Router) handleGetPartnerRegistration(ctx *gin.Context) {
 	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: resp})
 }
 
-func (r *Router) handleApprovePartnerRegistration(ctx *gin.Context) {
+func (r *Router) handleUpdateStatePartnerRegistration(ctx *gin.Context) {
 	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
 	defer cancel()
 	id := ctx.Param("id")
@@ -435,30 +435,7 @@ func (r *Router) handleApprovePartnerRegistration(ctx *gin.Context) {
 		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_access_denied))
 		return
 	}
-	_, err := r.userSer.ApprovePartnerRegistration(c, &userpb.PartnerRegistration{Id: id})
-	if err != nil {
-		utils.HandleError(LangMappingErr, ctx, err)
-		return
-	}
-	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success"})
-}
-
-func (r *Router) handleRejectPartnerRegistration(ctx *gin.Context) {
-	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
-	defer cancel()
-	id := ctx.Param("id")
-	req := &userpb.PartnerRegistration{}
-	ctx.ShouldBindJSON(req)
-	if req.ReasonReject == "" {
-		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_reason_reject_cannot_empty))
-		return
-	}
-	claims, _ := ctx.MustGet("claims").(*jwt.JWTClaim)
-	if claims.RoleId != config.AdminRole {
-		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_access_denied))
-		return
-	}
-	_, err := r.userSer.RejectPartnerRegistration(c, &userpb.PartnerRegistration{Id: id, ReasonReject: req.ReasonReject})
+	_, err := r.userSer.UpdateStatePartnerRegistration(c, &userpb.PartnerRegistration{Id: id})
 	if err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
