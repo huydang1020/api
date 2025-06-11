@@ -74,11 +74,6 @@ func (r *Router) mappingRouterAdmin() {
 	// order
 	r1.POST("/order-ship/:id", r.handleUpdateStateOrderShip)
 
-	// partner registration
-	r1.GET("/partner-registration", r.handleListPartnerRegistration)
-	r1.GET("/partner-registration/:id", r.handleGetPartnerRegistration)
-	r1.POST("/partner-registration/:id/state", r.handleUpdateStatePartnerRegistration)
-
 	// plan
 	r1.GET("/plan", r.handleListPlanAdmin)
 	r1.POST("/plan", r.handleCreatePlanAdmin)
