@@ -430,12 +430,15 @@ func (r *Router) handleUpdateStatePartnerRegistration(ctx *gin.Context) {
 	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
 	defer cancel()
 	id := ctx.Param("id")
+	req := &userpb.PartnerRegistration{}
+	ctx.ShouldBindJSON(req)
 	claims, _ := ctx.MustGet("claims").(*jwt.JWTClaim)
 	if claims.RoleId != config.AdminRole {
 		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_access_denied))
 		return
 	}
-	_, err := r.userSer.UpdateStatePartnerRegistration(c, &userpb.PartnerRegistration{Id: id})
+	req.Id = id
+	_, err := r.userSer.UpdateStatePartnerRegistration(c, req)
 	if err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return

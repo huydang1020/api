@@ -90,6 +90,7 @@ func (r *Router) mappingRouterAdmin() {
 	r1.GET("/order-plan", r.handleListOrderPlanAdmin)
 	r1.POST("/order-plan", r.handleCreateOrderPlanAdmin)
 	r1.GET("/order-plan/:id", r.handleGetOrderPlanAdmin)
+	r1.POST("order-plan/vnpay", r.handleCreateOrderPlanVNPay)
 
 	// review
 	r1.GET("/review", r.handleListReviewByAdmin)

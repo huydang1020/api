@@ -562,5 +562,13 @@
   "not_found_product_review": {
     "en": "Not found product review",
     "vi": "Không tìm thấy đánh giá sản phẩm"
+  },
+  "invalid_reason_reject": {
+    "en": "Invalid reason reject",
+    "vi": "Lý do từ chối không hợp lệ"
+  },
+  "invalid_vnpay_return_url": {
+    "en": "Invalid vnpay return url",
+    "vi": "Url trả về vnpay không hợp lệ"
   }
 }

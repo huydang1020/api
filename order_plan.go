@@ -20,6 +20,9 @@ func (r *Router) handleCreateOrderPlan(ctx *gin.Context) {
 		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_not_found_user_id))
 		return
 	}
+	if req.Action == "" {
+		req.Action = userpb.OrderPlan_create.String()
+	}
 	user, err := r.userSer.GetUser(c, &userpb.UserRequest{Id: uid})
 	if err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
@@ -123,18 +126,12 @@ func (r *Router) handleCreateOrderPlanAdmin(ctx *gin.Context) {
 	defer cancel()
 	req := &userpb.OrderPlan{}
 	ctx.ShouldBindJSON(req)
-	if err := r.isCanBeAccess(c, ctx, "order_plan", "c"); err != nil {
-		utils.HandleError(LangMappingErr, ctx, err)
-		return
-	}
-
+	claims, _ := ctx.MustGet("claims").(*jwt.JWTClaim)
+	req.UserId = claims.UserId
+	req.Action = userpb.OrderPlan_renew.String()
 	orderPlan, err := r.userSer.CreateOrderPlan(c, req)
 	if err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
-		return
-	}
-	if orderPlan == nil {
-		utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success"})
 		return
 	}
 	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: orderPlan})
