@@ -1,7 +1,9 @@
 package main
 
 import (
+	"errors"
 	"log"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/huyshop/api/jwt"
@@ -153,10 +155,48 @@ func (r *Router) handleCreateStore(ctx *gin.Context) {
 		return
 	}
 	req.PartnerId = claims.PartnerId
+	log.Println("req", req)
+	log.Println("claims", claims)
+	var limitSto int32
+	if claims.PartnerType == userpb.Partner_seller.String() {
+		part, err := r.userSer.GetPartner(c, &userpb.PartnerRequest{Id: claims.PartnerId})
+		if err != nil {
+			utils.HandleError(LangMappingErr, ctx, err)
+			return
+		}
+		log.Println("part", part)
+		if part.PlanExpiredAt < time.Now().Unix() {
+			utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_plan_expired))
+			return
+		}
+		stores, err := r.userSer.CountStore(c, &userpb.StoreRequest{PartnerId: claims.PartnerId})
+		if err != nil {
+			utils.HandleError(LangMappingErr, ctx, err)
+			return
+		}
+		log.Println("stores", stores)
+		if int32(stores.Count) >= part.MaxStoresAllowed {
+			utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_store_limit_reached))
+			return
+		}
+		limitSto = part.CurrentStoresCount
+	}
 	_, err := r.userSer.CreateStore(c, req)
 	if err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
+	}
+	// update partner
+	if claims.PartnerType == userpb.Partner_seller.String() {
+		_, err = r.userSer.UpdatePartner(c, &userpb.Partner{
+			Id:                 claims.PartnerId,
+			CurrentStoresCount: limitSto + 1,
+			UpdatedAt:          time.Now().Unix(),
+		})
+		if err != nil {
+			utils.HandleError(LangMappingErr, ctx, err)
+			return
+		}
 	}
 	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success"})
 }

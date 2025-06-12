@@ -40,4 +40,8 @@ const (
 	E_not_found_partner_id       = "not_found_partner_id"
 	E_not_found_product_id       = "not_found_product_id"
 	E_invalid_rating             = "invalid_rating"
+	E_store_limit_reached        = "store_limit_reached"
+	E_product_limit_reached      = "product_limit_reached"
+	E_invalid_store_id           = "invalid_store_id"
+	E_plan_expired               = "plan_expired"
 )

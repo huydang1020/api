@@ -570,5 +570,13 @@
   "invalid_vnpay_return_url": {
     "en": "Invalid vnpay return url",
     "vi": "Url trả về vnpay không hợp lệ"
+  },
+  "store_limit_reached": {
+    "en": "Store limit reached",
+    "vi": "Đã đạt giới hạn số lượng cửa hàng"
+  },
+  "product_limit_reached": {
+    "en": "Product limit reached",
+    "vi": "Đã đạt giới hạn số lượng sản phẩm"
   }
 }

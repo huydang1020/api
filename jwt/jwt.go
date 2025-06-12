@@ -19,6 +19,7 @@ type JWTClaim struct {
 
 func GenerateAccessToken(newClaims *JWTClaim, expireTime time.Duration, secretKey string) (string, error) {
 	expirationTime := time.Now().Add(expireTime * time.Minute)
+	log.Println("newClaims:", newClaims)
 	claims := &JWTClaim{
 		UserId:      newClaims.UserId,
 		RoleId:      newClaims.RoleId,
@@ -39,6 +40,7 @@ func GenerateAccessToken(newClaims *JWTClaim, expireTime time.Duration, secretKe
 
 func GenerateRefreshToken(newClaims *JWTClaim, expireTime time.Duration, secretKey string) (string, error) {
 	expirationTime := time.Now().Add(expireTime * time.Minute)
+	log.Println("newClaims:", newClaims)
 	claims := &JWTClaim{
 		UserId:      newClaims.UserId,
 		RoleId:      newClaims.RoleId,

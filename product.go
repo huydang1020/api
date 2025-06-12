@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	"log"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/huyshop/api/jwt"
@@ -60,12 +61,52 @@ func (r *Router) handleCreateProductType(ctx *gin.Context) {
 	} else {
 		req.State = ptpb.ProductType_pending.String()
 	}
+	if req.StoreId == "" {
+		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_invalid_store_id))
+		return
+	}
 	req.PartnerId = claims.PartnerId
+	log.Println("req", req)
+	log.Println("claims", claims)
+	var limitPty int32
+	if req.PartnerId == userpb.Partner_seller.String() {
+		part, err := r.userSer.GetPartner(c, &userpb.PartnerRequest{Id: req.PartnerId})
+		if err != nil {
+			utils.HandleError(LangMappingErr, ctx, err)
+			return
+		}
+		if part.PlanExpiredAt < time.Now().Unix() {
+			utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_plan_expired))
+			return
+		}
+		sto, err := r.userSer.GetStore(c, &userpb.StoreRequest{Id: req.StoreId})
+		if err != nil {
+			utils.HandleError(LangMappingErr, ctx, err)
+			return
+		}
+		if int32(sto.QuantityProduct) >= part.MaxProductsPerStore {
+			utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_product_limit_reached))
+			return
+		}
+		limitPty = sto.QuantityProduct
+	}
 	_, err := r.productSer.CreateProductType(c, req)
 	if err != nil {
 		log.Println("err", err)
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
+	}
+	// update limit product type for store
+	if req.PartnerId != userpb.Partner_seller.String() {
+		if _, err := r.userSer.UpdateStore(c, &userpb.Store{
+			Id:              req.StoreId,
+			QuantityProduct: limitPty + 1,
+			UpdatedAt:       time.Now().Unix(),
+		}); err != nil {
+			log.Println("err", err)
+			utils.HandleError(LangMappingErr, ctx, err)
+			return
+		}
 	}
 	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success"})
 }
@@ -300,7 +341,7 @@ func (r *Router) handleCreateCategory(ctx *gin.Context) {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
 	}
-	
+
 	_, err := r.productSer.CreateCategory(c, req)
 	if err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)

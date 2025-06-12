@@ -62,6 +62,7 @@ func (r *Router) handleListOrderPlan(ctx *gin.Context) {
 		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_not_found_user))
 		return
 	}
+	req.UserId = uid
 	resp, err := r.userSer.ListOrderPlan(c, req)
 	if err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
@@ -97,6 +98,7 @@ func (r *Router) handleListOrderPlanAdmin(ctx *gin.Context) {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
 	}
+	req.Includes = []string{"user", "plan"}
 	resp, err := r.userSer.ListOrderPlan(c, req)
 	if err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
@@ -128,6 +130,10 @@ func (r *Router) handleCreateOrderPlanAdmin(ctx *gin.Context) {
 	ctx.ShouldBindJSON(req)
 	claims, _ := ctx.MustGet("claims").(*jwt.JWTClaim)
 	req.UserId = claims.UserId
+	if err := r.isCanBeAccess(c, ctx, "order_plan", "c"); err != nil {
+		utils.HandleError(LangMappingErr, ctx, err)
+		return
+	}
 	req.Action = userpb.OrderPlan_renew.String()
 	orderPlan, err := r.userSer.CreateOrderPlan(c, req)
 	if err != nil {
@@ -142,6 +148,10 @@ func (r *Router) handleCreateOrderPlanVNPay(ctx *gin.Context) {
 	defer cancel()
 	req := &userpb.OrderPlan{}
 	ctx.ShouldBindJSON(req)
+	if err := r.isCanBeAccess(c, ctx, "order_plan", "c"); err != nil {
+		utils.HandleError(LangMappingErr, ctx, err)
+		return
+	}
 	_, err := r.userSer.CreateOrderPlanVNpay(c, req)
 	if err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
