@@ -8,6 +8,8 @@ func (r *Router) mappingRouterCustomer() {
 	r.route.POST("/api/customer/verify-otp", r.handleVerifyOtp)
 	r.route.POST("/api/customer/send-otp", r.handleSendOtp)
 	r.route.POST("/api/customer/upload-image", r.handleUploadImage)
+	r.route.POST("/api/customer/send-reset-password-otp", r.handleSendResetPasswordOtp)
+	r.route.POST("/api/customer/reset-password", r.handleResetPassword)
 
 	// plan
 	r.route.GET("/api/customer/plan", r.handleListPlan)

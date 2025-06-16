@@ -124,8 +124,10 @@ func HandleSuccess(mLangs map[string]LangCode, ctx *gin.Context, resp *Response)
 func BuildMenuTree(pages []*ppb.Page) []*ppb.MenuData {
 	idToMenu := make(map[string]*ppb.MenuData)
 	var roots []*ppb.MenuData
-
+	log.Println("pages", pages)
+	// Bước 1: Tạo map idToMenu và danh sách root
 	for _, page := range pages {
+		log.Println("page: ", page)
 		menu := &ppb.MenuData{
 			Path: page.Path,
 			Handle: &ppb.Handle{
@@ -141,13 +143,11 @@ func BuildMenuTree(pages []*ppb.Page) []*ppb.MenuData {
 
 		idToMenu[page.Id] = menu
 	}
-
-	// Bước 2: Gắn các node con vào cha
+	// Bước 2: Gắn các node con vào node cha
 	for _, page := range pages {
 		menu := idToMenu[page.Id]
 		if page.ParentId != "" {
-			parentMenu, ok := idToMenu[page.ParentId]
-			if ok {
+			if parentMenu, ok := idToMenu[page.ParentId]; ok {
 				parentMenu.Children = append(parentMenu.Children, menu)
 			}
 		} else {

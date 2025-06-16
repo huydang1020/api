@@ -29,6 +29,7 @@ func (r *Router) handleListUserPage(ctx *gin.Context) {
 		return
 	}
 	menu := utils.BuildMenuTree(pages.Pages)
+	log.Println("menu: ", menu)
 	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: gin.H{"pages": menu, "total": pages.Total}})
 }
 

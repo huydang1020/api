@@ -388,3 +388,36 @@ func (r *Router) handleSendOtp(ctx *gin.Context) {
 	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: ttl})
 }
 
+func (r *Router) handleSendResetPasswordOtp(ctx *gin.Context) {
+	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
+	defer cancel()
+	req := &userpb.User{}
+	ctx.ShouldBindJSON(req)
+	if req.Email == "" {
+		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_email_cannot_empty))
+		return
+	}
+	ttl, err := r.userSer.SendResetPasswordOtp(c, req)
+	if err != nil {
+		utils.HandleError(LangMappingErr, ctx, err)
+		return
+	}
+	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: ttl})
+}
+
+func (r *Router) handleResetPassword(ctx *gin.Context) {
+	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
+	defer cancel()
+	req := &userpb.User{}
+	ctx.ShouldBindJSON(req)
+	if req.Email == "" {
+		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_email_cannot_empty))
+		return
+	}
+	_, err := r.userSer.ResetPassword(c, req)
+	if err != nil {
+		utils.HandleError(LangMappingErr, ctx, err)
+		return
+	}
+	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success"})
+}
