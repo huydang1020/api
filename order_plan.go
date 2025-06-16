@@ -134,6 +134,7 @@ func (r *Router) handleCreateOrderPlanAdmin(ctx *gin.Context) {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
 	}
+	req.IpAddress = ctx.ClientIP()
 	req.Action = userpb.OrderPlan_renew.String()
 	orderPlan, err := r.userSer.CreateOrderPlan(c, req)
 	if err != nil {
