@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"log"
 
 	"github.com/gin-gonic/gin"
 	"github.com/huyshop/api/jwt"
@@ -29,9 +30,13 @@ func (r *Router) handleCreateOrderPlan(ctx *gin.Context) {
 		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_not_found_user))
 		return
 	}
+	if claims.PartnerType == userpb.Partner_seller.String() {
+		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_already_partner))
+		return
+	}
 	req.UserId = uid
 	req.IpAddress = ctx.ClientIP()
-	req.Type = userpb.OrderPlan_renew.String()
+	req.Type = userpb.OrderPlan_create.String()
 	orderPlan, err := r.userSer.CreateOrderPlan(c, req)
 	if err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
@@ -97,6 +102,9 @@ func (r *Router) handleListOrderPlanAdmin(ctx *gin.Context) {
 		return
 	}
 	req.Includes = []string{"user", "plan"}
+	claims, _ := ctx.MustGet("claims").(*jwt.JWTClaim)
+	uid := claims.UserId
+	req.UserId = uid
 	resp, err := r.userSer.ListOrderPlan(c, req)
 	if err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
@@ -147,10 +155,7 @@ func (r *Router) handleCreateOrderPlanVNPay(ctx *gin.Context) {
 	defer cancel()
 	req := &userpb.OrderPlan{}
 	ctx.ShouldBindJSON(req)
-	if err := r.isCanBeAccess(c, ctx, "order_plan", "c"); err != nil {
-		utils.HandleError(LangMappingErr, ctx, err)
-		return
-	}
+	log.Println("req", req)
 	_, err := r.userSer.CreateOrderPlanVNpay(c, req)
 	if err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
