@@ -31,6 +31,7 @@ func (r *Router) handleCreateOrderPlan(ctx *gin.Context) {
 	}
 	req.UserId = uid
 	req.IpAddress = ctx.ClientIP()
+	req.Type = userpb.OrderPlan_renew.String()
 	orderPlan, err := r.userSer.CreateOrderPlan(c, req)
 	if err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
