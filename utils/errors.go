@@ -44,4 +44,5 @@ const (
 	E_product_limit_reached      = "product_limit_reached"
 	E_invalid_store_id           = "invalid_store_id"
 	E_plan_expired               = "plan_expired"
+	E_invalid_order_plan_type    = "invalid_order_plan_type"
 )

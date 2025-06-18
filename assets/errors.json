@@ -578,5 +578,13 @@
   "product_limit_reached": {
     "en": "Product limit reached",
     "vi": "Đã đạt giới hạn số lượng sản phẩm"
+  },
+  "not_enough_points": {
+    "en": "Not enough points",
+    "vi": "Bạn không đủ điểm"
+  },
+  "invalid_receiver_id": {
+    "en": "Invalid receiver id",
+    "vi": "Không tìm thấy mã người dùng nhận điểm"
   }
 }

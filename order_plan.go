@@ -20,9 +20,6 @@ func (r *Router) handleCreateOrderPlan(ctx *gin.Context) {
 		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_not_found_user_id))
 		return
 	}
-	if req.Action == "" {
-		req.Action = userpb.OrderPlan_create.String()
-	}
 	user, err := r.userSer.GetUser(c, &userpb.UserRequest{Id: uid})
 	if err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
@@ -135,7 +132,7 @@ func (r *Router) handleCreateOrderPlanAdmin(ctx *gin.Context) {
 		return
 	}
 	req.IpAddress = ctx.ClientIP()
-	req.Action = userpb.OrderPlan_renew.String()
+	req.Type = userpb.OrderPlan_renew.String()
 	orderPlan, err := r.userSer.CreateOrderPlan(c, req)
 	if err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
