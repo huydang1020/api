@@ -56,14 +56,15 @@ func (r *Router) handleCreateProductType(ctx *gin.Context) {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
 	}
-	if claims.PartnerType == userpb.Partner_admin.String() {
-		req.State = ptpb.ProductType_active.String()
-	} else {
+	if claims.PartnerType != userpb.Partner_admin.String() {
 		req.State = ptpb.ProductType_pending.String()
 	}
 	if req.StoreId == "" {
 		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_invalid_store_id))
 		return
+	}
+	if req.State == "" {
+		req.State = ptpb.ProductType_pending.String()
 	}
 	req.PartnerId = claims.PartnerId
 	log.Println("req", req)
@@ -124,8 +125,6 @@ func (r *Router) handleUpdateProductType(ctx *gin.Context) {
 		return
 	}
 	if claims.PartnerType != userpb.Partner_admin.String() {
-		req.State = ptpb.ProductType_active.String()
-	} else {
 		req.State = ptpb.ProductType_pending.String()
 	}
 	_, err := r.productSer.UpdateProductType(c, req)
@@ -225,6 +224,7 @@ func (r *Router) handleListProductTypeCustomer(ctx *gin.Context) {
 	defer cancel()
 	req := &ptpb.ProductTypeRequest{}
 	utils.BindQuery(req, ctx)
+	req.State = ptpb.ProductType_active.String()
 	productTypes, err := r.productSer.ListProductType(c, req)
 	if err != nil {
 		log.Println("err", err)
@@ -265,6 +265,24 @@ func (r *Router) handleGetProductType(ctx *gin.Context) {
 		log.Println("err", err)
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
+	}
+	if productType.PartnerId != "" {
+		partner, err := r.userSer.GetPartner(c, &userpb.PartnerRequest{Id: productType.PartnerId})
+		if err != nil {
+			log.Println("err", err)
+			utils.HandleError(LangMappingErr, ctx, err)
+			return
+		}
+		productType.Partner = partner
+	}
+	if productType.StoreId != "" {
+		store, err := r.userSer.GetStore(c, &userpb.StoreRequest{Id: productType.StoreId})
+		if err != nil {
+			log.Println("err", err)
+			utils.HandleError(LangMappingErr, ctx, err)
+			return
+		}
+		productType.Store = store
 	}
 	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: productType})
 }
