@@ -93,4 +93,12 @@ func (r *Router) mappingRouterAdmin() {
 	r1.GET("/review/:id", r.handleGetReviewByAdmin)
 	r1.PUT("/review/:id", r.handleUpdateReview)
 	r1.DELETE("/review/:id", r.handleDeleteReview)
+
+	// voucher
+	r1.GET("/voucher", r.handleGetListVoucherAdmin)
+	r1.POST("/voucher", r.handleCreateVoucher)
+	r1.GET("/voucher/:id", r.handleGetOneVoucher)
+	r1.PUT("/voucher/:id", r.handleUpdateVoucher)
+	r1.DELETE("/voucher/:id", r.handleDeleteVoucher)
+	r1.GET("/voucher/user-voucher", r.handleListUserVoucherAdmin)
 }

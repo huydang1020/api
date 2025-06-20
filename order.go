@@ -9,6 +9,7 @@ import (
 	"github.com/huyshop/api/utils"
 	ptpb "github.com/huyshop/header/product"
 	upb "github.com/huyshop/header/user"
+	vpb "github.com/huyshop/header/voucher"
 )
 
 func (r *Router) handleUpsertCart(ctx *gin.Context) {
@@ -146,10 +147,22 @@ func (r *Router) handleCreateOrder(ctx *gin.Context) {
 		return
 	}
 	if user.State != upb.User_active.String() {
-		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_access_denied))
+		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_account_not_activated))
 		return
 	}
 	req.IpAddress = ctx.ClientIP()
+	if req.CodeId != "" {
+		uv, err := r.voucherSer.GetUserVoucher(ctx, &vpb.UserVoucher{CodeId: req.CodeId, UserId: req.UserId})
+		if err != nil {
+			utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_not_found_user_voucher))
+			return
+		}
+		if uv.State == vpb.UserVoucher_used.String() {
+			utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_not_found_user_voucher))
+			return
+		}
+
+	}
 	order, err := r.productSer.CreateOrder(c, req)
 	if err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)

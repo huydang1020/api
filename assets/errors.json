@@ -586,5 +586,13 @@
   "invalid_receiver_id": {
     "en": "Invalid receiver id",
     "vi": "Không tìm thấy mã người dùng nhận điểm"
+  },
+  "not_found_user_voucher": {
+    "en": "Not found user_voucher",
+    "vi": "Không tìm thấy mã quà người dùng"
+  },
+  "code_has_been_used": {
+    "en": "Code has been used",
+    "vi": "Mã code đã được sử dụng"
   }
 }

@@ -19,6 +19,7 @@ const (
 	E_role_cannot_empty          = "role_cannot_empty"
 	E_invalid_username           = "invalid_username"
 	E_invalid_email              = "invalid_email"
+	E_invalid_name               = "invalid_name"
 	E_invalid_logo               = "invalid_logo"
 	E_invalid_address            = "invalid_address"
 	E_invalid_province           = "invalid_province"
@@ -46,4 +47,6 @@ const (
 	E_plan_expired               = "plan_expired"
 	E_invalid_order_plan_type    = "invalid_order_plan_type"
 	E_already_partner            = "already_partner"
+	E_not_found_user_voucher     = "not_found_user_voucher"
+	E_code_has_been_used         = "code_has_been_used"
 )

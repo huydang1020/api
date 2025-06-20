@@ -53,4 +53,8 @@ func (r *Router) mappingRouterCustomer() {
 	r1.GET("/review", r.handleListRewivewByUser)
 	r1.POST("/review", r.handleCreateReview)
 	r1.GET("/review/:id", r.handleGetReview)
+
+	// voucher
+	r1.GET("/voucher/user-voucher/:id", r.handleUserVoucher)
+	r1.GET("/voucher/user-voucher", r.handleListUserVoucher)
 }
