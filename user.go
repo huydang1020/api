@@ -25,10 +25,17 @@ func (r *Router) handleSignInAdmin(ctx *gin.Context) {
 	req := &userpb.User{}
 	ctx.ShouldBindJSON(req)
 	resp, err := r.userSer.SignIn(c, req)
-	if err != nil {
+	if err != nil || resp == nil {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
 	}
+	role, err := r.permSer.GetRole(c, &permpb.RoleRequest{Id: resp.User.RoleId})
+	if err != nil {
+		log.Println("GetRole err:", err)
+		utils.HandleError(LangMappingErr, ctx, err)
+		return
+	}
+	resp.User.Role = role
 	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: resp})
 }
 
@@ -64,6 +71,13 @@ func (r *Router) handleGetMe(ctx *gin.Context) {
 		total += int(item.Quantity)
 	}
 	user.CartQuantity = int32(total)
+	role, err := r.permSer.GetRole(c, &permpb.RoleRequest{Id: user.RoleId})
+	if err != nil {
+		log.Println("GetRole err:", err)
+		utils.HandleError(LangMappingErr, ctx, err)
+		return
+	}
+	user.Role = role
 	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: user})
 }
 
@@ -309,6 +323,13 @@ func (r *Router) handleSignInCustomer(ctx *gin.Context) {
 		total += int(item.Quantity)
 	}
 	resp.User.CartQuantity = int32(total)
+	role, err := r.permSer.GetRole(c, &permpb.RoleRequest{Id: resp.User.RoleId})
+	if err != nil {
+		log.Println("GetRole err:", err)
+		utils.HandleError(LangMappingErr, ctx, err)
+		return
+	}
+	resp.User.Role = role
 	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: resp})
 }
 

@@ -68,14 +68,14 @@ func (r *Router) handleCreateProductType(ctx *gin.Context) {
 	}
 	req.PartnerId = claims.PartnerId
 	log.Println("req", req)
-	log.Println("claims", claims)
+	// log.Println("claims", claims)
+	part, err := r.userSer.GetPartner(c, &userpb.PartnerRequest{Id: req.PartnerId})
+	if err != nil {
+		utils.HandleError(LangMappingErr, ctx, err)
+		return
+	}
 	var limitPty int32
-	if req.PartnerId == userpb.Partner_seller.String() {
-		part, err := r.userSer.GetPartner(c, &userpb.PartnerRequest{Id: req.PartnerId})
-		if err != nil {
-			utils.HandleError(LangMappingErr, ctx, err)
-			return
-		}
+	if part.Type == userpb.Partner_seller.String() {
 		if part.PlanExpiredAt < time.Now().Unix() {
 			utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_plan_expired))
 			return
@@ -85,13 +85,14 @@ func (r *Router) handleCreateProductType(ctx *gin.Context) {
 			utils.HandleError(LangMappingErr, ctx, err)
 			return
 		}
+		log.Println("sto: ", sto)
 		if int32(sto.QuantityProduct) >= part.MaxProductsPerStore {
 			utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_product_limit_reached))
 			return
 		}
 		limitPty = sto.QuantityProduct
 	}
-	_, err := r.productSer.CreateProductType(c, req)
+	_, err = r.productSer.CreateProductType(c, req)
 	if err != nil {
 		log.Println("err", err)
 		utils.HandleError(LangMappingErr, ctx, err)
