@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"log"
 
 	"github.com/gin-gonic/gin"
 	"github.com/huyshop/api/jwt"
@@ -89,6 +90,7 @@ func (r *Router) handleUpdateReview(ctx *gin.Context) {
 
 // handle review by admin
 func (r *Router) handleListReviewByAdmin(ctx *gin.Context) {
+	claims, _ := ctx.MustGet("claims").(*jwt.JWTClaim)
 	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
 	defer cancel()
 	req := &ptpb.ReviewRequest{}
@@ -97,8 +99,35 @@ func (r *Router) handleListReviewByAdmin(ctx *gin.Context) {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
 	}
+	pid := claims.PartnerId
+	listpty, err := r.productSer.ListProductType(c, &ptpb.ProductTypeRequest{PartnerId: pid})
+	if err != nil {
+		log.Println("err", err)
+		utils.HandleError(LangMappingErr, ctx, err)
+		return
+	}
+	if listpty == nil {
+		utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success"})
+	}
+	var ptyIds, proIds []string
+	for _, pty := range listpty.GetProductTypes() {
+		ptyIds = append(ptyIds, pty.Id)
+	}
+	litsProduct, err := r.productSer.ListProduct(c, &ptpb.ProductRequest{ProductTypeIds: ptyIds})
+	if err != nil {
+		log.Println("err", err)
+		utils.HandleError(LangMappingErr, ctx, err)
+		return
+	}
+	if len(litsProduct.GetProducts()) > 0 {
+		for _, pro := range litsProduct.GetProducts() {
+			proIds = append(proIds, pro.Id)
+		}
+		req.ProductIds = proIds
+	}
 	resp, err := r.productSer.ListReview(c, req)
 	if err != nil {
+		log.Println("err", err)
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
 	}

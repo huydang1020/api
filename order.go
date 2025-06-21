@@ -195,10 +195,13 @@ func (r *Router) handleCreateOrderVNpay(ctx *gin.Context) {
 }
 
 func (r *Router) handleListOrder(ctx *gin.Context) {
+	claims, _ := ctx.MustGet("claims").(*jwt.JWTClaim)
 	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
 	defer cancel()
 	req := &ptpb.OrderRequest{}
-	ctx.ShouldBindQuery(&req)
+	utils.BindQuery(req, ctx)
+	req.UserId = claims.UserId
+	log.Println("req, ", req)
 	orders, err := r.productSer.ListOrder(c, req)
 	if err != nil {
 		log.Println("err ", err)
