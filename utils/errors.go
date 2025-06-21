@@ -51,4 +51,6 @@ const (
 	E_code_has_been_used         = "code_has_been_used"
 	E_invalid_item_cart          = "invalid_item_cart"
 	E_store_not_created          = "store_not_created"
+	E_not_found_order            = "not_found_order"
+	E_invalid_state              = "invalid_state"
 )
