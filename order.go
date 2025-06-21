@@ -211,11 +211,43 @@ func (r *Router) handleListOrder(ctx *gin.Context) {
 	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: orders})
 }
 
+func (r *Router) handleListOrderAdmin(ctx *gin.Context) {
+	claims, _ := ctx.MustGet("claims").(*jwt.JWTClaim)
+	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
+	defer cancel()
+	req := &ptpb.OrderRequest{}
+	utils.BindQuery(req, ctx)
+	pid := claims.PartnerId
+	stores, err := r.userSer.ListStore(c, &upb.StoreRequest{PartnerId: pid})
+	if err != nil {
+		log.Println("err: ", err)
+		utils.HandleError(LangMappingErr, ctx, err)
+		return
+	}
+	if len(stores.GetStores()) <= 0 {
+		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_store_not_created))
+		return
+	}
+	var storeIds []string
+	for _, sto := range stores.GetStores() {
+		storeIds = append(storeIds, sto.Id)
+	}
+	req.StoreIds = storeIds
+	log.Println("len store: ", len(req.StoreIds))
+	orders, err := r.productSer.ListOrder(c, req)
+	if err != nil {
+		log.Println("err ", err)
+		utils.HandleError(LangMappingErr, ctx, err)
+		return
+	}
+	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: orders})
+}
+
 func (r *Router) handleGetOrder(ctx *gin.Context) {
 	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
 	defer cancel()
 	req := &ptpb.OrderRequest{}
-	ctx.ShouldBindQuery(&req)
+	utils.BindQuery(req, ctx)
 	order, err := r.productSer.GetOrder(c, req)
 	if err != nil {
 		log.Println("err ", err)
@@ -226,16 +258,18 @@ func (r *Router) handleGetOrder(ctx *gin.Context) {
 }
 
 func (r *Router) handleCancelOrder(ctx *gin.Context) {
+	claims, _ := ctx.MustGet("claims").(*jwt.JWTClaim)
 	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
 	defer cancel()
 	req := &ptpb.Order{}
-	ctx.ShouldBindJSON(&req)
 	id := ctx.Param("id")
 	if id == "" {
 		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_not_found_order_id))
 		return
 	}
 	req.State = ptpb.Order_canceled.String()
+	req.Id = id
+	req.UserId = claims.UserId
 	order, err := r.productSer.UpdateStateOrder(c, req)
 	if err != nil {
 		log.Println("err ", err)
@@ -250,6 +284,30 @@ func (r *Router) handleUpdateStateOrder(ctx *gin.Context) {
 	defer cancel()
 	req := &ptpb.Order{}
 	ctx.ShouldBindJSON(&req)
+	id := ctx.Param("id")
+	if id == "" {
+		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_not_found_order_id))
+		return
+	}
+	req.Id = id
+	order, err := r.productSer.UpdateStateOrder(c, req)
+	if err != nil {
+		log.Println("err ", err)
+		utils.HandleError(LangMappingErr, ctx, err)
+		return
+	}
+	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: order})
+}
+
+func (r *Router) handleUpdateStateOrderAdmin(ctx *gin.Context) {
+	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
+	defer cancel()
+	req := &ptpb.Order{}
+	ctx.ShouldBindJSON(&req)
+	if err := r.isCanBeAccess(c, ctx, "order", "r"); err != nil {
+		utils.HandleError(LangMappingErr, ctx, err)
+		return
+	}
 	id := ctx.Param("id")
 	if id == "" {
 		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_not_found_order_id))

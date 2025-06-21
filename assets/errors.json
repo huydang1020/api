@@ -610,5 +610,9 @@
   "review_already_exists": {
     "en": "You have already rated this product",
     "vi": "Bạn đã đánh giá sản phẩm này rồi"
+  },
+  "store_not_created": {
+    "en": "No store found. Set up your store to continue",
+    "vi": "Bạn chưa có shop. Hãy tạo ngay để bắt đầu kinh doanh"
   }
 }

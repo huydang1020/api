@@ -72,7 +72,8 @@ func (r *Router) mappingRouterAdmin() {
 	r1.DELETE("/banner/:id", r.handleDeleteBanner)
 
 	// order
-	r1.POST("/order-ship/:id", r.handleUpdateStateOrderShip)
+	r1.POST("/order/:id", r.handleUpdateStateOrderAdmin)
+	r1.GET("/order", r.handleListOrderAdmin)
 
 	// plan
 	r1.GET("/plan", r.handleListPlanAdmin)
