@@ -261,7 +261,7 @@ func (r *Router) handleGetProductType(ctx *gin.Context) {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
 	}
-	productType, err := r.productSer.GetProductType(c, &ptpb.ProductTypeRequest{Id: id})
+	productType, err := r.productSer.GetProductTypeBySlug(c, &ptpb.ProductTypeRequest{Id: id})
 	if err != nil {
 		log.Println("err", err)
 		utils.HandleError(LangMappingErr, ctx, err)
