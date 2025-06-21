@@ -115,6 +115,10 @@ func (r *Router) handleDeleteItemCart(ctx *gin.Context) {
 		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_not_found_user_id))
 		return
 	}
+	if len(req) == 0 {
+		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_invalid_item_cart))
+		return
+	}
 	_, err := r.productSer.DeleteCartItem(c, &ptpb.Cart{Item: req, UserId: user_id})
 	if err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)

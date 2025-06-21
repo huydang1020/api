@@ -594,5 +594,21 @@
   "code_has_been_used": {
     "en": "Code has been used",
     "vi": "Mã code đã được sử dụng"
+  },
+  "invalid_order": {
+    "en": "invalid order",
+    "vi": "Đơn hàng không hợp lệ"
+  },
+  "product_not_in_order": {
+    "en": "product not in order",
+    "vi": "Bạn chưa tạo đơn hàng với sản phẩm này"
+  },
+  "invalid_item_cart": {
+    "en": "invalid item cart",
+    "vi": "Giỏ hàng không hợp lệ"
+  },
+  "review_already_exists": {
+    "en": "You have already rated this product",
+    "vi": "Bạn đã đánh giá sản phẩm này rồi"
   }
 }

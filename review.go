@@ -44,12 +44,12 @@ func (r *Router) handleCreateReview(ctx *gin.Context) {
 		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_invalid_rating))
 		return
 	}
-	resp, err := r.productSer.CreateReview(c, req)
+	_, err := r.productSer.CreateReview(c, req)
 	if err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
 	}
-	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: resp})
+	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success"})
 }
 
 func (r *Router) handleGetReview(ctx *gin.Context) {

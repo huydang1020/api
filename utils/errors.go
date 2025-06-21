@@ -49,4 +49,5 @@ const (
 	E_already_partner            = "already_partner"
 	E_not_found_user_voucher     = "not_found_user_voucher"
 	E_code_has_been_used         = "code_has_been_used"
+	E_invalid_item_cart          = "invalid_item_cart"
 )

@@ -292,7 +292,7 @@ func (r *Router) handleGetProductTypeCustomer(ctx *gin.Context) {
 	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
 	defer cancel()
 	id := ctx.Param("id")
-	pty, err := r.productSer.GetProductType(c, &ptpb.ProductTypeRequest{Id: id})
+	pty, err := r.productSer.GetProductTypeBySlug(c, &ptpb.ProductTypeRequest{Id: id})
 	if err != nil {
 		log.Println("err", err)
 		utils.HandleError(LangMappingErr, ctx, err)
