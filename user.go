@@ -71,13 +71,15 @@ func (r *Router) handleGetMe(ctx *gin.Context) {
 		total += int(item.Quantity)
 	}
 	user.CartQuantity = int32(total)
-	role, err := r.permSer.GetRole(c, &permpb.RoleRequest{Id: user.RoleId})
-	if err != nil {
-		log.Println("GetRole err:", err)
-		utils.HandleError(LangMappingErr, ctx, err)
-		return
+	if user.PartnerId != "" {
+		part, err := r.userSer.GetPartner(c, &userpb.PartnerRequest{Id: user.PartnerId})
+		if err != nil {
+			log.Println("GetOart err:", err)
+			utils.HandleError(LangMappingErr, ctx, err)
+			return
+		}
+		user.Partner = part
 	}
-	user.Role = role
 	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: user})
 }
 
@@ -323,13 +325,15 @@ func (r *Router) handleSignInCustomer(ctx *gin.Context) {
 		total += int(item.Quantity)
 	}
 	resp.User.CartQuantity = int32(total)
-	role, err := r.permSer.GetRole(c, &permpb.RoleRequest{Id: resp.User.RoleId})
-	if err != nil {
-		log.Println("GetRole err:", err)
-		utils.HandleError(LangMappingErr, ctx, err)
-		return
+	if resp.User.PartnerId != "" {
+		part, err := r.userSer.GetPartner(c, &userpb.PartnerRequest{Id: resp.User.PartnerId})
+		if err != nil {
+			log.Println("GetOart err:", err)
+			utils.HandleError(LangMappingErr, ctx, err)
+			return
+		}
+		resp.User.Partner = part
 	}
-	resp.User.Role = role
 	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: resp})
 }
 
