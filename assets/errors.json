@@ -630,5 +630,9 @@
   "favorite_is_empty": {
     "en": "favorite is empty",
     "vi": "Danh sách yêu thích trống"
+  },
+  "invalid_state_order": {
+    "en": "You won't be rated if the order fails",
+    "vi": "Bạn chưa được đánh gía nếu đơn hàng chưa đặt thành công"
   }
 }
