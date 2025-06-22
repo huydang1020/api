@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	"log"
+	"net/http"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -527,4 +528,127 @@ func (r *Router) handleHome(ctx *gin.Context) {
 		Banners:    banners.GetBanners(),
 	}
 	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: home})
+}
+
+// favorite
+type FavoriteRequest struct {
+	ProductTypeID string `json:"product_type_id"`
+}
+
+func (r *Router) handleAddFavorites(ctx *gin.Context) {
+	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
+	defer cancel()
+	claims, _ := ctx.MustGet("claims").(*jwt.JWTClaim)
+	uid := claims.UserId
+	var req *FavoriteRequest
+	ctx.ShouldBindJSON(&req)
+	if req.ProductTypeID == "" {
+		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_invalid_product_id))
+		return
+	}
+	if uid == "" {
+		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_invalid_user_id))
+		return
+	}
+	key := "favorites:" + uid
+	err := r.cache.SAdd(c, key, req.ProductTypeID).Err()
+	if err != nil {
+		log.Println("Redis SAdd error:", err)
+		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_can_not_add_favorite))
+		return
+	}
+
+	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success"})
+}
+
+func (r *Router) handleListFavorites(ctx *gin.Context) {
+	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
+	defer cancel()
+
+	claims, _ := ctx.MustGet("claims").(*jwt.JWTClaim)
+	uid := claims.UserId
+	if uid == "" {
+		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_invalid_user_id))
+		return
+	}
+
+	key := "favorites:" + uid
+	ProductTypeIDs, err := r.cache.SMembers(c, key).Result()
+	if err != nil {
+		log.Println("Redis SMembers error:", err)
+		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_invalid_user_id))
+		return
+	}
+	if len(ProductTypeIDs) <= 0 {
+		utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "favorite_is_empty"})
+		return
+	}
+	productTypes, err := r.productSer.ListProductType(ctx, &ptpb.ProductTypeRequest{Ids: ProductTypeIDs})
+	if err != nil {
+		log.Println("error:", err)
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "could not fetch favorites"})
+		return
+	}
+	for _, pty := range productTypes.GetProductTypes() {
+		if pty.PartnerId != "" {
+			partner, err := r.userSer.GetPartner(c, &userpb.PartnerRequest{Id: pty.PartnerId})
+			if err != nil {
+				log.Println("err", err)
+				continue
+			}
+			pty.Partner = partner
+		}
+		if pty.StoreId != "" {
+			store, err := r.userSer.GetStore(c, &userpb.StoreRequest{Id: pty.StoreId})
+			if err != nil {
+				log.Println("err", err)
+				continue
+			}
+			pty.Store = store
+		}
+	}
+	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: productTypes})
+}
+
+func (r *Router) handleDeleteOneFavorite(ctx *gin.Context) {
+	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
+	defer cancel()
+
+	claims, _ := ctx.MustGet("claims").(*jwt.JWTClaim)
+	uid := claims.UserId
+	if uid == "" {
+		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_invalid_user_id))
+		return
+	}
+	id := ctx.Param("id")
+	if id == "" {
+		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_invalid_product_id))
+		return
+	}
+	key := "favorites:" + uid
+	err := r.cache.SRem(c, key, id).Err()
+	if err != nil {
+		log.Println("Redis SRem error:", err)
+		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_can_not_delete_favorite))
+		return
+	}
+
+	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success"})
+}
+
+func (r *Router) handleDeleteAllFavorites(ctx *gin.Context) {
+	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
+	defer cancel()
+	claims, _ := ctx.MustGet("claims").(*jwt.JWTClaim)
+	uid := claims.UserId
+
+	key := "favorites:" + uid
+	err := r.cache.Del(c, key).Err()
+	if err != nil {
+		log.Println("Redis DEL error:", err)
+		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_can_not_delete_favorite))
+		return
+	}
+
+	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success"})
 }

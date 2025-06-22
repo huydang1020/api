@@ -6,5 +6,9 @@
   "account_not_activated": {
     "en": "Account not activated",
     "vi": "Tài khoản chưa được kích hoạt"
+  },
+  "favorite_is_empty": {
+    "en": "Favorite is empty",
+    "vi": "Chưa có sản phẩm yêu thích"
   }
 }

@@ -53,4 +53,8 @@ const (
 	E_store_not_created          = "store_not_created"
 	E_not_found_order            = "not_found_order"
 	E_invalid_state              = "invalid_state"
+	E_invalid_product_id         = "invalid_product_id"
+	E_can_not_add_favorite       = "can_not_add_favorite"
+	E_can_not_delete_favorite    = "can_not_delete_favorite"
+	E_can_not_favorite           = "can_not_favorite"
 )

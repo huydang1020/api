@@ -57,4 +57,10 @@ func (r *Router) mappingRouterCustomer() {
 	// voucher
 	r1.GET("/voucher/user-voucher/:id", r.handleUserVoucher)
 	r1.GET("/voucher/user-voucher", r.handleListUserVoucher)
+
+	// favorites
+	r1.POST("/favorite-product", r.handleAddFavorites)
+	r1.GET("/favorite-product", r.handleListFavorites)
+	r1.DELETE("/favorite-product", r.handleDeleteAllFavorites)
+	r1.DELETE("/favorite-product/:id", r.handleDeleteOneFavorite)
 }

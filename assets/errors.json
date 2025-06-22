@@ -600,11 +600,11 @@
     "vi": "Đơn hàng không hợp lệ"
   },
   "product_not_in_order": {
-    "en": "product not in order",
+    "en": "Product not in order",
     "vi": "Bạn chưa tạo đơn hàng với sản phẩm này"
   },
   "invalid_item_cart": {
-    "en": "invalid item cart",
+    "en": "Invalid item cart",
     "vi": "Giỏ hàng không hợp lệ"
   },
   "review_already_exists": {
@@ -614,5 +614,21 @@
   "store_not_created": {
     "en": "No store found. Set up your store to continue",
     "vi": "Bạn chưa có shop. Hãy tạo ngay để bắt đầu kinh doanh"
+  },
+  "invalid_product_id": {
+    "en": "Invalid product id",
+    "vi": "Mã sản phẩm không hợp lệ"
+  },
+  "can_not_add_favorite": {
+    "en": "Can not add favorite",
+    "vi": "Không thể thêm vào danh sách yêu thích"
+  },
+  "can_not_delete_favorite": {
+    "en": "Can not delete favorite",
+    "vi": "Không thể xóa khỏi danh sách yêu thích"
+  },
+  "favorite_is_empty": {
+    "en": "favorite is empty",
+    "vi": "Danh sách yêu thích trống"
   }
 }
