@@ -200,6 +200,7 @@ func (r *Router) handleListOrder(ctx *gin.Context) {
 	defer cancel()
 	req := &ptpb.OrderRequest{}
 	utils.BindQuery(req, ctx)
+	req.State = ctx.Query("state")
 	req.UserId = claims.UserId
 	log.Println("req, ", req)
 	orders, err := r.productSer.ListOrder(c, req)
