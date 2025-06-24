@@ -76,6 +76,7 @@ func (r *Router) mappingRouterAdmin() {
 	r1.POST("/order/:id/cancel", r.handleCancelOrderAdmin)
 	r1.GET("/order", r.handleListOrderAdmin)
 	r1.GET("/order/:id", r.handleGetOrderAdmin)
+	r1.POST("/order-ship/:id/confirm", r.handleSuccessOrderShip)
 
 	// plan
 	r1.GET("/plan", r.handleListPlanAdmin)
