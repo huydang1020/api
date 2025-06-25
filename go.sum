@@ -131,6 +131,8 @@ github.com/huyshop/header v0.0.73 h1:y7ckEa08OcJGcx2MZhkf6OJ4u8TV3xV+0nDs4nMIjnU
 github.com/huyshop/header v0.0.73/go.mod h1:L/AyNEtR83jMFV1loxOb0CECEwqwhFcJCAOnuxGuaGw=
 github.com/huyshop/header v0.0.74 h1:kiHNKR9gdRrpOvT3zn2r00BEv04Y2fEn/YALjMEpw8w=
 github.com/huyshop/header v0.0.74/go.mod h1:L/AyNEtR83jMFV1loxOb0CECEwqwhFcJCAOnuxGuaGw=
+github.com/huyshop/header v0.0.75 h1:RBAewBCvxzr+a3PNSDro5RJqH9w3oV6C+ZMexhDSjQ4=
+github.com/huyshop/header v0.0.75/go.mod h1:L/AyNEtR83jMFV1loxOb0CECEwqwhFcJCAOnuxGuaGw=
 github.com/jcchavezs/porto v0.1.0/go.mod h1:fESH0gzDHiutHRdX2hv27ojnOVFco37hg1W6E9EZF4A=
 github.com/jcchavezs/porto v0.7.0 h1:VncK84yxV7QZD4GdvoslzjnieSuruztGxLCmFi/Eu28=
 github.com/jcchavezs/porto v0.7.0/go.mod h1:tQ1cJ85cNzzZg/58VuZWOLbmrjcH1wPxkWgeBjvOq5o=

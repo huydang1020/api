@@ -233,24 +233,6 @@ func (r *Router) handleListProductTypeCustomer(ctx *gin.Context) {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
 	}
-	for _, pty := range productTypes.GetProductTypes() {
-		if pty.PartnerId != "" {
-			partner, err := r.userSer.GetPartner(c, &userpb.PartnerRequest{Id: pty.PartnerId})
-			if err != nil {
-				log.Println("err", err)
-				continue
-			}
-			pty.Partner = partner
-		}
-		if pty.StoreId != "" {
-			store, err := r.userSer.GetStore(c, &userpb.StoreRequest{Id: pty.StoreId})
-			if err != nil {
-				log.Println("err", err)
-				continue
-			}
-			pty.Store = store
-		}
-	}
 	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: productTypes})
 }
 
