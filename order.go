@@ -291,10 +291,10 @@ func (r *Router) handleCancelOrder(ctx *gin.Context) {
 		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_not_found_order))
 		return
 	}
-	if order.State == ptpb.Order_confirm.String() {
+	if order.State == ptpb.Order_confirmed.String() {
 		req.CancelOrder = "true"
 	} else {
-		req.State = ptpb.Order_canceled.String()
+		req.State = ptpb.Order_cancelled.String()
 	}
 	req.Id = id
 	req.UserId = claims.UserId
@@ -322,7 +322,7 @@ func (r *Router) handleCancelOrderAdmin(ctx *gin.Context) {
 		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_not_found_order_id))
 		return
 	}
-	req.State = ptpb.Order_canceled.String()
+	req.State = ptpb.Order_cancelled.String()
 	req.Id = id
 	_, err := r.productSer.UpdateStateOrder(c, req)
 	if err != nil {
@@ -353,14 +353,14 @@ func (r *Router) handleConfirmOrderAdmin(ctx *gin.Context) {
 		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_not_found_order))
 		return
 	}
-	if order.State == ptpb.Order_completed.String() || order.State == ptpb.Order_canceled.String() {
+	if order.State == ptpb.Order_completed.String() || order.State == ptpb.Order_cancelled.String() {
 		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_invalid_state))
 		return
 	}
-	if order.State == ptpb.Order_confirm.String() {
+	if order.State == ptpb.Order_confirmed.String() {
 		req.State = ptpb.Order_shipping.String()
 	} else {
-		req.State = ptpb.Order_confirm.String()
+		req.State = ptpb.Order_confirmed.String()
 	}
 	req.Id = id
 	req.UserId = claims.UserId
