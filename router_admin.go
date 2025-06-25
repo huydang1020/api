@@ -53,7 +53,7 @@ func (r *Router) mappingRouterAdmin() {
 	r1.GET("/product-type", r.handleListProductType)
 	r1.POST("/product-type", r.handleCreateProductType)
 	r1.GET("/product-type/:id", r.handleGetProductType)
-	r1.PUT("/product-type/:id", r.handleUpdateProductType)
+	r1.PUT("/product-type/:id", r.handleUpdateProductTypeAdmin)
 	r1.DELETE("/product-type/:id", r.handleDeleteProductType)
 	r1.PUT("product-type/state/:id", r.handleUpdateStateProductType)
 

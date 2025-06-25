@@ -114,7 +114,7 @@ func (r *Router) handleCreateProductType(ctx *gin.Context) {
 	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success"})
 }
 
-func (r *Router) handleUpdateProductType(ctx *gin.Context) {
+func (r *Router) handleUpdateProductTypeAdmin(ctx *gin.Context) {
 	claims, _ := ctx.MustGet("claims").(*jwt.JWTClaim)
 	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
 	defer cancel()
@@ -129,7 +129,7 @@ func (r *Router) handleUpdateProductType(ctx *gin.Context) {
 	if claims.PartnerType != userpb.Partner_admin.String() {
 		req.State = ptpb.ProductType_pending.String()
 	}
-	_, err := r.productSer.UpdateProductType(c, req)
+	_, err := r.productSer.UpdateProductTypeAdmin(c, req)
 	if err != nil {
 		log.Println("err", err)
 		utils.HandleError(LangMappingErr, ctx, err)
