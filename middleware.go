@@ -43,12 +43,12 @@ func authMiddleware(r *Router) gin.HandlerFunc {
 					defer cancel()
 					refreshToken, err := r.cache.Get(ctx, keyRedis).Result()
 					if err == redis.Nil || err != nil {
-						utils.HandleError(LangMappingErr, c, fmt.Errorf(utils.E_invalid_token))
+						c.JSON(200, utils.ErrMsg{Code: 1, Message: utils.E_invalid_token})
 						c.Abort()
 						return
 					}
 					if refreshToken == "" {
-						utils.HandleError(LangMappingErr, c, fmt.Errorf(utils.E_invalid_token))
+						c.JSON(200, utils.ErrMsg{Code: 1, Message: utils.E_invalid_token})
 						c.Abort()
 						return
 					}

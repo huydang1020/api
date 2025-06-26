@@ -27,6 +27,7 @@ func GenerateAccessToken(newClaims *JWTClaim, expireTime time.Duration, secretKe
 		PartnerType: newClaims.PartnerType,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: expirationTime.Unix(),
+			IssuedAt:  time.Now().Unix(),
 		},
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
@@ -48,6 +49,7 @@ func GenerateRefreshToken(newClaims *JWTClaim, expireTime time.Duration, secretK
 		PartnerType: newClaims.PartnerType,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: expirationTime.Unix(),
+			IssuedAt:  time.Now().Unix(),
 		},
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
