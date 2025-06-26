@@ -3,7 +3,6 @@ package main
 import (
 	"errors"
 	"log"
-	"net/http"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -562,33 +561,33 @@ func (r *Router) handleListFavorites(ctx *gin.Context) {
 		return
 	}
 	if len(ProductTypeIDs) <= 0 {
-		utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "favorite_is_empty"})
+		utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: []*ptpb.ProductType{}})
 		return
 	}
 	productTypes, err := r.productSer.ListProductType(ctx, &ptpb.ProductTypeRequest{Ids: ProductTypeIDs})
 	if err != nil {
 		log.Println("error:", err)
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "could not fetch favorites"})
+		utils.HandleError(LangMappingErr, ctx, err)
 		return
 	}
-	for _, pty := range productTypes.GetProductTypes() {
-		if pty.PartnerId != "" {
-			partner, err := r.userSer.GetPartner(c, &userpb.PartnerRequest{Id: pty.PartnerId})
-			if err != nil {
-				log.Println("err", err)
-				continue
-			}
-			pty.Partner = partner
-		}
-		if pty.StoreId != "" {
-			store, err := r.userSer.GetStore(c, &userpb.StoreRequest{Id: pty.StoreId})
-			if err != nil {
-				log.Println("err", err)
-				continue
-			}
-			pty.Store = store
-		}
-	}
+	// for _, pty := range productTypes.GetProductTypes() {
+	// 	if pty.PartnerId != "" {
+	// 		partner, err := r.userSer.GetPartner(c, &userpb.PartnerRequest{Id: pty.PartnerId})
+	// 		if err != nil {
+	// 			log.Println("err", err)
+	// 			continue
+	// 		}
+	// 		pty.Partner = partner
+	// 	}
+	// 	if pty.StoreId != "" {
+	// 		store, err := r.userSer.GetStore(c, &userpb.StoreRequest{Id: pty.StoreId})
+	// 		if err != nil {
+	// 			log.Println("err", err)
+	// 			continue
+	// 		}
+	// 		pty.Store = store
+	// 	}
+	// }
 	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: productTypes})
 }
 
@@ -614,7 +613,18 @@ func (r *Router) handleDeleteOneFavorite(ctx *gin.Context) {
 		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_can_not_delete_favorite))
 		return
 	}
+	count, err := r.cache.SCard(c, key).Result()
+	if err != nil {
+		log.Println("Redis SCard error:", err)
+		return
+	}
 
+	if count == 0 {
+		err = r.cache.Del(c, key).Err()
+		if err != nil {
+			log.Println("Redis Del error:", err)
+		}
+	}
 	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success"})
 }
 

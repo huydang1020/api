@@ -80,6 +80,14 @@ func (r *Router) handleGetMe(ctx *gin.Context) {
 		}
 		user.Partner = part
 	}
+	key := "favorites:" + user.Id
+	productTypeIds, err := r.cache.SMembers(c, key).Result()
+	if err != nil {
+		log.Println("Redis SMembers error:", err)
+		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_invalid_user_id))
+		return
+	}
+	user.FavoriteQuantity = int32(len(productTypeIds))
 	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: user})
 }
 
@@ -334,6 +342,14 @@ func (r *Router) handleSignInCustomer(ctx *gin.Context) {
 		}
 		resp.User.Partner = part
 	}
+	key := "favorites:" + resp.User.Id
+	productTypeIds, err := r.cache.SMembers(c, key).Result()
+	if err != nil {
+		log.Println("Redis SMembers error:", err)
+		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_invalid_user_id))
+		return
+	}
+	resp.User.FavoriteQuantity = int32(len(productTypeIds))
 	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: resp})
 }
 
