@@ -545,7 +545,8 @@ func (r *Router) handleAddFavorites(ctx *gin.Context) {
 func (r *Router) handleListFavorites(ctx *gin.Context) {
 	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
 	defer cancel()
-
+	req := &ptpb.ProductTypeRequest{}
+	utils.BindQuery(req, ctx)
 	claims, _ := ctx.MustGet("claims").(*jwt.JWTClaim)
 	uid := claims.UserId
 	if uid == "" {
@@ -564,7 +565,7 @@ func (r *Router) handleListFavorites(ctx *gin.Context) {
 		utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: []*ptpb.ProductType{}})
 		return
 	}
-	productTypes, err := r.productSer.ListProductType(ctx, &ptpb.ProductTypeRequest{Ids: ProductTypeIDs})
+	productTypes, err := r.productSer.ListProductType(ctx, &ptpb.ProductTypeRequest{Ids: ProductTypeIDs, Limit: req.GetLimit(), Skip: req.GetSkip()})
 	if err != nil {
 		log.Println("error:", err)
 		utils.HandleError(LangMappingErr, ctx, err)
