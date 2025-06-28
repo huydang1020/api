@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	"log"
+	"slices"
 
 	"github.com/gin-gonic/gin"
 	"github.com/huyshop/api/jwt"
@@ -277,25 +278,13 @@ func (r *Router) handleGetOrderAdmin(ctx *gin.Context) {
 }
 
 func (r *Router) handleCancelOrder(ctx *gin.Context) {
-	claims, _ := ctx.MustGet("claims").(*jwt.JWTClaim)
 	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
 	defer cancel()
 	req := &ptpb.Order{}
 	id := ctx.Param("id")
-	if id == "" {
-		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_not_found_order_id))
-		return
-	}
-	order, err := r.productSer.GetOrder(c, &ptpb.OrderRequest{Id: id})
-	if err != nil {
-		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_not_found_order))
-		return
-	}
-	log.Println("order:", order)
 	req.State = ptpb.Order_cancelled.String()
 	req.Id = id
-	req.UserId = claims.UserId
-	_, err = r.productSer.UpdateStateOrder(c, req)
+	_, err := r.productSer.UpdateStateOrder(c, req)
 	if err != nil {
 		log.Println("err ", err)
 		utils.HandleError(LangMappingErr, ctx, err)
@@ -305,7 +294,12 @@ func (r *Router) handleCancelOrder(ctx *gin.Context) {
 }
 
 func (r *Router) handleUpdateStateOrderAdmin(ctx *gin.Context) {
-	// claims, _ := ctx.MustGet("claims").(*jwt.JWTClaim)
+	claims, _ := ctx.MustGet("claims").(*jwt.JWTClaim)
+	acceptPartnerType := []string{"seller", "admin"}
+	if !slices.Contains(acceptPartnerType, claims.PartnerType) {
+		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_access_denied))
+		return
+	}
 	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
 	defer cancel()
 	req := &ptpb.Order{}
