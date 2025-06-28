@@ -72,11 +72,9 @@ func (r *Router) mappingRouterAdmin() {
 	r1.DELETE("/banner/:id", r.handleDeleteBanner)
 
 	// order
-	r1.POST("/order/:id/confirm", r.handleConfirmOrderAdmin)
-	r1.POST("/order/:id/cancel", r.handleCancelOrderAdmin)
+	r1.PUT("/order/:id", r.handleUpdateStateOrderAdmin)
 	r1.GET("/order", r.handleListOrderAdmin)
 	r1.GET("/order/:id", r.handleGetOrderAdmin)
-	r1.POST("/order-ship/:id/confirm", r.handleSuccessOrderShip)
 
 	// plan
 	r1.GET("/plan", r.handleListPlanAdmin)
@@ -92,11 +90,11 @@ func (r *Router) mappingRouterAdmin() {
 	r1.POST("order-plan/vnpay", r.handleCreateOrderPlanVNPay)
 
 	// review
-	r1.GET("/review", r.handleListReviewByAdmin)
-	r1.POST("/review/reply", r.handleReplyReviewByAdmin)
-	r1.GET("/review/:id", r.handleGetReviewByAdmin)
-	r1.PUT("/review/:id", r.handleUpdateReview)
-	r1.DELETE("/review/:id", r.handleDeleteReview)
+	r1.GET("/reviews", r.handleListReviewsByAdmin)
+	r1.POST("/reviews/reply", r.handleReplyReviewsByAdmin)
+	r1.GET("/review/:id", r.handleGetReviewsByAdmin)
+	r1.PUT("/reviews/:id", r.handleUpdateReviews)
+	r1.DELETE("/reviews/:id", r.handleDeleteReviews)
 
 	// voucher
 	r1.GET("/voucher", r.handleGetListVoucherAdmin)

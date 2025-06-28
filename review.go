@@ -10,15 +10,12 @@ import (
 	ptpb "github.com/huyshop/header/product"
 )
 
-// handle review by user
-func (r *Router) handleListRewivewByUser(ctx *gin.Context) {
-	claims, _ := ctx.MustGet("claims").(*jwt.JWTClaim)
+func (r *Router) handleListReviews(ctx *gin.Context) {
 	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
 	defer cancel()
-	req := &ptpb.ReviewRequest{}
-	ctx.ShouldBindJSON(req)
-	req.UserId = claims.UserId
-	resp, err := r.productSer.ListReview(c, req)
+	req := &ptpb.ReviewsRequest{}
+	utils.BindQuery(req, ctx)
+	resp, err := r.productSer.ListReviews(c, req)
 	if err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
@@ -26,11 +23,11 @@ func (r *Router) handleListRewivewByUser(ctx *gin.Context) {
 	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: resp})
 }
 
-func (r *Router) handleCreateReview(ctx *gin.Context) {
+func (r *Router) handleCreateReviews(ctx *gin.Context) {
 	claims, _ := ctx.MustGet("claims").(*jwt.JWTClaim)
 	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
 	defer cancel()
-	req := &ptpb.Review{}
+	req := &ptpb.Reviews{}
 	ctx.ShouldBindJSON(req)
 	req.UserId = claims.UserId
 	if req.ProductId == "" {
@@ -45,7 +42,7 @@ func (r *Router) handleCreateReview(ctx *gin.Context) {
 		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_invalid_rating))
 		return
 	}
-	_, err := r.productSer.CreateReview(c, req)
+	_, err := r.productSer.CreateReviews(c, req)
 	if err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
@@ -53,13 +50,13 @@ func (r *Router) handleCreateReview(ctx *gin.Context) {
 	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success"})
 }
 
-func (r *Router) handleGetReview(ctx *gin.Context) {
+func (r *Router) handleGetReviews(ctx *gin.Context) {
 	claims, _ := ctx.MustGet("claims").(*jwt.JWTClaim)
 	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
 	defer cancel()
 	id := ctx.Param("id")
-	req := &ptpb.ReviewRequest{Id: id, UserId: claims.UserId}
-	resp, err := r.productSer.GetReview(c, req)
+	req := &ptpb.ReviewsRequest{Id: id, UserId: claims.UserId}
+	resp, err := r.productSer.GetReviews(c, req)
 	if err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
@@ -67,12 +64,12 @@ func (r *Router) handleGetReview(ctx *gin.Context) {
 	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: resp})
 }
 
-func (r *Router) handleUpdateReview(ctx *gin.Context) {
+func (r *Router) handleUpdateReviews(ctx *gin.Context) {
 	claims, _ := ctx.MustGet("claims").(*jwt.JWTClaim)
 	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
 	defer cancel()
 	id := ctx.Param("id")
-	req := &ptpb.Review{}
+	req := &ptpb.Reviews{}
 	ctx.ShouldBindJSON(req)
 	if err := r.isCanBeAccess(c, ctx, "review", "u"); err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
@@ -80,7 +77,7 @@ func (r *Router) handleUpdateReview(ctx *gin.Context) {
 	}
 	req.Id = id
 	req.UserId = claims.UserId
-	resp, err := r.productSer.UpdateReview(c, req)
+	resp, err := r.productSer.UpdateReviews(c, req)
 	if err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
@@ -89,11 +86,11 @@ func (r *Router) handleUpdateReview(ctx *gin.Context) {
 }
 
 // handle review by admin
-func (r *Router) handleListReviewByAdmin(ctx *gin.Context) {
+func (r *Router) handleListReviewsByAdmin(ctx *gin.Context) {
 	claims, _ := ctx.MustGet("claims").(*jwt.JWTClaim)
 	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
 	defer cancel()
-	req := &ptpb.ReviewRequest{}
+	req := &ptpb.ReviewsRequest{}
 	ctx.ShouldBindJSON(req)
 	if err := r.isCanBeAccess(c, ctx, "review", "r"); err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
@@ -113,7 +110,7 @@ func (r *Router) handleListReviewByAdmin(ctx *gin.Context) {
 		ordIds = append(ordIds, ord.Id)
 	}
 	req.OrderIds = ordIds
-	resp, err := r.productSer.ListReview(c, req)
+	resp, err := r.productSer.ListReviews(c, req)
 	if err != nil {
 		log.Println("err", err)
 		utils.HandleError(LangMappingErr, ctx, err)
@@ -122,7 +119,7 @@ func (r *Router) handleListReviewByAdmin(ctx *gin.Context) {
 	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: resp})
 }
 
-func (r *Router) handleGetReviewByAdmin(ctx *gin.Context) {
+func (r *Router) handleGetReviewsByAdmin(ctx *gin.Context) {
 	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
 	defer cancel()
 	id := ctx.Param("id")
@@ -130,8 +127,8 @@ func (r *Router) handleGetReviewByAdmin(ctx *gin.Context) {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
 	}
-	req := &ptpb.ReviewRequest{Id: id}
-	resp, err := r.productSer.GetReview(c, req)
+	req := &ptpb.ReviewsRequest{Id: id}
+	resp, err := r.productSer.GetReviews(c, req)
 	if err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
@@ -139,18 +136,18 @@ func (r *Router) handleGetReviewByAdmin(ctx *gin.Context) {
 	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: resp})
 }
 
-func (r *Router) handleReplyReviewByAdmin(ctx *gin.Context) {
+func (r *Router) handleReplyReviewsByAdmin(ctx *gin.Context) {
 	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
 	defer cancel()
 	id := ctx.Param("id")
-	req := &ptpb.Review{}
+	req := &ptpb.Reviews{}
 	ctx.ShouldBindJSON(req)
 	if err := r.isCanBeAccess(c, ctx, "review", "u"); err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
 	}
 	req.Id = id
-	resp, err := r.productSer.ReplyReview(c, req)
+	resp, err := r.productSer.ReplyReviews(c, req)
 	if err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
@@ -158,7 +155,7 @@ func (r *Router) handleReplyReviewByAdmin(ctx *gin.Context) {
 	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: resp})
 }
 
-func (r *Router) handleDeleteReview(ctx *gin.Context) {
+func (r *Router) handleDeleteReviews(ctx *gin.Context) {
 	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
 	defer cancel()
 	id := ctx.Param("id")
@@ -166,8 +163,8 @@ func (r *Router) handleDeleteReview(ctx *gin.Context) {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
 	}
-	req := &ptpb.Review{Id: id}
-	if _, err := r.productSer.DeleteReview(c, req); err != nil {
+	req := &ptpb.Reviews{Id: id}
+	if _, err := r.productSer.DeleteReviews(c, req); err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
 	}

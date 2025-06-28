@@ -291,11 +291,8 @@ func (r *Router) handleCancelOrder(ctx *gin.Context) {
 		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_not_found_order))
 		return
 	}
-	if order.State == ptpb.Order_confirmed.String() {
-		req.CancelOrder = "true"
-	} else {
-		req.State = ptpb.Order_cancelled.String()
-	}
+	log.Println("order:", order)
+	req.State = ptpb.Order_cancelled.String()
 	req.Id = id
 	req.UserId = claims.UserId
 	_, err = r.productSer.UpdateStateOrder(c, req)
@@ -307,34 +304,8 @@ func (r *Router) handleCancelOrder(ctx *gin.Context) {
 	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success"})
 }
 
-func (r *Router) handleCancelOrderAdmin(ctx *gin.Context) {
+func (r *Router) handleUpdateStateOrderAdmin(ctx *gin.Context) {
 	// claims, _ := ctx.MustGet("claims").(*jwt.JWTClaim)
-	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
-	defer cancel()
-	req := &ptpb.Order{}
-	if err := r.isCanBeAccess(c, ctx, "order", "r"); err != nil {
-		log.Println("err", err)
-		utils.HandleError(LangMappingErr, ctx, err)
-		return
-	}
-	id := ctx.Param("id")
-	if id == "" {
-		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_not_found_order_id))
-		return
-	}
-	req.State = ptpb.Order_cancelled.String()
-	req.Id = id
-	_, err := r.productSer.UpdateStateOrder(c, req)
-	if err != nil {
-		log.Println("err ", err)
-		utils.HandleError(LangMappingErr, ctx, err)
-		return
-	}
-	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success"})
-}
-
-func (r *Router) handleConfirmOrderAdmin(ctx *gin.Context) {
-	claims, _ := ctx.MustGet("claims").(*jwt.JWTClaim)
 	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
 	defer cancel()
 	req := &ptpb.Order{}
@@ -344,48 +315,7 @@ func (r *Router) handleConfirmOrderAdmin(ctx *gin.Context) {
 		return
 	}
 	id := ctx.Param("id")
-	if id == "" {
-		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_not_found_order_id))
-		return
-	}
-	order, err := r.productSer.GetOrder(c, &ptpb.OrderRequest{Id: id})
-	if err != nil {
-		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_not_found_order))
-		return
-	}
-	if order.State == ptpb.Order_completed.String() || order.State == ptpb.Order_cancelled.String() {
-		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_invalid_state))
-		return
-	}
-	if order.State == ptpb.Order_confirmed.String() {
-		req.State = ptpb.Order_shipping.String()
-	} else {
-		req.State = ptpb.Order_confirmed.String()
-	}
 	req.Id = id
-	req.UserId = claims.UserId
-	_, err = r.productSer.UpdateStateOrder(c, req)
-	if err != nil {
-		log.Println("err ", err)
-		utils.HandleError(LangMappingErr, ctx, err)
-		return
-	}
-	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success"})
-}
-
-func (r *Router) handleCompleteOrder(ctx *gin.Context) {
-	claims, _ := ctx.MustGet("claims").(*jwt.JWTClaim)
-	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
-	defer cancel()
-	req := &ptpb.Order{}
-	id := ctx.Param("id")
-	if id == "" {
-		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_not_found_order_id))
-		return
-	}
-	req.State = ptpb.Order_completed.String()
-	req.Id = id
-	req.UserId = claims.UserId
 	_, err := r.productSer.UpdateStateOrder(c, req)
 	if err != nil {
 		log.Println("err ", err)
@@ -418,24 +348,3 @@ func (r *Router) handleCompleteOrder(ctx *gin.Context) {
 // 	}
 // 	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: order})
 // }
-
-func (r *Router) handleSuccessOrderShip(ctx *gin.Context) {
-	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
-	defer cancel()
-	req := &ptpb.OrderShip{}
-	ctx.ShouldBindJSON(&req)
-	id := ctx.Param("id")
-	if id == "" {
-		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_not_found_order_id))
-		return
-	}
-	req.State = ptpb.OrderShip_delivered.String()
-	req.OrderId = id
-	_, err := r.productSer.UpdateOrderShipStatus(c, req)
-	if err != nil {
-		log.Println("err ", err)
-		utils.HandleError(LangMappingErr, ctx, err)
-		return
-	}
-	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success"})
-}

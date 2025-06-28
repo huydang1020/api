@@ -38,7 +38,6 @@ func (r *Router) mappingRouterCustomer() {
 	r1.GET("/order", r.handleListOrder)
 	r1.GET("/order/:id", r.handleGetOrder)
 	r1.POST("/order/:id/cancel", r.handleCancelOrder)
-	r1.POST("order/:id/complete", r.handleCompleteOrder)
 
 	// partner registration
 	// r1.POST("/partner-registration", r.handleCreatePartnerRegistration)
@@ -50,9 +49,9 @@ func (r *Router) mappingRouterCustomer() {
 	r1.POST("order-plan/vnpay", r.handleCreateOrderPlanVNPay)
 
 	// review
-	r1.GET("/review", r.handleListRewivewByUser)
-	r1.POST("/review", r.handleCreateReview)
-	r1.GET("/review/:id", r.handleGetReview)
+	r.route.GET("api/customer/reviews", r.handleListReviews)
+	r1.POST("/reviews", r.handleCreateReviews)
+	r1.GET("/reviews/:id", r.handleGetReviews)
 
 	// voucher
 	r1.GET("/voucher/user-voucher/:id", r.handleUserVoucher)
