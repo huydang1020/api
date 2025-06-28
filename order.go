@@ -281,6 +281,7 @@ func (r *Router) handleCancelOrder(ctx *gin.Context) {
 	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
 	defer cancel()
 	req := &ptpb.Order{}
+	ctx.ShouldBindJSON(&req)
 	id := ctx.Param("id")
 	req.State = ptpb.Order_cancelled.String()
 	req.Id = id
