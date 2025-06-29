@@ -95,7 +95,7 @@ func (r *Router) handleUpdateReviews(ctx *gin.Context) {
 	id := ctx.Param("id")
 	req := &ptpb.Reviews{}
 	ctx.ShouldBindJSON(req)
-	if err := r.isCanBeAccess(c, ctx, "review", "u"); err != nil {
+	if err := r.isCanBeAccess(c, ctx, "reviews", "u"); err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
 	}
@@ -116,7 +116,7 @@ func (r *Router) handleListReviewsByAdmin(ctx *gin.Context) {
 	defer cancel()
 	req := &ptpb.ReviewsRequest{}
 	ctx.ShouldBindJSON(req)
-	if err := r.isCanBeAccess(c, ctx, "review", "r"); err != nil {
+	if err := r.isCanBeAccess(c, ctx, "reviews", "r"); err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
 	}
@@ -147,7 +147,7 @@ func (r *Router) handleGetReviewsByAdmin(ctx *gin.Context) {
 	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
 	defer cancel()
 	id := ctx.Param("id")
-	if err := r.isCanBeAccess(c, ctx, "review", "r"); err != nil {
+	if err := r.isCanBeAccess(c, ctx, "reviews", "r"); err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
 	}
@@ -166,7 +166,7 @@ func (r *Router) handleReplyReviewsByAdmin(ctx *gin.Context) {
 	id := ctx.Param("id")
 	req := &ptpb.Reviews{}
 	ctx.ShouldBindJSON(req)
-	if err := r.isCanBeAccess(c, ctx, "review", "u"); err != nil {
+	if err := r.isCanBeAccess(c, ctx, "reviews", "u"); err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
 	}
@@ -183,7 +183,7 @@ func (r *Router) handleDeleteReviews(ctx *gin.Context) {
 	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
 	defer cancel()
 	id := ctx.Param("id")
-	if err := r.isCanBeAccess(c, ctx, "review", "d"); err != nil {
+	if err := r.isCanBeAccess(c, ctx, "reviews", "d"); err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
 	}
