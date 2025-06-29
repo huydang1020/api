@@ -8,6 +8,7 @@ import (
 	"github.com/huyshop/api/jwt"
 	"github.com/huyshop/api/utils"
 	ptpb "github.com/huyshop/header/product"
+	"github.com/huyshop/header/user"
 )
 
 func (r *Router) handleListReviews(ctx *gin.Context) {
@@ -19,6 +20,14 @@ func (r *Router) handleListReviews(ctx *gin.Context) {
 	if err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
+	}
+	for _, rv := range resp.GetReviews() {
+		user, err := r.userSer.GetUser(c, &user.UserRequest{Id: rv.GetUserId()})
+		if err != nil {
+			log.Println("get user err:", err, rv.GetUserId())
+			continue
+		}
+		rv.User = user
 	}
 	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: resp})
 }
