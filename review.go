@@ -23,6 +23,21 @@ func (r *Router) handleListReviews(ctx *gin.Context) {
 	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: resp})
 }
 
+func (r *Router) handleListReviewsOfCustomer(ctx *gin.Context) {
+	claims, _ := ctx.MustGet("claims").(*jwt.JWTClaim)
+	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
+	defer cancel()
+	req := &ptpb.ReviewsRequest{}
+	utils.BindQuery(req, ctx)
+	req.UserId = claims.UserId
+	resp, err := r.productSer.ListReviews(c, req)
+	if err != nil {
+		utils.HandleError(LangMappingErr, ctx, err)
+		return
+	}
+	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: resp})
+}
+
 func (r *Router) handleCreateReviews(ctx *gin.Context) {
 	claims, _ := ctx.MustGet("claims").(*jwt.JWTClaim)
 	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)

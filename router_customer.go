@@ -50,6 +50,7 @@ func (r *Router) mappingRouterCustomer() {
 
 	// review
 	r.route.GET("api/customer/reviews", r.handleListReviews)
+	r1.GET("/reviews-of-customer", r.handleListReviewsOfCustomer)
 	r1.POST("/reviews", r.handleCreateReviews)
 	r1.GET("/reviews/:id", r.handleGetReviews)
 
