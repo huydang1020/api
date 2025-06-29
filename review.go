@@ -140,6 +140,14 @@ func (r *Router) handleListReviewsByAdmin(ctx *gin.Context) {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
 	}
+	for _, rv := range resp.GetReviews() {
+		user, err := r.userSer.GetUser(c, &user.UserRequest{Id: rv.GetUserId()})
+		if err != nil {
+			log.Println("get user err:", err, rv.GetUserId())
+			continue
+		}
+		rv.User = user
+	}
 	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: resp})
 }
 
