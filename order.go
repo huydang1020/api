@@ -219,6 +219,7 @@ func (r *Router) handleListOrderAdmin(ctx *gin.Context) {
 	defer cancel()
 	req := &ptpb.OrderRequest{}
 	utils.BindQuery(req, ctx)
+	req.State = ctx.Query("state")
 	if err := r.isCanBeAccess(c, ctx, "order", "r"); err != nil {
 		log.Println("err", err)
 		utils.HandleError(LangMappingErr, ctx, err)
@@ -304,6 +305,7 @@ func (r *Router) handleUpdateStateOrderAdmin(ctx *gin.Context) {
 	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
 	defer cancel()
 	req := &ptpb.Order{}
+	ctx.ShouldBindJSON(&req)
 	if err := r.isCanBeAccess(c, ctx, "order", "u"); err != nil {
 		log.Println("err", err)
 		utils.HandleError(LangMappingErr, ctx, err)
