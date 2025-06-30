@@ -57,4 +57,12 @@ const (
 	E_can_not_add_favorite       = "can_not_add_favorite"
 	E_can_not_delete_favorite    = "can_not_delete_favorite"
 	E_can_not_favorite           = "can_not_favorite"
+	E_voucher_expired            = "voucher_expired"
+	E_voucher_not_active         = "voucher_not_active"
+	E_invalid_voucher_id         = "invalid_voucher_id"
+	E_end_at_in_the_past         = "end_at_in_the_past"
+	E_remaining_quantity_empty   = "remaining_quantity_empty"
+	E_start_at_in_the_future     = "start_at_in_the_future"
+	E_total_quantity_empty       = "total_quantity_empty"
+	E_point_not_enough           = "point_not_enough"
 )

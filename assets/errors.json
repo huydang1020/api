@@ -634,5 +634,37 @@
   "invalid_state_order": {
     "en": "You won't be rated if the order fails",
     "vi": "Bạn chưa được đánh gía nếu đơn hàng chưa đặt thành công"
+  },
+  "voucher_expired": {
+    "en": "Voucher expired",
+    "vi": "Mã quà tặng đã hết hạn"
+  },
+  "voucher_not_active": {
+    "en": "Voucher not active",
+    "vi": "Mã quà tặng không hoạt động"
+  },
+  "invalid_voucher_id": {
+    "en": "Invalid voucher id",
+    "vi": "Mã quà tặng không hợp lệ"
+  },
+  "remaining_quantity_empty": {
+    "en": "Remaining quantity empty",
+    "vi": "Số lượng còn lại của mã quà tặng không đủ"
+  },
+  "start_at_in_the_future": {
+    "en": "Start at in the future",
+    "vi": "Mã quà tặng chưa bắt đầu"
+  },
+  "end_at_in_the_past": {
+    "en": "End at in the past",
+    "vi": "Mã quà tặng đã hết hạn"
+  },
+  "point_not_enough": {
+    "en": "Point not enough",
+    "vi": "Bạn không đủ điểm"
+  },
+  "invalid_points": {
+    "en": "Invalid points",
+    "vi": "Điểm không hợp lệ"
   }
 }

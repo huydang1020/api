@@ -4,6 +4,7 @@ import (
 	"errors"
 	"log"
 	"slices"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/huyshop/api/jwt"
@@ -166,7 +167,20 @@ func (r *Router) handleCreateOrder(ctx *gin.Context) {
 			utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_not_found_user_voucher))
 			return
 		}
-
+		voucher, err := r.voucherSer.GetVoucher(c, &vpb.Voucher{Id: uv.VoucherId})
+		if err != nil {
+			utils.HandleError(LangMappingErr, ctx, err)
+			return
+		}
+		if voucher.State != vpb.Voucher_active.String() {
+			utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_voucher_not_active))
+			return
+		}
+		if voucher.EndAt < time.Now().Unix() {
+			utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_voucher_expired))
+			return
+		}
+		req.Voucher = voucher
 	}
 	order, err := r.productSer.CreateOrder(c, req)
 	if err != nil {
@@ -176,6 +190,17 @@ func (r *Router) handleCreateOrder(ctx *gin.Context) {
 	if order == nil {
 		utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success"})
 		return
+	}
+	if req.MethodPayment == "cod" && req.CodeId != "" {
+		if _, err := r.voucherSer.UpdateUserVoucher(c, &vpb.UserVoucher{
+			UserId:    req.UserId,
+			State:     vpb.UserVoucher_used.String(),
+			CodeId:    req.CodeId,
+			VoucherId: req.Voucher.Id,
+		}); err != nil {
+			utils.HandleError(LangMappingErr, ctx, err)
+			return
+		}
 	}
 	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: order})
 }
@@ -191,6 +216,17 @@ func (r *Router) handleCreateOrderVNpay(ctx *gin.Context) {
 	if err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
+	}
+	if req.CodeId != "" {
+		if _, err := r.voucherSer.UpdateUserVoucher(c, &vpb.UserVoucher{
+			UserId:    req.UserId,
+			State:     vpb.UserVoucher_used.String(),
+			CodeId:    req.CodeId,
+			VoucherId: req.Voucher.Id,
+		}); err != nil {
+			utils.HandleError(LangMappingErr, ctx, err)
+			return
+		}
 	}
 	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success"})
 }

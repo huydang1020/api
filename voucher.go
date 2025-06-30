@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"log"
 	"time"
 
@@ -59,6 +60,45 @@ func (r *Router) handleGetListVoucherAdmin(ctx *gin.Context) {
 			continue
 		}
 		vou.Partner = partner
+	}
+	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: vou})
+}
+
+func (r *Router) handleGetListVoucher(ctx *gin.Context) {
+	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
+	defer cancel()
+	req := &vpb.VoucherRequest{}
+	utils.BindQuery(req, ctx)
+	req.State = vpb.Voucher_active.String()
+	vou, err := r.voucherSer.ListVouchers(c, req)
+	if err != nil {
+		log.Println("insert voucher err:", err)
+		utils.HandleError(LangMappingErr, ctx, err)
+		return
+	}
+	for _, vou := range vou.Vouchers {
+		partner, err := r.userSer.GetPartner(c, &upb.PartnerRequest{Id: vou.PartnerId})
+		if err != nil {
+			log.Println("get partner err:", err)
+			continue
+		}
+		vou.Partner = partner
+	}
+	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: vou})
+}
+
+func (r *Router) handleGetVoucherOfCustomer(ctx *gin.Context) {
+	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
+	claims, _ := ctx.MustGet("claims").(*jwt.JWTClaim)
+	defer cancel()
+	req := &vpb.UserVoucher{}
+	ctx.ShouldBindJSON(req)
+	req.UserId = claims.UserId
+	vou, err := r.voucherSer.GetUserVoucher(c, req)
+	if err != nil {
+		log.Println("insert voucher err:", err)
+		utils.HandleError(LangMappingErr, ctx, err)
+		return
 	}
 	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: vou})
 }
@@ -198,4 +238,72 @@ func (r *Router) handleListUserVoucherAdmin(ctx *gin.Context) {
 		uv.User = user
 	}
 	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: list})
+}
+
+func (r *Router) handleBuyVoucher(ctx *gin.Context) {
+	claims, _ := ctx.MustGet("claims").(*jwt.JWTClaim)
+	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
+	defer cancel()
+	req := &vpb.UserVoucher{}
+	ctx.ShouldBindJSON(req)
+	if req.VoucherId == "" {
+		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_invalid_voucher_id))
+		return
+	}
+	voucher, err := r.voucherSer.GetVoucher(c, &vpb.Voucher{Id: req.VoucherId})
+	if err != nil {
+		utils.HandleError(LangMappingErr, ctx, err)
+		return
+	}
+	if voucher.State != vpb.Voucher_active.String() {
+		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_voucher_not_active))
+		return
+	}
+	if voucher.TotalQuantity <= 0 {
+		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_total_quantity_empty))
+		return
+	}
+	if voucher.RemainingQuantity <= 0 {
+		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_remaining_quantity_empty))
+		return
+	}
+	if voucher.StartAt > time.Now().Unix() {
+		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_start_at_in_the_future))
+		return
+	}
+	if voucher.EndAt < time.Now().Unix() {
+		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_end_at_in_the_past))
+		return
+	}
+	req.UserId = claims.UserId
+	if voucher.PointExchange > 0 {
+		user, err := r.userSer.GetUser(c, &upb.UserRequest{Id: claims.UserId})
+		if err != nil {
+			log.Println("user err:", err)
+			utils.HandleError(LangMappingErr, ctx, err)
+			return
+		}
+		if user.Point.Points < int64(voucher.PointExchange) {
+			utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_point_not_enough))
+			return
+		}
+		if _, err := r.userSer.CreatePointExchange(c, &upb.PointExchange{
+			ReceiverId:  claims.UserId,
+			SenderId:    voucher.PartnerId,
+			Points:      int64(voucher.PointExchange),
+			Description: "Mua mã quà tặng " + voucher.Name,
+		}); err != nil {
+			log.Println("point_exchange err:", err)
+			utils.HandleError(LangMappingErr, ctx, err)
+			return
+		}
+	}
+	uv, err := r.voucherSer.CreateUserVoucher(c, req)
+	if err != nil {
+		log.Println("user_voucher err:", err)
+		utils.HandleError(LangMappingErr, ctx, err)
+		return
+	}
+
+	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: uv})
 }
