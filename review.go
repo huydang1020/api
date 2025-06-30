@@ -89,7 +89,6 @@ func (r *Router) handleGetReviews(ctx *gin.Context) {
 }
 
 func (r *Router) handleUpdateReviews(ctx *gin.Context) {
-	claims, _ := ctx.MustGet("claims").(*jwt.JWTClaim)
 	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
 	defer cancel()
 	id := ctx.Param("id")
@@ -100,7 +99,6 @@ func (r *Router) handleUpdateReviews(ctx *gin.Context) {
 		return
 	}
 	req.Id = id
-	req.UserId = claims.UserId
 	resp, err := r.productSer.UpdateReviews(c, req)
 	if err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
@@ -115,7 +113,7 @@ func (r *Router) handleListReviewsByAdmin(ctx *gin.Context) {
 	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
 	defer cancel()
 	req := &ptpb.ReviewsRequest{}
-	ctx.ShouldBindJSON(req)
+	utils.BindQuery(req, ctx)
 	if err := r.isCanBeAccess(c, ctx, "reviews", "r"); err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
