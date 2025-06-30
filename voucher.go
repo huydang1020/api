@@ -1,23 +1,19 @@
 package main
 
 import (
-	"errors"
 	"log"
 	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/huyshop/api/jwt"
 	"github.com/huyshop/api/utils"
-	"github.com/huyshop/header/user"
+	upb "github.com/huyshop/header/user"
 	vpb "github.com/huyshop/header/voucher"
-)
-
-const (
-	FREE = "free"
 )
 
 // voucher
 func (r *Router) handleCreateVoucher(ctx *gin.Context) {
+	claims, _ := ctx.MustGet("claims").(*jwt.JWTClaim)
 	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
 	defer cancel()
 	req := &vpb.Voucher{}
@@ -26,28 +22,8 @@ func (r *Router) handleCreateVoucher(ctx *gin.Context) {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
 	}
-	if req.Name == "" {
-		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_invalid_name))
-		return
-	}
-	if req.EndAt < time.Now().Unix() {
-		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_invalid_name))
-		return
-	}
-	if req.StartAt > req.EndAt {
-		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_invalid_name))
-		return
-	}
-	if req.TotalQuantity < 1 {
-		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_invalid_name))
-		return
-	}
 	req.RemainingQuantity = req.TotalQuantity
-	req.State = vpb.UserVoucher_got.String()
-	if req.Type == "" {
-		req.Type = FREE
-	}
-	req.CreatedAt = time.Now().Unix()
+	req.PartnerId = claims.PartnerId
 	vou, err := r.voucherSer.CreateVoucher(c, req)
 	if err != nil {
 		log.Println("insert voucher err:", err)
@@ -58,20 +34,31 @@ func (r *Router) handleCreateVoucher(ctx *gin.Context) {
 }
 
 func (r *Router) handleGetListVoucherAdmin(ctx *gin.Context) {
+	claims, _ := ctx.MustGet("claims").(*jwt.JWTClaim)
 	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
 	defer cancel()
 	req := &vpb.VoucherRequest{}
-	ctx.ShouldBindJSON(req)
+	utils.BindQuery(req, ctx)
 	if err := r.isCanBeAccess(c, ctx, "voucher", "r"); err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
 	}
-
+	if claims.PartnerType != upb.Partner_admin.String() {
+		req.PartnerId = claims.PartnerId
+	}
 	vou, err := r.voucherSer.ListVouchers(c, req)
 	if err != nil {
 		log.Println("insert voucher err:", err)
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
+	}
+	for _, vou := range vou.Vouchers {
+		partner, err := r.userSer.GetPartner(c, &upb.PartnerRequest{Id: vou.PartnerId})
+		if err != nil {
+			log.Println("get partner err:", err)
+			continue
+		}
+		vou.Partner = partner
 	}
 	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: vou})
 }
@@ -202,7 +189,7 @@ func (r *Router) handleListUserVoucherAdmin(ctx *gin.Context) {
 			return
 		}
 		uv.Voucher = vou
-		user, err := r.userSer.GetUser(c, &user.UserRequest{Id: uv.UserId})
+		user, err := r.userSer.GetUser(c, &upb.UserRequest{Id: uv.UserId})
 		if err != nil {
 			log.Println("user err:", err)
 			utils.HandleError(LangMappingErr, ctx, err)
