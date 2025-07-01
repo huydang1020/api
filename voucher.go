@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"fmt"
 	"log"
 	"time"
 
@@ -290,8 +291,8 @@ func (r *Router) handleBuyVoucher(ctx *gin.Context) {
 		if _, err := r.userSer.CreatePointExchange(c, &upb.PointExchange{
 			ReceiverId:  claims.UserId,
 			SenderId:    voucher.PartnerId,
-			Points:      int64(voucher.PointExchange),
-			Description: "Mua mã quà tặng " + voucher.Name,
+			Points:      -int64(voucher.PointExchange),
+			Description: fmt.Sprintf("Trừ %d điểm để đổi ưu đãi: %v", voucher.PointExchange, voucher.Name),
 		}); err != nil {
 			log.Println("point_exchange err:", err)
 			utils.HandleError(LangMappingErr, ctx, err)
