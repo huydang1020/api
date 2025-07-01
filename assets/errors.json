@@ -641,7 +641,7 @@
   },
   "voucher_not_active": {
     "en": "Voucher not active",
-    "vi": "Mã quà tặng không hoạt động"
+    "vi": "Ưu đãi này chưa được kích hoạt "
   },
   "invalid_voucher_id": {
     "en": "Invalid voucher id",

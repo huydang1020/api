@@ -56,7 +56,9 @@ func (r *Router) mappingRouterCustomer() {
 
 	// voucher
 	r.route.GET("/api/customer/voucher", r.handleGetListVoucher)
-	r1.GET("/vouche-of-customer", r.handleGetVoucherOfCustomer)
+	r.route.GET("/api/customer/voucher/:id", r.handleGetVoucher)
+	// danh sách voucher free đã lấy của user
+	r1.GET("/voucher/user-voucher/free", r.handleListUserVoucherFree)
 	r1.GET("/voucher/user-voucher/:id", r.handleUserVoucher)
 	r1.GET("/voucher/user-voucher", r.handleListUserVoucher)
 	r1.POST("/voucher/buy", r.handleBuyVoucher)

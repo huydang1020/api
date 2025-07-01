@@ -50,7 +50,7 @@ func (r *Router) handleGetListVoucherAdmin(ctx *gin.Context) {
 	}
 	vou, err := r.voucherSer.ListVouchers(c, req)
 	if err != nil {
-		log.Println("insert voucher err:", err)
+		log.Println("list voucher err:", err)
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
 	}
@@ -73,7 +73,7 @@ func (r *Router) handleGetListVoucher(ctx *gin.Context) {
 	req.State = vpb.Voucher_active.String()
 	vou, err := r.voucherSer.ListVouchers(c, req)
 	if err != nil {
-		log.Println("insert voucher err:", err)
+		log.Println("list voucher err:", err)
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
 	}
@@ -88,16 +88,37 @@ func (r *Router) handleGetListVoucher(ctx *gin.Context) {
 	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: vou})
 }
 
-func (r *Router) handleGetVoucherOfCustomer(ctx *gin.Context) {
+func (r *Router) handleGetVoucher(ctx *gin.Context) {
+	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
+	defer cancel()
+	id := ctx.Param("id")
+	vou, err := r.voucherSer.GetVoucher(c, &vpb.Voucher{Id: id})
+	if err != nil {
+		log.Println("get voucher err:", err)
+		utils.HandleError(LangMappingErr, ctx, err)
+		return
+	}
+	partner, err := r.userSer.GetPartner(c, &upb.PartnerRequest{Id: vou.PartnerId})
+	if err != nil {
+		log.Println("get partner err:", err)
+		utils.HandleError(LangMappingErr, ctx, err)
+		return
+	}
+	vou.Partner = partner
+	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: vou})
+}
+
+func (r *Router) handleListUserVoucherFree(ctx *gin.Context) {
 	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
 	claims, _ := ctx.MustGet("claims").(*jwt.JWTClaim)
 	defer cancel()
-	req := &vpb.UserVoucher{}
-	ctx.ShouldBindJSON(req)
+	req := &vpb.UserVoucherRequest{}
+	utils.BindQuery(req, ctx)
+	req.Type = vpb.Voucher_free.String()
 	req.UserId = claims.UserId
-	vou, err := r.voucherSer.GetUserVoucher(c, req)
+	vou, err := r.voucherSer.ListUserVouchers(c, req)
 	if err != nil {
-		log.Println("insert voucher err:", err)
+		log.Println("list user voucher err:", err)
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
 	}
@@ -114,7 +135,7 @@ func (r *Router) handleGetOneVoucher(ctx *gin.Context) {
 	}
 	vou, err := r.voucherSer.GetVoucher(c, &vpb.Voucher{Id: id})
 	if err != nil {
-		log.Println("insert voucher err:", err)
+		log.Println("get one voucher err:", err)
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
 	}
@@ -163,7 +184,7 @@ func (r *Router) handleUserVoucher(ctx *gin.Context) {
 	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
 	defer cancel()
 	req := &vpb.UserVoucher{}
-	ctx.ShouldBindJSON(req)
+	utils.BindQuery(req, ctx)
 	id := ctx.Param("id")
 	uid := claims.UserId
 	uv, err := r.voucherSer.GetUserVoucher(c, &vpb.UserVoucher{Id: req.VoucherId, UserId: uid, CodeId: id})
@@ -187,7 +208,7 @@ func (r *Router) handleListUserVoucher(ctx *gin.Context) {
 	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
 	defer cancel()
 	req := &vpb.UserVoucher{}
-	ctx.ShouldBindJSON(req)
+	utils.BindQuery(req, ctx)
 	uid := claims.UserId
 	list, err := r.voucherSer.ListUserVouchers(c, &vpb.UserVoucherRequest{UserId: uid})
 	if err != nil {
@@ -211,7 +232,7 @@ func (r *Router) handleListUserVoucherAdmin(ctx *gin.Context) {
 	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
 	defer cancel()
 	req := &vpb.UserVoucher{}
-	ctx.ShouldBindJSON(req)
+	utils.BindQuery(req, ctx)
 	if err := r.isCanBeAccess(c, ctx, "user_voucher", "d"); err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
