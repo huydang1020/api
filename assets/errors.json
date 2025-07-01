@@ -666,5 +666,25 @@
   "invalid_points": {
     "en": "Invalid points",
     "vi": "Điểm không hợp lệ"
+  },
+  "receiver_id_cannot_empty": {
+    "en": "Receiver id cannot be empty",
+    "vi": "Mã người dùng nhận điểm không được để trống"
+  },
+  "user_id_cannot_empty": {
+    "en": "User id cannot be empty",
+    "vi": "Mã người dùng không được để trống"
+  },
+  "point_cannot_empty": {
+    "en": "Point cannot be empty",
+    "vi": "Điểm không được để trống"
+  },
+  "not_found_user_address": {
+    "en": "Not found user address",
+    "vi": "Không tìm thấy địa chỉ người dùng"
+  },
+  "max_user_address": {
+    "en": "Max user address",
+    "vi": "Bạn đã đạt giới hạn số lượng địa chỉ"
   }
 }

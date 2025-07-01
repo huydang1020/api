@@ -61,6 +61,7 @@ func (r *Router) handleGetMe(ctx *gin.Context) {
 		return
 	}
 	user.Password = ""
+	// lấy số lượng sản phẩm trong giỏ hàng
 	cart, err := r.productSer.ListCart(c, &product.Cart{UserId: claims.UserId})
 	if err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
@@ -71,6 +72,7 @@ func (r *Router) handleGetMe(ctx *gin.Context) {
 		total += int(item.Quantity)
 	}
 	user.CartQuantity = int32(total)
+	// lấy đối tác
 	if user.PartnerId != "" {
 		part, err := r.userSer.GetPartner(c, &userpb.PartnerRequest{Id: user.PartnerId})
 		if err != nil {
@@ -80,6 +82,7 @@ func (r *Router) handleGetMe(ctx *gin.Context) {
 		}
 		user.Partner = part
 	}
+	// lấy sản phẩm yêu thích
 	key := "favorites:" + user.Id
 	productTypeIds, err := r.cache.SMembers(c, key).Result()
 	if err != nil {
@@ -88,6 +91,19 @@ func (r *Router) handleGetMe(ctx *gin.Context) {
 		return
 	}
 	user.FavoriteQuantity = int32(len(productTypeIds))
+	// lấy số lượng đơn hàng đã đặt
+	order, err := r.productSer.ListOrder(c, &product.OrderRequest{UserId: user.Id})
+	if err != nil {
+		utils.HandleError(LangMappingErr, ctx, err)
+		return
+	}
+	user.TotalOrders = int32(len(order.Orders))
+	// lấy số lượng đơn hàng đã đặt
+	for _, ord := range order.Orders {
+		if ord.State == product.Order_completed.String() {
+			user.TotalAmountSpent += int64(ord.TotalMoney)
+		}
+	}
 	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: user})
 }
 
@@ -278,10 +294,10 @@ func (r *Router) handleRegisterSellerAccount(ctx *gin.Context) {
 		return
 	}
 	req.RoleId = roleId
-	req.Province = ctx.PostForm("province")
-	req.District = ctx.PostForm("district")
-	req.Ward = ctx.PostForm("ward")
-	req.Address = ctx.PostForm("address")
+	// req.Province = ctx.PostForm("province")
+	// req.District = ctx.PostForm("district")
+	// req.Ward = ctx.PostForm("ward")
+	// req.Address = ctx.PostForm("address")
 	if birthday := ctx.PostForm("birthday"); birthday != "" {
 		birth, err := strconv.Atoi(birthday)
 		if err != nil {
@@ -446,6 +462,21 @@ func (r *Router) handleSendResetPasswordOtp(ctx *gin.Context) {
 	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: ttl})
 }
 
+func (r *Router) handleUpdateProfile(ctx *gin.Context) {
+	claims, _ := ctx.MustGet("claims").(*jwt.JWTClaim)
+	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
+	defer cancel()
+	req := &userpb.User{}
+	ctx.ShouldBindJSON(req)
+	req.Id = claims.UserId
+	_, err := r.userSer.UpdateUser(c, req)
+	if err != nil {
+		utils.HandleError(LangMappingErr, ctx, err)
+		return
+	}
+	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success"})
+}
+
 func (r *Router) handleResetPassword(ctx *gin.Context) {
 	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
 	defer cancel()
@@ -456,6 +487,91 @@ func (r *Router) handleResetPassword(ctx *gin.Context) {
 		return
 	}
 	_, err := r.userSer.ResetPassword(c, req)
+	if err != nil {
+		utils.HandleError(LangMappingErr, ctx, err)
+		return
+	}
+	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success"})
+}
+
+func (r *Router) handleCreatePointTransaction(ctx *gin.Context) {
+	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
+	claims, _ := ctx.MustGet("claims").(*jwt.JWTClaim)
+	defer cancel()
+	req := &userpb.PointExchange{}
+	ctx.ShouldBindJSON(req)
+	if claims.RoleId != config.AdminRole {
+		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_invalid_role))
+		return
+	}
+	if req.ReceiverId == "" {
+		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_receiver_id_cannot_empty))
+		return
+	}
+	_, err := r.userSer.CreatePointExchange(c, req)
+	if err != nil {
+		utils.HandleError(LangMappingErr, ctx, err)
+		return
+	}
+
+	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success"})
+}
+
+func (r *Router) handleListUserAddress(ctx *gin.Context) {
+	claims, _ := ctx.MustGet("claims").(*jwt.JWTClaim)
+	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
+	defer cancel()
+	req := &userpb.UserAddressRequest{}
+	utils.BindQuery(req, ctx)
+	req.UserId = claims.UserId
+	userAddress, err := r.userSer.ListUserAddress(c, req)
+	if err != nil {
+		utils.HandleError(LangMappingErr, ctx, err)
+		return
+	}
+	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: userAddress})
+}
+
+func (r *Router) handleCreateUserAddress(ctx *gin.Context) {
+	claims, _ := ctx.MustGet("claims").(*jwt.JWTClaim)
+	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
+	defer cancel()
+	req := &userpb.UserAddress{}
+	ctx.ShouldBindJSON(req)
+	req.Id = ctx.Param("id")
+	req.UserId = claims.UserId
+	_, err := r.userSer.CreateUserAddress(c, req)
+	if err != nil {
+		utils.HandleError(LangMappingErr, ctx, err)
+		return
+	}
+	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success"})
+}
+
+func (r *Router) handleUpdateUserAddress(ctx *gin.Context) {
+	claims, _ := ctx.MustGet("claims").(*jwt.JWTClaim)
+	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
+	defer cancel()
+	req := &userpb.UserAddress{}
+	ctx.ShouldBindJSON(req)
+	req.Id = ctx.Param("id")
+	req.UserId = claims.UserId
+	log.Println("req:", req)
+	_, err := r.userSer.UpdateUserAddress(c, req)
+	if err != nil {
+		utils.HandleError(LangMappingErr, ctx, err)
+		return
+	}
+	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success"})
+}
+
+func (r *Router) handleDeleteUserAddress(ctx *gin.Context) {
+	claims, _ := ctx.MustGet("claims").(*jwt.JWTClaim)
+	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
+	defer cancel()
+	id := ctx.Param("id")
+	req := &userpb.UserAddress{Id: id, UserId: claims.UserId}
+	_, err := r.userSer.DeleteUserAddress(c, req)
 	if err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return

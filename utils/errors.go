@@ -65,4 +65,7 @@ const (
 	E_start_at_in_the_future     = "start_at_in_the_future"
 	E_total_quantity_empty       = "total_quantity_empty"
 	E_point_not_enough           = "point_not_enough"
+	E_receiver_id_cannot_empty   = "receiver_id_cannot_empty"
+	E_user_id_cannot_empty       = "user_id_cannot_empty"
+	E_point_cannot_empty         = "point_cannot_empty"
 )
