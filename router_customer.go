@@ -24,8 +24,9 @@ func (r *Router) mappingRouterCustomer() {
 	// user
 	r1.GET("/me", r.handleGetMe)
 	r1.POST("/sign-out", r.handleSignOutCustomer)
-	r1.POST("register-seller", r.handleRegisterSellerAccount)
-	r1.POST("update-profile", r.handleUpdateProfile)
+	r1.POST("/register-seller", r.handleRegisterSellerAccount)
+	r1.POST("/update-profile", r.handleUpdateProfile)
+	r1.POST("/change-password", r.handleChangePassword)
 
 	// user address
 	r1.GET("/user-address", r.handleListUserAddress)

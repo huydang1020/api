@@ -479,6 +479,21 @@ func (r *Router) handleUpdateProfile(ctx *gin.Context) {
 	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success"})
 }
 
+func (r *Router) handleChangePassword(ctx *gin.Context) {
+	claims, _ := ctx.MustGet("claims").(*jwt.JWTClaim)
+	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
+	defer cancel()
+	req := &userpb.ChangePasswordRequest{}
+	ctx.ShouldBindJSON(req)
+	req.UserId = claims.UserId
+	_, err := r.userSer.ChangePassword(c, req)
+	if err != nil {
+		utils.HandleError(LangMappingErr, ctx, err)
+		return
+	}
+	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success"})
+}
+
 func (r *Router) handleResetPassword(ctx *gin.Context) {
 	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
 	defer cancel()
