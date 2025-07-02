@@ -1,15 +1,15 @@
 {
   "not_found": {
     "en": "Not found",
-    "vi": "Không tìm thấy"
+    "vi": "Không tìm thấy dữ liệu"
   },
   "not_found_id": {
     "en": "Not found id",
-    "vi": "Không tìm thấy id"
+    "vi": "Không tìm thấy mã dữ liệu"
   },
   "invalid_token": {
     "en": "Invalid token",
-    "vi": "Token không hợp lệ"
+    "vi": "Phiên đăng nhập không hợp lệ"
   },
   "not_found_user": {
     "en": "Not found user",
@@ -21,19 +21,19 @@
   },
   "name_cannot_empty": {
     "en": "Name cannot empty",
-    "vi": "Tên không được để trống"
+    "vi": "Vui lòng nhập tên"
   },
   "email_cannot_empty": {
     "en": "Email cannot empty",
-    "vi": "Email không được để trống"
+    "vi": "Vui lòng nhập email"
   },
   "username_existed": {
     "en": "username existed",
-    "vi": "Tên người dùng tồn tại"
+    "vi": "Tên đăng nhập đã tồn tại"
   },
   "user_existed": {
     "en": "user existed",
-    "vi": "Người dùng tồn tại"
+    "vi": "Người dùng đã tồn tại"
   },
   "user_not_existed": {
     "en": "user not existed",
@@ -45,31 +45,31 @@
   },
   "not_found_role": {
     "en": "Not found role",
-    "vi": "Không tìm thấy quyền"
+    "vi": "Không tìm thấy quyền hạn"
   },
   "not_found_role_id": {
     "en": "Not found role id",
-    "vi": "Không tìm thấy mã quyền"
+    "vi": "Không tìm thấy mã quyền hạn"
   },
   "not_found_permission": {
     "en": "Not found permission",
-    "vi": "Không tìm thấy quyền"
+    "vi": "Không tìm thấy quyền truy cập"
   },
   "unknown": {
     "en": "unknown",
-    "vi": "Không xác định"
+    "vi": "Lỗi không xác định"
   },
   "not_found_partner_id": {
     "en": "Not found partner id",
-    "vi": "Không tìm thấy id đối tác"
+    "vi": "Không tìm thấy mã đối tác"
   },
   "not_found_page": {
     "en": "Not found page",
-    "vi": "Không tìm thấy trang"
+    "vi": "Không tìm thấy trang yêu cầu"
   },
   "internal_errors": {
     "en": "Internal errors",
-    "vi": "Đã có lỗi xảy ra"
+    "vi": "Đã xảy ra lỗi hệ thống"
   },
   "invalid_category": {
     "en": "Invalid category",
@@ -77,11 +77,11 @@
   },
   "can_not_update": {
     "en": "can not update",
-    "vi": "Không thể cập nhật"
+    "vi": "Không thể cập nhật thông tin"
   },
   "not_found_api_key": {
     "en": "Not found api key",
-    "vi": "Không tìm thấy khóa api"
+    "vi": "Không tìm thấy khóa API"
   },
   "not_found_partner": {
     "en": "Not found partner",
@@ -89,11 +89,11 @@
   },
   "can_not_insert": {
     "en": "Can not insert",
-    "vi": "Không thể thêm mới"
+    "vi": "Không thể thêm mới dữ liệu"
   },
   "can_not_delete": {
     "en": "Can not delete",
-    "vi": "Không thể xóa"
+    "vi": "Không thể xóa dữ liệu"
   },
   "invalid_state": {
     "en": "Invalid state",
@@ -101,7 +101,7 @@
   },
   "voucher_invalid": {
     "en": "Voucher_invalid",
-    "vi": "Ưu đãi không hợp lệ"
+    "vi": "Mã ưu đãi không hợp lệ"
   },
   "not_found_store": {
     "en": "Cannot find the store",
@@ -109,15 +109,15 @@
   },
   "access_is_denied": {
     "en": "access is denied",
-    "vi": "Truy cập bị từ chối"
+    "vi": "Bạn không có quyền truy cập"
   },
   "can_not_pay_voucher": {
     "en": "Can not pay voucher",
-    "vi": "Không thể đổi ưu đãi"
+    "vi": "Không thể đổi ưu đãi này"
   },
   "unauthorized": {
     "en": "Unauthorized",
-    "vi": "Lỗi xác thực"
+    "vi": "Bạn chưa đăng nhập hoặc phiên đã hết hạn"
   },
   "bad_request": {
     "en": "Bad request",
@@ -125,11 +125,11 @@
   },
   "invalid_signature": {
     "en": "Invalid signature",
-    "vi": "Chữ ký không hợp lệ"
+    "vi": "Chữ ký xác thực không hợp lệ"
   },
   "password_is_incorrect": {
     "en": "Password is incorrect",
-    "vi": "Mật khẩu không chính xác"
+    "vi": "Mật khẩu không đúng"
   },
   "not_found_password": {
     "en": "Not found password",
@@ -149,11 +149,11 @@
   },
   "not_found_username": {
     "en": "Not found username",
-    "vi": "Không tìm thấy tên người dùng"
+    "vi": "Không tìm thấy tên đăng nhập"
   },
   "invalid_username": {
     "en": "Invalid username",
-    "vi": "Tên người dùng không hợp lệ"
+    "vi": "Tên đăng nhập không hợp lệ"
   },
   "invalid_password": {
     "en": "Invalid password",
@@ -161,39 +161,39 @@
   },
   "E_username_is_incorrect": {
     "en": "Username is incorrect",
-    "vi": "Tên người dùng không chính xác"
+    "vi": "Tên đăng nhập không đúng"
   },
   "address_cannot_empty": {
     "en": "Address cannot empty",
-    "vi": "Địa chỉ không được để trống"
+    "vi": "Vui lòng nhập địa chỉ"
   },
   "provice_cannot_empty": {
     "en": "Provice cannot empty",
-    "vi": "Tỉnh không được để trống"
+    "vi": "Vui lòng nhập tỉnh/thành phố"
   },
   "district_cannot_empty": {
     "en": "District cannot empty",
-    "vi": "Quận không được để trống"
+    "vi": "Vui lòng nhập quận/huyện"
   },
   "ward_cannot_empty": {
     "en": "Ward cannot_empty",
-    "vi": "Phường cửa hàng không hợp lệ"
+    "vi": "Vui lòng nhập phường/xã"
   },
   "role_cannot_empty": {
     "en": "Role cannot empty",
-    "vi": "Quyền không được để trống"
+    "vi": "Vui lòng chọn quyền hạn"
   },
   "username_cannot_empty": {
     "en": "Username cannot empty",
-    "vi": "Tên người dùng không được để trống"
+    "vi": "Vui lòng nhập tên đăng nhập"
   },
   "password_cannot_empty": {
     "en": "Password cannot empty",
-    "vi": "Mật khẩu không được để trống"
+    "vi": "Vui lòng nhập mật khẩu"
   },
   "phone_number_cannot_empty": {
     "en": "Phone cannot empty",
-    "vi": "Số điện thoại không được để trống"
+    "vi": "Vui lòng nhập số điện thoại"
   },
   "group_exist": {
     "en": "Group exist",
@@ -201,15 +201,15 @@
   },
   "full_name_cannot_empty": {
     "en": "Full name cannot empty",
-    "vi": "Họ tên không được để trống"
+    "vi": "Vui lòng nhập họ tên"
   },
   "category_name_empty": {
     "en": "Category name cannot empty",
-    "vi": "Tên danh mục không được để trống"
+    "vi": "Vui lòng nhập tên danh mục"
   },
   "product_banner_word": {
     "en": "The product name or description contains prohibited words. Please revise it.",
-    "vi": "Tên hoặc mô tả sản phẩm chứa từ ngữ bị cấm. Vui lòng chỉnh sửa lại."
+    "vi": "Tên hoặc mô tả sản phẩm chứa từ không phù hợp. Vui lòng chỉnh sửa lại."
   },
   "not_found_product_type": {
     "en": "Not found product type",
@@ -581,7 +581,7 @@
   },
   "not_enough_points": {
     "en": "Not enough points",
-    "vi": "Bạn không đủ điểm"
+    "vi": "Bạn không đủ điểm để đổi ưu đãi này"
   },
   "invalid_receiver_id": {
     "en": "Invalid receiver id",
@@ -673,7 +673,7 @@
   },
   "point_not_enough": {
     "en": "Point not enough",
-    "vi": "Bạn không đủ điểm"
+    "vi": "Bạn không đủ điểm để đổi ưu đãi này"
   },
   "invalid_points": {
     "en": "Invalid points",
@@ -706,5 +706,9 @@
   "not_found_user_address_id": {
     "en": "Please check again or add a new address.",
     "vi": "Vui lòng kiểm tra lại hoặc thêm địa chỉ mới."
+  },
+  "voucher_already_redeemed": {
+    "en": "You've already used this voucher",
+    "vi": "Bạn đã đổi mã này"
   }
 }
