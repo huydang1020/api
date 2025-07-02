@@ -163,8 +163,8 @@ func (r *Router) handleCreateOrder(ctx *gin.Context) {
 			utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_not_found_user_voucher))
 			return
 		}
-		if uv.State == vpb.UserVoucher_used.String() {
-			utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_not_found_user_voucher))
+		if uv.State != vpb.UserVoucher_got.String() {
+			utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_code_state_invalid))
 			return
 		}
 		voucher, err := r.voucherSer.GetVoucher(c, &vpb.Voucher{Id: uv.VoucherId})

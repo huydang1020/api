@@ -68,4 +68,5 @@ const (
 	E_receiver_id_cannot_empty   = "receiver_id_cannot_empty"
 	E_user_id_cannot_empty       = "user_id_cannot_empty"
 	E_point_cannot_empty         = "point_cannot_empty"
+	E_code_state_invalid         = "code_state_invalid"
 )
