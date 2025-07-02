@@ -698,5 +698,9 @@
   "max_user_address": {
     "en": "Max user address",
     "vi": "Bạn đã đạt giới hạn số lượng địa chỉ"
+  },
+  "can_not_update_user_address": {
+    "en": "Can not update user address",
+    "vi": "Không thể cập nhật đia chỉ cá nhân"
   }
 }
