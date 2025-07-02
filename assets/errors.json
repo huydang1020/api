@@ -701,6 +701,10 @@
   },
   "can_not_update_user_address": {
     "en": "Can not update user address",
-    "vi": "Không thể cập nhật đia chỉ cá nhân"
+    "vi": "Không thể cập nhật địa chỉ giao hàng"
+  },
+  "not_found_user_address_id": {
+    "en": "Please check again or add a new address.",
+    "vi": "Vui lòng kiểm tra lại hoặc thêm địa chỉ mới."
   }
 }

@@ -67,11 +67,11 @@ func (r *Router) handleGetMe(ctx *gin.Context) {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
 	}
-	var total int
+	var total int32
 	for _, item := range cart.GetItem() {
-		total += int(item.Quantity)
+		total += item.Quantity
 	}
-	user.CartQuantity = int32(total)
+	user.CartQuantity = total
 	// lấy đối tác
 	if user.PartnerId != "" {
 		part, err := r.userSer.GetPartner(c, &userpb.PartnerRequest{Id: user.PartnerId})
@@ -90,17 +90,19 @@ func (r *Router) handleGetMe(ctx *gin.Context) {
 		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_invalid_user_id))
 		return
 	}
-	user.FavoriteQuantity = int32(len(productTypeIds))
+	if len(productTypeIds) > 0 {
+		user.FavoriteQuantity = int32(len(productTypeIds))
+	}
 	// lấy số lượng đơn hàng đã đặt
-	order, err := r.productSer.ListOrder(c, &product.OrderRequest{UserId: user.Id})
+	order, err := r.productSer.ListOrder(c, &product.OrderRequest{UserId: user.Id, State: product.Order_completed.String()})
 	if err != nil {
+		log.Println("error:", err)
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
 	}
-	user.TotalOrders = int32(len(order.Orders))
-	// lấy số lượng đơn hàng đã đặt
-	for _, ord := range order.Orders {
-		if ord.State == product.Order_completed.String() {
+	if len(order.Orders) > 0 {
+		user.TotalOrders = int32(len(order.Orders))
+		for _, ord := range order.Orders {
 			user.TotalAmountSpent += int64(ord.TotalMoney)
 		}
 	}
