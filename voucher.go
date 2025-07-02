@@ -207,10 +207,11 @@ func (r *Router) handleListUserVoucher(ctx *gin.Context) {
 	claims, _ := ctx.MustGet("claims").(*jwt.JWTClaim)
 	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
 	defer cancel()
-	req := &vpb.UserVoucher{}
+	req := &vpb.UserVoucherRequest{}
 	utils.BindQuery(req, ctx)
-	uid := claims.UserId
-	list, err := r.voucherSer.ListUserVouchers(c, &vpb.UserVoucherRequest{UserId: uid})
+	req.State = ctx.Query("state")
+	req.UserId = claims.UserId
+	list, err := r.voucherSer.ListUserVouchers(c, req)
 	if err != nil {
 		log.Println("user_voucher err:", err)
 		utils.HandleError(LangMappingErr, ctx, err)
@@ -226,6 +227,19 @@ func (r *Router) handleListUserVoucher(ctx *gin.Context) {
 		uv.Voucher = vou
 	}
 	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: list})
+}
+
+func (r *Router) handleVerifyCodeVoucher(ctx *gin.Context) {
+	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
+	defer cancel()
+	req := &vpb.VerifyCodeRequest{}
+	ctx.ShouldBindJSON(req)
+	_, err := r.voucherSer.VerifyCode(c, req)
+	if err != nil {
+		utils.HandleError(LangMappingErr, ctx, err)
+		return
+	}
+	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success"})
 }
 
 func (r *Router) handleListUserVoucherAdmin(ctx *gin.Context) {

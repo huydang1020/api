@@ -637,11 +637,23 @@
   },
   "voucher_expired": {
     "en": "Voucher expired",
-    "vi": "Mã quà tặng đã hết hạn"
+    "vi": "Ưu đãi đã hết hạn"
+  },
+  "voucher_not_existed": {
+    "en": "Voucher not existed",
+    "vi": "Ưu đãi không tồn tại trong hệ thống"
   },
   "voucher_not_active": {
     "en": "Voucher not active",
-    "vi": "Ưu đãi này chưa được kích hoạt "
+    "vi": "Ưu đãi chưa được kích hoạt"
+  },
+  "total_bill_not_enough": {
+    "en": "Total bill not enough",
+    "vi": "Tổng tiền hóa đơn không đủ để sử dụng ưu đãi"
+  },
+  "code_state_invalid": {
+    "en": "Code state invalid",
+    "vi": "Trạng thái mã ưu đãi không hợp lệ"
   },
   "invalid_voucher_id": {
     "en": "Invalid voucher id",
