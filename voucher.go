@@ -313,13 +313,13 @@ func (r *Router) handleBuyVoucher(ctx *gin.Context) {
 	}
 	req.UserId = claims.UserId
 	if voucher.PointExchange > 0 {
-		user, err := r.userSer.GetUser(c, &upb.UserRequest{Id: claims.UserId})
+		userpoint, err := r.userSer.GetUserPoint(c, &upb.UserPointRequest{Id: claims.UserId})
 		if err != nil {
 			log.Println("user err:", err)
 			utils.HandleError(LangMappingErr, ctx, err)
 			return
 		}
-		if user.Point.Points < int64(voucher.PointExchange) {
+		if userpoint.Points < int64(voucher.PointExchange) {
 			utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_point_not_enough))
 			return
 		}
@@ -339,6 +339,5 @@ func (r *Router) handleBuyVoucher(ctx *gin.Context) {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
 	}
-
 	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: uv})
 }
