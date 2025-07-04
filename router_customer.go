@@ -40,6 +40,9 @@ func (r *Router) mappingRouterCustomer() {
 	r1.DELETE("/cart", r.handleDeleteAllItemCart)
 	r1.DELETE("/cart-item", r.handleDeleteItemCart)
 
+	// point exchange
+	r1.GET("/point-exchange", r.handleListPointExchange)
+
 	// order
 	r1.POST("/order", r.handleCreateOrder)
 	r1.POST("/order/vnpay", r.handleCreateOrderVNpay)

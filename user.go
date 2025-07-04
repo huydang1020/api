@@ -129,10 +129,26 @@ func (r *Router) handleGetListUser(ctx *gin.Context) {
 		return
 	}
 	// Gán lại quyền cho user
+	uids := make([]string, 0)
 	for _, user := range users.Users {
+		uids = append(uids, user.Id)
 		for _, role := range roles.Roles {
 			if user.RoleId == role.Id {
 				user.Role = role
+				break
+			}
+		}
+	}
+	// lấy điểm
+	listPoints, err := r.userSer.ListUserPoint(c, &userpb.UserPointRequest{UserIds: uids})
+	if err != nil {
+		utils.HandleError(LangMappingErr, ctx, err)
+		return
+	}
+	for _, user := range users.Users {
+		for _, point := range listPoints.UserPoints {
+			if point.UserId == user.Id {
+				user.Point = point
 				break
 			}
 		}
@@ -532,6 +548,38 @@ func (r *Router) handleCreatePointTransaction(ctx *gin.Context) {
 	}
 
 	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success"})
+}
+
+func (r *Router) handleListPointExchange(ctx *gin.Context) {
+	claims, _ := ctx.MustGet("claims").(*jwt.JWTClaim)
+	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
+	defer cancel()
+	req := &userpb.PointExchangeRequest{}
+	utils.BindQuery(req, ctx)
+	req.ReceiverId = claims.UserId
+	pointExchange, err := r.userSer.ListPointExchange(c, req)
+	if err != nil {
+		utils.HandleError(LangMappingErr, ctx, err)
+		return
+	}
+	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: pointExchange})
+}
+
+func (r *Router) handleListPointExchangeAdmin(ctx *gin.Context) {
+	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
+	defer cancel()
+	req := &userpb.PointExchangeRequest{}
+	utils.BindQuery(req, ctx)
+	if err := r.isCanBeAccess(c, ctx, "point_exchange", "r"); err != nil {
+		utils.HandleError(LangMappingErr, ctx, err)
+		return
+	}
+	pointExchange, err := r.userSer.ListPointExchange(c, req)
+	if err != nil {
+		utils.HandleError(LangMappingErr, ctx, err)
+		return
+	}
+	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: pointExchange})
 }
 
 func (r *Router) handleListUserAddress(ctx *gin.Context) {

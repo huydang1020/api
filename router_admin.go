@@ -17,6 +17,7 @@ func (r *Router) mappingRouterAdmin() {
 	r1.PUT("/user/:id", r.handleUpdateUser)
 	r1.DELETE("/user/:id", r.handleDeleteUser)
 	r1.POST("/user/create-point-transaction", r.handleCreatePointTransaction)
+	r1.GET("/user/point-exchange", r.handleListPointExchangeAdmin)
 
 	// role
 	r1.GET("/role", r.handleListRole)
