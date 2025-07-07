@@ -710,5 +710,13 @@
   "voucher_already_redeemed": {
     "en": "You've already used this voucher",
     "vi": "Bạn đã đổi mã này"
+  },
+  "email_already_in_use": {
+    "en": "Email already in use",
+    "vi": "Email đã được sử dụng bởi tài khoản khác"
+  },
+  "phone_number_already_in_use": {
+    "en": "Phone number already in use",
+    "vi": "Số điện thoại đã được sử dụng bởi tài khoản khác"
   }
 }
