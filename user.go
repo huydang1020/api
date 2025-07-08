@@ -430,14 +430,6 @@ func (r *Router) handleVerifyOtp(ctx *gin.Context) {
 	defer cancel()
 	req := &userpb.User{}
 	ctx.ShouldBindJSON(req)
-	if req.Email == "" {
-		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_email_cannot_empty))
-		return
-	}
-	if req.VerifyOtp == "" {
-		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_not_found_code))
-		return
-	}
 	_, err := r.userSer.VerifyEmail(c, req)
 	if err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
@@ -451,10 +443,6 @@ func (r *Router) handleSendOtp(ctx *gin.Context) {
 	defer cancel()
 	req := &userpb.User{}
 	ctx.ShouldBindJSON(req)
-	if req.Email == "" {
-		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_email_cannot_empty))
-		return
-	}
 	ttl, err := r.userSer.SendVerifyOtp(c, req)
 	if err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
