@@ -105,4 +105,10 @@ func (r *Router) mappingRouterAdmin() {
 	r1.PUT("/voucher/:id", r.handleUpdateVoucher)
 	r1.DELETE("/voucher/:id", r.handleDeleteVoucher)
 	r1.GET("/voucher/user-voucher", r.handleListUserVoucherAdmin)
+
+	// report
+	r1.GET("/report/overview", r.handleGetReportOverview)
+	r1.GET("/report/revenue", r.handleGetReportRevenue)
+	r1.GET("/report/store/revenue", r.handleGetReportRevenueByStore)
+	r1.GET("/report/user", r.handleGetReportUser)
 }
