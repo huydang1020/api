@@ -16,6 +16,9 @@ func (r *Router) mappingRouterCustomer() {
 	r.route.GET("/api/customer/plan", r.handleListPlan)
 	r.route.GET("/api/customer/plan/:id", r.handleGetPlan)
 
+	// category
+	r.route.GET("/api/customer/category", r.handleListCategoryCustomer)
+
 	// productType
 	r.route.GET("/api/customer/product-type", r.handleListProductTypeCustomer)
 	r.route.GET("/api/customer/product-type/:id", r.handleGetProductTypeCustomer)

@@ -323,6 +323,20 @@ func (r *Router) handleListCategory(ctx *gin.Context) {
 	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: productCategories})
 }
 
+func (r *Router) handleListCategoryCustomer(ctx *gin.Context) {
+	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
+	defer cancel()
+	req := &ptpb.CategoryRequest{}
+	utils.BindQuery(req, ctx)
+	productCategories, err := r.productSer.ListCategory(c, req)
+	if err != nil {
+		log.Println("err", err)
+		utils.HandleError(LangMappingErr, ctx, err)
+		return
+	}
+	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: productCategories})
+}
+
 func (r *Router) handleGetCategory(ctx *gin.Context) {
 	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
 	defer cancel()
