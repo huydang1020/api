@@ -387,6 +387,52 @@ func (r *Router) handleSignInCustomer(ctx *gin.Context) {
 	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: resp})
 }
 
+func (r *Router) handleSignInCustomerAfterVerifyOtp(ctx *gin.Context) {
+	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
+	defer cancel()
+	req := &userpb.User{}
+	ctx.ShouldBindJSON(req)
+	resp, err := r.userSer.SignInAfterVerifyOtp(c, req)
+	if err != nil {
+		s := status.Convert(err)
+		if s.Message() != utils.E_account_not_activated {
+			utils.HandleError(LangMappingErr, ctx, err)
+			return
+		}
+		utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 1, Message: utils.E_account_not_activated})
+		return
+	}
+	cart, err := r.productSer.ListCart(c, &product.Cart{UserId: resp.User.Id})
+	if err != nil {
+		log.Println("ListCart err:", err)
+		utils.HandleError(LangMappingErr, ctx, err)
+		return
+	}
+	var total int
+	for _, item := range cart.GetItem() {
+		total += int(item.Quantity)
+	}
+	resp.User.CartQuantity = int32(total)
+	if resp.User.PartnerId != "" {
+		part, err := r.userSer.GetPartner(c, &userpb.PartnerRequest{Id: resp.User.PartnerId})
+		if err != nil {
+			log.Println("GetOart err:", err)
+			utils.HandleError(LangMappingErr, ctx, err)
+			return
+		}
+		resp.User.Partner = part
+	}
+	key := "favorites:" + resp.User.Id
+	productTypeIds, err := r.cache.SMembers(c, key).Result()
+	if err != nil {
+		log.Println("Redis SMembers error:", err)
+		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_invalid_user_id))
+		return
+	}
+	resp.User.FavoriteQuantity = int32(len(productTypeIds))
+	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: resp})
+}
+
 func (r *Router) handleSignOutCustomer(ctx *gin.Context) {
 	claims, _ := ctx.MustGet("claims").(*jwt.JWTClaim)
 	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
