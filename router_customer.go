@@ -23,6 +23,9 @@ func (r *Router) mappingRouterCustomer() {
 	r.route.GET("/api/customer/product-type", r.handleListProductTypeCustomer)
 	r.route.GET("/api/customer/product-type/:id", r.handleGetProductTypeCustomer)
 
+	// store
+	r.route.GET("/api/customer/store/:slug", r.handleGetStoreCustomer)
+
 	r1 := r.route.Group("/api/customer", authMiddleware(r))
 
 	// user

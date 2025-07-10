@@ -8,6 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/huyshop/api/jwt"
 	"github.com/huyshop/api/utils"
+	ptpb "github.com/huyshop/header/product"
 	userpb "github.com/huyshop/header/user"
 )
 
@@ -236,4 +237,31 @@ func (r *Router) handleDeleteStore(ctx *gin.Context) {
 		return
 	}
 	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success"})
+}
+
+type StoreCustomer struct {
+	Store        *userpb.Store      `json:"store"`
+	ProductTypes *ptpb.ProductTypes `json:"product_types"`
+}
+
+func (r *Router) handleGetStoreCustomer(ctx *gin.Context) {
+	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
+	defer cancel()
+	slug := ctx.Param("slug")
+	store, err := r.userSer.GetStore(c, &userpb.StoreRequest{Slug: slug})
+	if err != nil {
+		log.Println("err", err)
+		utils.HandleError(LangMappingErr, ctx, err)
+		return
+	}
+	productTypes, err := r.productSer.ListProductType(c, &ptpb.ProductTypeRequest{StoreId: store.Id, State: ptpb.ProductType_active.String()})
+	if err != nil {
+		log.Println("err", err)
+		utils.HandleError(LangMappingErr, ctx, err)
+		return
+	}
+	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: &StoreCustomer{
+		Store:        store,
+		ProductTypes: productTypes,
+	}})
 }

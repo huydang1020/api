@@ -225,7 +225,7 @@ func (r *Router) handleListProductTypeCustomer(ctx *gin.Context) {
 	defer cancel()
 	req := &ptpb.ProductTypeRequest{}
 	utils.BindQuery(req, ctx)
-	req.State = ptpb.ProductType_active.String()
+	
 	productTypes, err := r.productSer.ListProductType(c, req)
 	if err != nil {
 		log.Println("err", err)
