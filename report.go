@@ -20,15 +20,9 @@ func (r *Router) handleGetReportOverview(ctx *gin.Context) {
 	req := &ptpb.ReportRequest{}
 	utils.BindQuery(req, ctx)
 
-	now := time.Now()
-	if req.StartDate == 0 {
-		req.StartDate = time.Date(now.Year(), now.Month(), 1, 0, 0, 0, 0, now.Location()).Unix()
+	if claims.PartnerType != "admin" {
+		req.PartnerId = claims.PartnerId
 	}
-	if req.EndDate == 0 {
-		req.EndDate = time.Date(now.Year(), now.Month(), 1, 0, 0, 0, 0, now.Location()).AddDate(0, 1, -1).Unix() + 86399
-	}
-
-	req.PartnerId = claims.PartnerId
 	log.Println("req", req)
 	resp, err := r.productSer.GetReportOverview(c, req)
 	if err != nil {
@@ -36,20 +30,30 @@ func (r *Router) handleGetReportOverview(ctx *gin.Context) {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
 	}
-	listUser, err := r.userSer.ListUsers(c, &userpb.UserRequest{From: req.StartDate, To: req.EndDate})
-	if err != nil {
-		log.Println("err", err)
-		utils.HandleError(LangMappingErr, ctx, err)
-		return
+	log.Println("resp", resp.OrderStatus)
+	if claims.PartnerType == "admin" {
+		listUser, err := r.userSer.ListUsers(c, &userpb.UserRequest{})
+		if err != nil {
+			log.Println("err", err)
+			utils.HandleError(LangMappingErr, ctx, err)
+			return
+		}
+		resp.NewUsers = int32(len(listUser.Users))
+		listPartner, err := r.userSer.ListPartner(c, &userpb.PartnerRequest{})
+		if err != nil {
+			log.Println("err", err)
+			utils.HandleError(LangMappingErr, ctx, err)
+			return
+		}
+		resp.NewPartners = int32(len(listPartner.Partners))
 	}
-	listStore, err := r.userSer.ListStore(c, &userpb.StoreRequest{PartnerId: claims.PartnerId})
+	listStore, err := r.userSer.ListStore(c, &userpb.StoreRequest{PartnerId: req.PartnerId})
 	if err != nil {
 		log.Println("err", err)
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
 	}
 	resp.TotalStores = listStore.Total
-	resp.NewUsers = int32(len(listUser.Users))
 	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: resp})
 }
 
@@ -63,7 +67,9 @@ func (r *Router) handleGetReportRevenue(ctx *gin.Context) {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
 	}
-	req.PartnerId = claims.PartnerId
+	if claims.PartnerType != "admin" {
+		req.PartnerId = claims.PartnerId
+	}
 	log.Println("req", req)
 	resp, err := r.productSer.GetReportRevenue(c, req)
 	if err != nil {
@@ -91,7 +97,9 @@ func (r *Router) handleGetReportRevenueByStore(ctx *gin.Context) {
 	if req.EndDate == 0 {
 		req.EndDate = time.Date(now.Year(), now.Month(), 1, 0, 0, 0, 0, now.Location()).AddDate(0, 1, -1).Unix() + 86399
 	}
-	req.PartnerId = claims.PartnerId
+	if claims.PartnerType != "admin" {
+		req.PartnerId = claims.PartnerId
+	}
 	log.Println("req", req)
 	resp, err := r.productSer.GetReportStoreRevenue(c, req)
 	if err != nil {
