@@ -269,6 +269,17 @@ func (r *Router) handleListOrderAdmin(ctx *gin.Context) {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
 	}
+	for _, order := range orders.Orders {
+		if order.UserAddressId != "" {
+			userAddress, err := r.userSer.GetUserAddress(c, &upb.UserAddress{Id: order.UserAddressId})
+			if err != nil {
+				log.Println("err ", err)
+				utils.HandleError(LangMappingErr, ctx, err)
+				return
+			}
+			order.UserAddress = userAddress
+		}
+	}
 	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: orders})
 }
 

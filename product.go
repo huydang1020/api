@@ -91,6 +91,12 @@ func (r *Router) handleCreateProductType(ctx *gin.Context) {
 			return
 		}
 		limitPty = sto.QuantityProduct
+		sto.QuantityProduct = sto.QuantityProduct + 1
+		if _, err := r.userSer.UpdateStore(c, sto); err != nil {
+			log.Println("err", err)
+			utils.HandleError(LangMappingErr, ctx, err)
+			return
+		}
 	}
 	_, err = r.productSer.CreateProductType(c, req)
 	if err != nil {
@@ -225,7 +231,7 @@ func (r *Router) handleListProductTypeCustomer(ctx *gin.Context) {
 	defer cancel()
 	req := &ptpb.ProductTypeRequest{}
 	utils.BindQuery(req, ctx)
-	
+	req.State = ptpb.ProductType_active.String()
 	productTypes, err := r.productSer.ListProductType(c, req)
 	if err != nil {
 		log.Println("err", err)
