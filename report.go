@@ -38,14 +38,14 @@ func (r *Router) handleGetReportOverview(ctx *gin.Context) {
 			utils.HandleError(LangMappingErr, ctx, err)
 			return
 		}
-		resp.NewUsers = int32(len(listUser.Users))
+		resp.TotalUsers = int32(len(listUser.Users))
 		listPartner, err := r.userSer.ListPartner(c, &userpb.PartnerRequest{})
 		if err != nil {
 			log.Println("err", err)
 			utils.HandleError(LangMappingErr, ctx, err)
 			return
 		}
-		resp.NewPartners = int32(len(listPartner.Partners))
+		resp.TotalPartners = int32(len(listPartner.Partners))
 	}
 	listStore, err := r.userSer.ListStore(c, &userpb.StoreRequest{PartnerId: req.PartnerId})
 	if err != nil {
