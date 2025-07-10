@@ -61,6 +61,14 @@ func (r *Router) handleGetMe(ctx *gin.Context) {
 		return
 	}
 	user.Password = ""
+	// lấy quyền của user
+	role, err := r.permSer.GetRole(c, &permpb.RoleRequest{Id: user.RoleId})
+	if err != nil {
+		log.Println("GetRole err:", err)
+		utils.HandleError(LangMappingErr, ctx, err)
+		return
+	}
+	user.Role = role
 	// lấy số lượng sản phẩm trong giỏ hàng
 	cart, err := r.productSer.ListCart(c, &product.Cart{UserId: claims.UserId})
 	if err != nil {

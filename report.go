@@ -11,6 +11,7 @@ import (
 	"github.com/huyshop/api/utils"
 	ptpb "github.com/huyshop/header/product"
 	userpb "github.com/huyshop/header/user"
+	"github.com/huyshop/header/voucher"
 )
 
 func (r *Router) handleGetReportOverview(ctx *gin.Context) {
@@ -46,6 +47,22 @@ func (r *Router) handleGetReportOverview(ctx *gin.Context) {
 			return
 		}
 		resp.TotalPartners = int32(len(listPartner.Partners))
+		listVoucher, err := r.voucherSer.ListVouchers(c, &voucher.VoucherRequest{})
+		if err != nil {
+			log.Println("err", err)
+			utils.HandleError(LangMappingErr, ctx, err)
+			return
+		}
+		resp.TotalVouchers = int32(len(listVoucher.Vouchers))
+		listCodeUsed, err := r.voucherSer.ListUserVouchers(c, &voucher.UserVoucherRequest{
+			State: voucher.UserVoucher_used.String(),
+		})
+		if err != nil {
+			log.Println("err", err)
+			utils.HandleError(LangMappingErr, ctx, err)
+			return
+		}
+		resp.TotalCodeUsed = listCodeUsed.Total
 	}
 	listStore, err := r.userSer.ListStore(c, &userpb.StoreRequest{PartnerId: req.PartnerId})
 	if err != nil {
