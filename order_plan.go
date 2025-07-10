@@ -104,7 +104,9 @@ func (r *Router) handleListOrderPlanAdmin(ctx *gin.Context) {
 	req.Includes = []string{"user", "plan"}
 	claims, _ := ctx.MustGet("claims").(*jwt.JWTClaim)
 	uid := claims.UserId
-	req.UserId = uid
+	if claims.PartnerType != "admin" {
+		req.UserId = uid
+	}
 	resp, err := r.userSer.ListOrderPlan(c, req)
 	if err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)

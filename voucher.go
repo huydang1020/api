@@ -71,19 +71,19 @@ func (r *Router) handleGetListVoucher(ctx *gin.Context) {
 	req := &vpb.VoucherRequest{}
 	utils.BindQuery(req, ctx)
 	req.State = vpb.Voucher_active.String()
-	vou, err := r.voucherSer.ListVouchers(c, req)
+	vou, err := r.voucherSer.ListVouchersCustomer(c, req)
 	if err != nil {
 		log.Println("list voucher err:", err)
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
 	}
-	for _, vou := range vou.Vouchers {
-		partner, err := r.userSer.GetPartner(c, &upb.PartnerRequest{Id: vou.PartnerId})
+	for _, data := range vou.Vouchers {
+		partner, err := r.userSer.GetPartner(c, &upb.PartnerRequest{Id: data.PartnerId})
 		if err != nil {
 			log.Println("get partner err:", err)
 			continue
 		}
-		vou.Partner = partner
+		data.Partner = partner
 	}
 	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: vou})
 }
