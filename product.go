@@ -56,8 +56,8 @@ func (r *Router) handleCreateProductType(ctx *gin.Context) {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
 	}
-	if claims.PartnerType != userpb.Partner_admin.String() {
-		req.State = ptpb.ProductType_pending.String()
+	if claims.PartnerType == userpb.Partner_admin.String() {
+		req.State = ptpb.ProductType_active.String()
 	}
 	if req.StoreId == "" {
 		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_invalid_store_id))
@@ -131,7 +131,9 @@ func (r *Router) handleUpdateProductTypeAdmin(ctx *gin.Context) {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
 	}
-	if claims.PartnerType != userpb.Partner_admin.String() {
+	if claims.PartnerType == userpb.Partner_admin.String() {
+		req.State = ptpb.ProductType_active.String()
+	} else {
 		req.State = ptpb.ProductType_pending.String()
 	}
 	_, err := r.productSer.UpdateProductTypeAdmin(c, req)

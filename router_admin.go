@@ -111,4 +111,6 @@ func (r *Router) mappingRouterAdmin() {
 	r1.GET("/report/revenue", r.handleGetReportRevenue)
 	r1.GET("/report/store/revenue", r.handleGetReportRevenueByStore)
 	r1.GET("/report/user", r.handleGetReportUser)
+	r1.GET("/report/product", r.handleGetReportProduct)
+	r1.GET("/report/top-products", r.handleGetReportTopProducts)
 }

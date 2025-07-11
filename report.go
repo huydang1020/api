@@ -199,3 +199,154 @@ func (r *Router) handleGetReportUser(ctx *gin.Context) {
 	}
 	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: resp})
 }
+
+func (r *Router) handleGetReportProduct(ctx *gin.Context) {
+	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
+	claims, _ := ctx.MustGet("claims").(*jwt.JWTClaim)
+	defer cancel()
+	req := &ptpb.ReportRequest{}
+	utils.BindQuery(req, ctx)
+	if err := r.isCanBeAccess(c, ctx, "home", "r"); err != nil {
+		utils.HandleError(LangMappingErr, ctx, err)
+		return
+	}
+	if claims.PartnerType != "admin" {
+		req.PartnerId = claims.PartnerId
+	}
+	log.Println("req", req)
+	if req.OrderBy == "" {
+		req.OrderBy = "sold"
+	}
+	resp, err := r.productSer.ListProductType(c, &ptpb.ProductTypeRequest{Limit: 10, State: ptpb.ProductType_active.String(), PartnerId: req.PartnerId, OrderBy: req.OrderBy})
+	if err != nil {
+		log.Println("err", err)
+		utils.HandleError(LangMappingErr, ctx, err)
+		return
+	}
+	dataProduct := make(map[string]int32, 0)
+	for _, product := range resp.ProductTypes {
+		if req.OrderBy == "views" {
+			dataProduct[product.Name] = product.GetViews()
+		} else {
+			dataProduct[product.Name] = product.GetQuantitySold()
+		}
+	}
+	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: dataProduct})
+}
+
+func (r *Router) handleGetReportTopProducts(ctx *gin.Context) {
+	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
+	claims, _ := ctx.MustGet("claims").(*jwt.JWTClaim)
+	defer cancel()
+	req := &ptpb.ReportRequest{}
+	utils.BindQuery(req, ctx)
+	if err := r.isCanBeAccess(c, ctx, "home", "r"); err != nil {
+		utils.HandleError(LangMappingErr, ctx, err)
+		return
+	}
+
+	// Set default time range to current month
+	now := time.Now()
+	if req.StartDate == 0 {
+		req.StartDate = time.Date(now.Year(), now.Month(), 1, 0, 0, 0, 0, now.Location()).Unix()
+	}
+	if req.EndDate == 0 {
+		req.EndDate = time.Date(now.Year(), now.Month(), 1, 0, 0, 0, 0, now.Location()).AddDate(0, 1, -1).Unix() + 86399
+	}
+
+	if claims.PartnerType != "admin" {
+		req.PartnerId = claims.PartnerId
+	}
+
+	log.Println("req", req)
+
+	// Get all completed orders in the time range
+	orderResp, err := r.productSer.ListOrder(c, &ptpb.OrderRequest{
+		State: ptpb.Order_completed.String(),
+	})
+	if err != nil {
+		log.Println("err", err)
+		utils.HandleError(LangMappingErr, ctx, err)
+		return
+	}
+
+	// Count products sold in the time range
+	productCount := make(map[string]int32)
+	productInfo := make(map[string]*ptpb.Product)
+
+	for _, order := range orderResp.Orders {
+		// Check if order is within time range
+		if order.TimeOrder >= req.StartDate && order.TimeOrder <= req.EndDate {
+			// Count products in this order
+			for _, item := range order.ProductOrdered {
+				if item.Product != nil && item.Product.Id != "" {
+					productCount[item.Product.Id] += item.Quantity
+
+					// Get product info if not already cached
+					if _, exists := productInfo[item.Product.Id]; !exists {
+						product, err := r.productSer.GetProduct(c, &ptpb.ProductRequest{Id: item.Product.Id})
+						if err == nil && product != nil {
+							productInfo[item.Product.Id] = product
+						}
+					}
+				}
+			}
+		}
+	}
+
+	// Create labels and values for ReportRevenue
+	var labels []string
+	var values []int32
+
+	// Convert map to slice for sorting
+	type ProductSale struct {
+		ProductId string
+		Quantity  int32
+		Product   *ptpb.Product
+	}
+
+	var productSales []ProductSale
+
+	for productId, quantity := range productCount {
+		if productInfo[productId] != nil {
+			product := productInfo[productId]
+			productSale := ProductSale{
+				ProductId: productId,
+				Quantity:  quantity,
+				Product:   product,
+			}
+			productSales = append(productSales, productSale)
+		}
+	}
+
+	// Sort by quantity sold (descending) and take top 10
+	sort.Slice(productSales, func(i, j int) bool {
+		return productSales[i].Quantity > productSales[j].Quantity
+	})
+
+	// Limit to top 10 and create labels/values
+	for i, productSale := range productSales {
+		if i >= 10 {
+			break
+		}
+
+		// Create label: product name
+		label := productSale.Product.Name
+
+		labels = append(labels, label)
+		values = append(values, productSale.Quantity)
+	}
+
+	// Create ReportRevenue response
+	reportRevenue := &ptpb.ReportRevenue{
+		Labels: labels,
+		Values: make([]int64, len(values)),
+	}
+
+	// Convert int32 to int64
+	for i, v := range values {
+		reportRevenue.Values[i] = int64(v)
+	}
+
+	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: reportRevenue})
+}
