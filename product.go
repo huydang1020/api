@@ -136,6 +136,7 @@ func (r *Router) handleUpdateProductTypeAdmin(ctx *gin.Context) {
 	} else {
 		req.State = ptpb.ProductType_pending.String()
 	}
+	log.Println("req", req)
 	_, err := r.productSer.UpdateProductTypeAdmin(c, req)
 	if err != nil {
 		log.Println("err", err)
@@ -304,8 +305,22 @@ func (r *Router) handleGetProductTypeCustomer(ctx *gin.Context) {
 	if countpty.GetCount() > 0 {
 		pty.Store.QuantityProduct = int32(countpty.GetCount())
 	}
+	// // thêm lượt xem
+	// if _, err = r.productSer.UpdateProductType(c, &ptpb.ProductType{Id: pty.Id, Views: pty.Views + 1}); err != nil {
+	// 	log.Println("err", err)
+	// 	utils.HandleError(LangMappingErr, ctx, err)
+	// 	return
+	// }
+	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: pty})
+}
+
+func (r *Router) handleUpdateProductTypeCustomer(ctx *gin.Context) {
+	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
+	defer cancel()
 	// thêm lượt xem
-	if _, err = r.productSer.UpdateProductType(c, &ptpb.ProductType{Id: pty.Id, Views: pty.Views + 1}); err != nil {
+	pty := &ptpb.ProductType{}
+	ctx.ShouldBindJSON(pty)
+	if _, err := r.productSer.UpdateProductType(c, &ptpb.ProductType{Id: pty.Id, Views: pty.Views + 1}); err != nil {
 		log.Println("err", err)
 		utils.HandleError(LangMappingErr, ctx, err)
 		return

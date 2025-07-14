@@ -71,7 +71,6 @@ func (r *Router) handleCreatePartner(ctx *gin.Context) {
 }
 
 func (r *Router) handleUpdatePartner(ctx *gin.Context) {
-	claims, _ := ctx.MustGet("claims").(*jwt.JWTClaim)
 	c, cancel := utils.MakeContext(MAXTIMEREQ, nil)
 	defer cancel()
 	id := ctx.Param("id")
@@ -82,7 +81,6 @@ func (r *Router) handleUpdatePartner(ctx *gin.Context) {
 		return
 	}
 	req.Id = id
-	req.Type = claims.PartnerType
 	_, err := r.userSer.UpdatePartner(c, req)
 	if err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)

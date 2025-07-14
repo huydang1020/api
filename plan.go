@@ -47,6 +47,7 @@ func (r *Router) handleListPlan(ctx *gin.Context) {
 	defer cancel()
 	req := &userpb.PlansRequest{}
 	utils.BindQuery(req, ctx)
+	req.State = userpb.Plan_active.String()
 	resp, err := r.userSer.ListPlans(c, req)
 	if err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
@@ -100,10 +101,6 @@ func (r *Router) handleUpdatePlanAdmin(ctx *gin.Context) {
 		return
 	}
 	req.Id = id
-	if req.Name == "" {
-		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_name_cannot_empty))
-		return
-	}
 	log.Println("req:", req)
 	_, err := r.userSer.UpdatePlan(c, req)
 	if err != nil {

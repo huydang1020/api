@@ -22,6 +22,7 @@ func (r *Router) mappingRouterCustomer() {
 	// productType
 	r.route.GET("/api/customer/product-type", r.handleListProductTypeCustomer)
 	r.route.GET("/api/customer/product-type/:id", r.handleGetProductTypeCustomer)
+	r.route.POST("/api/customer/product-type/update-views", r.handleUpdateProductTypeCustomer)
 
 	// store
 	r.route.GET("/api/customer/store/:slug", r.handleGetStoreCustomer)

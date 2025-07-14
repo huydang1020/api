@@ -122,6 +122,10 @@ func (r *Router) handleGetListUser(ctx *gin.Context) {
 	defer cancel()
 	req := &userpb.UserRequest{}
 	utils.BindQuery(req, ctx)
+	if err := r.isCanBeAccess(c, ctx, "user", "r"); err != nil {
+		utils.HandleError(LangMappingErr, ctx, err)
+		return
+	}
 	users, err := r.userSer.ListUsers(c, req)
 	if err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
@@ -256,7 +260,7 @@ func (r *Router) handleUpdateUser(ctx *gin.Context) {
 			return
 		}
 	}
-	log.Println("req:", req)
+	log.Println("req 2:", req)
 	_, err = r.userSer.UpdateUser(c, req)
 	if err != nil {
 		utils.HandleError(LangMappingErr, ctx, err)
