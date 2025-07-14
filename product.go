@@ -306,11 +306,11 @@ func (r *Router) handleGetProductTypeCustomer(ctx *gin.Context) {
 		pty.Store.QuantityProduct = int32(countpty.GetCount())
 	}
 	// // thêm lượt xem
-	// if _, err = r.productSer.UpdateProductType(c, &ptpb.ProductType{Id: pty.Id, Views: pty.Views + 1}); err != nil {
-	// 	log.Println("err", err)
-	// 	utils.HandleError(LangMappingErr, ctx, err)
-	// 	return
-	// }
+	if _, err = r.productSer.UpdateProductType(c, &ptpb.ProductType{Id: pty.Id, Views: pty.Views + 1}); err != nil {
+		log.Println("err", err)
+		utils.HandleError(LangMappingErr, ctx, err)
+		return
+	}
 	utils.HandleSuccess(LangMappingSuccess, ctx, &utils.Response{Code: 0, Message: "success", Data: pty})
 }
 
