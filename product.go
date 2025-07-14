@@ -320,7 +320,13 @@ func (r *Router) handleUpdateProductTypeCustomer(ctx *gin.Context) {
 	// thêm lượt xem
 	pty := &ptpb.ProductType{}
 	ctx.ShouldBindJSON(pty)
-	if _, err := r.productSer.UpdateProductType(c, &ptpb.ProductType{Id: pty.Id, Views: pty.Views + 1}); err != nil {
+	ptoductType, err := r.productSer.GetProductType(c, &ptpb.ProductTypeRequest{Id: pty.Id})
+	if err != nil {
+		log.Println("err", err)
+		utils.HandleError(LangMappingErr, ctx, err)
+		return
+	}
+	if _, err := r.productSer.UpdateProductType(c, &ptpb.ProductType{Id: pty.Id, Views: ptoductType.Views + 1}); err != nil {
 		log.Println("err", err)
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
