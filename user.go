@@ -3,7 +3,6 @@ package main
 import (
 	"errors"
 	"log"
-	"reflect"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -193,10 +192,10 @@ func (r *Router) handleCreateUser(ctx *gin.Context) {
 		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_email_cannot_empty))
 		return
 	}
-	if req.Username == "" {
-		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_username_cannot_empty))
-		return
-	}
+	// if req.Username == "" {
+	// 	utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_username_cannot_empty))
+	// 	return
+	// }
 	if req.Password == "" {
 		utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_password_cannot_empty))
 		return
@@ -236,30 +235,32 @@ func (r *Router) handleUpdateUser(ctx *gin.Context) {
 		utils.HandleError(LangMappingErr, ctx, err)
 		return
 	}
-	newUsername := req.Username
-	if newUsername == "" {
-		newUsername = user.Username
-	}
-	newEmail := req.Email
-	if newEmail == "" {
-		newEmail = user.Email
-	}
-	newPhone := req.PhoneNumber
-	if newPhone == "" {
-		newPhone = user.PhoneNumber
-	}
-	if !reflect.DeepEqual(
-		&userpb.User{Username: user.Username, Email: user.Email, PhoneNumber: user.PhoneNumber},
-		&userpb.User{Username: newUsername, Email: newEmail, PhoneNumber: newPhone},
-	) {
-		check, _ := r.userSer.IsExistUser(c, &userpb.User{
-			Email: newEmail, Username: newUsername, PhoneNumber: newPhone,
-		})
+
+	// Kiểm tra trùng lặp email
+	if req.Email != "" && req.Email != user.Email {
+		check, _ := r.userSer.IsExistUser(c, &userpb.User{Email: req.Email})
 		if check.Exist {
-			utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_user_existed))
+			utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_email_existed))
 			return
 		}
 	}
+	// Kiểm tra trùng lặp username
+	if req.Username != "" && req.Username != user.Username {
+		check, _ := r.userSer.IsExistUser(c, &userpb.User{Username: req.Username})
+		if check.Exist {
+			utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_username_existed))
+			return
+		}
+	}
+	// Kiểm tra trùng lặp phone
+	if req.PhoneNumber != "" && req.PhoneNumber != user.PhoneNumber {
+		check, _ := r.userSer.IsExistUser(c, &userpb.User{PhoneNumber: req.PhoneNumber})
+		if check.Exist {
+			utils.HandleError(LangMappingErr, ctx, errors.New(utils.E_phone_number_existed))
+			return
+		}
+	}
+
 	log.Println("req 2:", req)
 	_, err = r.userSer.UpdateUser(c, req)
 	if err != nil {

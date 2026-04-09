@@ -69,4 +69,7 @@ const (
 	E_user_id_cannot_empty       = "user_id_cannot_empty"
 	E_point_cannot_empty         = "point_cannot_empty"
 	E_code_state_invalid         = "code_state_invalid"
+	E_email_existed              = "email_existed"
+	E_username_existed           = "username_existed"
+	E_phone_number_existed       = "phone_number_existed"
 )

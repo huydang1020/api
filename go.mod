@@ -2,7 +2,7 @@ module github.com/huyshop/api
 
 go 1.23.7
 
-replace github.com/huyshop/header v0.0.111 => ../header
+replace github.com/huyshop/header => ../header
 
 require (
 	github.com/gin-contrib/cors v1.7.5
