@@ -14,10 +14,10 @@ import (
 )
 
 type Configs struct {
-	Port              string
-	PermGrpcServer    string
-	UserGrpcServer    string
-	PartnerGrpcServer string
+	Port           string
+	PermGrpcServer string
+	UserGrpcServer string
+	// PartnerGrpcServer string
 	VoucherGrpcServer string
 	ProductGrpcServer string
 	JwtSecretKey      string
@@ -34,26 +34,40 @@ var config *Configs
 
 func init() {
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading env:", err)
+	if _, err := os.Stat(".env"); err == nil {
+		err := godotenv.Load()
+		if err != nil {
+			log.Println("Warning: Error loading .env file:", err)
+		} else {
+			log.Println("Loaded .env file for local development")
+		}
+	} else {
+		log.Println("No .env file found, using system environment variables")
 	}
+
 	config = &Configs{
-		Port:              os.Getenv("PORT"),
-		PermGrpcServer:    os.Getenv("PERM_GRPC_SERVER"),
-		UserGrpcServer:    os.Getenv("USER_GRPC_SERVER"),
-		PartnerGrpcServer: os.Getenv("PARTNER_GRPC_SERVER"),
-		VoucherGrpcServer: os.Getenv("VOUCHER_GRPC_SERVER"),
-		ProductGrpcServer: os.Getenv("PRODUCT_GRPC_SERVER"),
-		JwtSecretKey:      os.Getenv("JWT_SECRET_KEY"),
-		RedisAddr:         os.Getenv("REDIS_ADDR"),
-		RedisPassword:     os.Getenv("REDIS_PASSWORD"),
-		RedisDb:           os.Getenv("REDIS_DB"),
-		CloudinaryName:    os.Getenv("CLOUDINARY_NAME"),
-		CloudinaryApiKey:  os.Getenv("CLOUDINARY_API_KEY"),
-		CloudinarySecret:  os.Getenv("CLOUDINARY_SECRET"),
-		AdminRole:         os.Getenv("ADMIN_ROLE"),
+		Port:           getEnv("PORT", "8080"),
+		PermGrpcServer: getEnv("PERM_GRPC_SERVER", "localhost:7000"),
+		UserGrpcServer: getEnv("USER_GRPC_SERVER", "localhost:6000"),
+		// PartnerGrpcServer: getEnv("PARTNER_GRPC_SERVER", "localhost:5000"),
+		VoucherGrpcServer: getEnv("VOUCHER_GRPC_SERVER", "localhost:4000"),
+		ProductGrpcServer: getEnv("PRODUCT_GRPC_SERVER", "localhost:8000"),
+		JwtSecretKey:      getEnv("JWT_SECRET_KEY", ""),
+		RedisAddr:         getEnv("REDIS_ADDR", "localhost:6379"),
+		RedisPassword:     getEnv("REDIS_PASSWORD", ""),
+		RedisDb:           getEnv("REDIS_DB", "0"),
+		CloudinaryName:    getEnv("CLOUDINARY_NAME", ""),
+		CloudinaryApiKey:  getEnv("CLOUDINARY_API_KEY", ""),
+		CloudinarySecret:  getEnv("CLOUDINARY_SECRET", ""),
+		AdminRole:         getEnv("ADMIN_ROLE", "admin"),
 	}
+}
+
+func getEnv(key, defaultValue string) string {
+	if value := os.Getenv(key); value != "" {
+		return value
+	}
+	return defaultValue
 }
 
 func init() {
