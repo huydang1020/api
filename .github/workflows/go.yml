@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 env:
-  DOCKER_IMAGE: huydang1020/api
+  DOCKER_IMAGE: dhuy09031/api
   DOCKER_TAG: latest
 
 jobs:
