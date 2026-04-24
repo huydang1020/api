@@ -29,7 +29,6 @@ type Router struct {
 	userSer    userpb.UserServiceClient
 	voucherSer voupb.VoucherServiceClient
 	productSer propb.ProductServiceClient
-	
 }
 
 func init() {
